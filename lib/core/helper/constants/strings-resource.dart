@@ -7,8 +7,6 @@ class StringResources {
   static const String soon = 'SOON';
   static const String omnigo = 'OMNIGO';
   static const String fastFood = 'FAST FOOD';
-
-  // 👇 Bottom Navigation Labels
   static const String home = 'Home';
   static const String myOrder = 'My Order';
   static const String favourite = 'Favourite';

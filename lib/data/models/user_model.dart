@@ -18,7 +18,7 @@ class UserModel {
       id: json['id'] ?? '',
       name: json['name'] ?? '',
       email: json['email'] ?? '',
-      phone: json['phone'], // nullable
+      phone: json['phone'],
       isPhoneVerified: json['isPhoneVerified'] ?? false,
     );
   }

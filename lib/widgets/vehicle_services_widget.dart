@@ -27,7 +27,7 @@ class _VehicleServicesWidgetState extends State<VehicleServicesWidget> {
         crossAxisCount: 2,
         crossAxisSpacing: 12.w,
         mainAxisSpacing: 12.h,
-        childAspectRatio: 1.2, //
+        childAspectRatio: 1.2,
       ),
       itemBuilder: (context, index) {
         final item = widget.services[index];

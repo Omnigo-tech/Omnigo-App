@@ -37,8 +37,6 @@ class _AuthTextFieldState extends State<AuthTextField> {
       validator: widget.validator,
       decoration: InputDecoration(
         labelText: widget.label,
-
-        // ✅ Suffix Icon Logic
         suffixIcon: widget.obscure
             ? IconButton(
                 icon: Icon(
@@ -56,29 +54,4 @@ class _AuthTextFieldState extends State<AuthTextField> {
   }
 }
 
-/*import 'package:flutter/material.dart';
 
-class AuthTextField extends StatelessWidget {
-  final String label;
-  final bool obscure;
-  final TextEditingController? controller;
-  final String? Function(String?)? validator;
-
-  const AuthTextField({
-    super.key,
-    required this.label,
-    this.controller,
-    this.validator,
-    this.obscure = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      obscureText: obscure,
-      validator: validator,
-      decoration: InputDecoration(labelText: label),
-    );
-  }
-}*/

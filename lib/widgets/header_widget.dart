@@ -20,14 +20,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Row(
         children: [
           Container(
-            width: DimensionsResources.D_40.r, // Double the radius for the total width
+            width: DimensionsResources.D_40.r,
             height: DimensionsResources.D_40.r,
             decoration: BoxDecoration(
-              color: AppColors.grey, // Fallback background
+              color: AppColors.grey,
               shape: BoxShape.circle,
               image: DecorationImage(
                 image: AssetImage(ImageResource.COMPANY_LOGO),
-                fit: BoxFit.cover, // Now you can use fit!
+                fit: BoxFit.cover,
               ),
             ),
           ),
@@ -60,5 +60,5 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize =>
-      Size.fromHeight(kToolbarHeight); // default AppBar height
+      Size.fromHeight(kToolbarHeight);
 }

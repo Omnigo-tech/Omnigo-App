@@ -1,65 +1,64 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:grocery_app/core/helper/constants/strings-resource.dart';
 
+import '../core/helper/constants/colors_resources.dart';
 import '../core/helper/constants/dimensions-resource.dart';
 import '../core/helper/constants/images-resources.dart';
+import '../core/helper/constants/strings-resource.dart';
 
-class HeaderWidget extends StatelessWidget {
-  const HeaderWidget({super.key});
+class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const CustomAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: DimensionsResources.D_160.h,
-      padding: EdgeInsets.only(top: DimensionsResources.D_50.h, left: DimensionsResources.D_16.w, right: DimensionsResources.D_16.w),
-      decoration: const BoxDecoration(
-        color: Color(0xFF1565C0),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(DimensionsResources.D_30),
-          bottomRight: Radius.circular(DimensionsResources.D_30),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return AppBar(
+      backgroundColor: AppColors.homeBackground,
+      elevation: DimensionsResources.D_0,
+      automaticallyImplyLeading: false,
+
+      title: Row(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-
-                  Container(
-                      width: DimensionsResources.D_40.r, // Double the radius for the total width
-                      height: DimensionsResources.D_40.r,
-                      decoration: BoxDecoration(
-                        color: Colors.grey, // Fallback background
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: AssetImage(ImageResource.COMPANY_LOGO),
-                          fit: BoxFit.cover, // Now you can use fit!
-                        ),
-                      ),
-                    ),
-                  SizedBox(width: DimensionsResources.D_12.w),
-                  Text(
-                    StringResources.omnigo,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: DimensionsResources.D_20.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
+          Container(
+            width: DimensionsResources.D_40.r, // Double the radius for the total width
+            height: DimensionsResources.D_40.r,
+            decoration: BoxDecoration(
+              color: AppColors.grey, // Fallback background
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                image: AssetImage(ImageResource.COMPANY_LOGO),
+                fit: BoxFit.cover, // Now you can use fit!
               ),
+            ),
+          ),
 
-              const Icon(Icons.notifications, color: Colors.white),
-            ],
+          SizedBox(width: DimensionsResources.D_8.w),
+
+          Text(
+            StringResources.omnigo,
+            style: TextStyle(
+              color: AppColors.white,
+              fontWeight: FontWeight.w600,
+              fontSize: DimensionsResources.FONT_SIZE_1X_EXTRA_MEDIUM.sp,
+            ),
           ),
         ],
       ),
+
+      actions: [
+        IconButton(
+          onPressed: () {},
+          icon: Icon(
+            Icons.notifications_none,
+            color: AppColors.white,
+            size: DimensionsResources.D_24.sp,
+          ),
+        ),
+      ],
     );
   }
+
+  @override
+  Size get preferredSize =>
+      Size.fromHeight(kToolbarHeight); // default AppBar height
 }

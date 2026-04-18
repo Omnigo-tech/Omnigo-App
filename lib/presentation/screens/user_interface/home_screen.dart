@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:grocery_app/core/helper/constants/colors_resources.dart';
 import 'package:grocery_app/widgets/bottom_navigation_bar.dart';
 import 'package:grocery_app/widgets/header_widget.dart';
@@ -22,6 +23,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.homeBackground,
+      appBar:const  CustomAppBar(),
       bottomNavigationBar: const AppBottomBar(),
       body: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
@@ -33,85 +35,82 @@ class HomeScreen extends StatelessWidget {
             return SingleChildScrollView(
               child: Column(
                 children: [
-                  const HeaderWidget(),
-
+                  SizedBox(height: DimensionsResources.D_30.h),
                   Transform.translate(
                     offset: Offset(0, -DimensionsResources.D_20),
-                    child: Container(
-                      padding: EdgeInsets.all(DimensionsResources.D_16),
-                      decoration: BoxDecoration(
-                        color: AppColors.whiteTranslucent,
-                        borderRadius: BorderRadius.circular(
-                          DimensionsResources.RADIUS_DEFAULT,
+                    child: Padding(
+                      padding:  EdgeInsets.symmetric(horizontal: DimensionsResources.D_4.sp),
+                      child: Container(
+                        padding: EdgeInsets.all(DimensionsResources.D_16),
+                        decoration: BoxDecoration(
+                          color: AppColors.whiteTranslucent,
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(DimensionsResources.D_25.r),
+                            topLeft: Radius.circular(DimensionsResources.D_25.r),),
+                          boxShadow: const [
+                            BoxShadow(
+                              blurRadius: 10,
+                              color: Colors.black12,
+                            )
+                          ],
                         ),
-                        boxShadow: const [
-                          BoxShadow(
-                            blurRadius: 10,
-                            color: Colors.black12,
-                          )
-                        ],
-                      ),
-                      child: Column(
-                        children: [
+                        child: Column(
+                          children: [
+                            _locationCard(),
+                            SizedBox(height: DimensionsResources.D_8.h),
+                            VehicleServicesWidget(
+                              services: state.services,
+                            ),
+                            SizedBox(height: DimensionsResources.D_20.h),
+                            CarouselSlider.builder(
+                              itemCount: ImageResource.banners.length,
+                              itemBuilder: (context, index, realIndex) {
+                                return ClipRRect(
+                                  borderRadius: BorderRadius.circular(
+                                    DimensionsResources.D_10.r,
+                                  ),
+                                  child: Image.asset(
+                                    ImageResource.banners[index],
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                  ),
+                                );
+                              },
+                              options: CarouselOptions(
+                                height: DimensionsResources.D_200.h,
+                                autoPlay: true,
+                                autoPlayInterval: const Duration(seconds: 3),
+                                enlargeCenterPage: false,
+                                viewportFraction: 1.0,
+                                aspectRatio: 16 / 9,
+                                initialPage: DimensionsResources.INT_0,
+                              ),
+                            ),
 
-                          _locationCard(),
+                            SizedBox(height: DimensionsResources.D_10.h),
 
-                          SizedBox(height: DimensionsResources.D_20.h),
+                            CategoriesWidget(
+                              categories: state.categories,
+                            ),
 
-                          VehicleServicesWidget(
-                            services: state.services,
-                          ),
-
-                          SizedBox(height: DimensionsResources.D_20.h),
-
-                          CarouselSlider.builder(
-                            itemCount: ImageResource.banners.length,
-                            itemBuilder: (context, index, realIndex) {
-                              return ClipRRect(
+                            Padding(
+                              padding: EdgeInsets.only(
+                                top: DimensionsResources.D_20.h,
+                              ),
+                              child: ClipRRect(
                                 borderRadius: BorderRadius.circular(
-                                  DimensionsResources.D_10.r,
+                                  DimensionsResources.RADIUS_DEFAULT.r,
                                 ),
                                 child: Image.asset(
-                                  ImageResource.banners[index],
-                                  fit: BoxFit.cover,
+                                  ImageResource.BANNER_IMAGE1,
+                                  height: DimensionsResources.D_180.h,
                                   width: double.infinity,
+                                  fit: BoxFit.cover,
                                 ),
-                              );
-                            },
-                            options: CarouselOptions(
-                              height: DimensionsResources.D_200.h,
-                              autoPlay: true,
-                              autoPlayInterval: const Duration(seconds: 3),
-                              enlargeCenterPage: false,
-                              viewportFraction: 1.0,
-                              aspectRatio: 16 / 9,
-                              initialPage: DimensionsResources.INT_0,
-                            ),
-                          ),
-
-                          SizedBox(height: DimensionsResources.D_10.h),
-
-                          CategoriesWidget(
-                            categories: state.categories,
-                          ),
-
-                          Padding(
-                            padding: EdgeInsets.only(
-                              top: DimensionsResources.D_20.h,
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(
-                                DimensionsResources.RADIUS_DEFAULT.r,
-                              ),
-                              child: Image.asset(
-                                ImageResource.BANNER_IMAGE1,
-                                height: DimensionsResources.D_180.h,
-                                width: double.infinity,
-                                fit: BoxFit.cover,
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -128,12 +127,11 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  /// ✅ RESOURCE-BASED LOCATION CARD
   Widget _locationCard() {
     return Container(
       padding: EdgeInsets.all(DimensionsResources.D_14.w),
       decoration: BoxDecoration(
-        color: Colors.white, // 👉 better: add AppColors.white
+        color: Colors.white,
         borderRadius: BorderRadius.circular(
           DimensionsResources.RADIUS_DEFAULT.r,
         ),
@@ -159,15 +157,14 @@ class HomeScreen extends StatelessWidget {
               children: [
                 Text(
                   StringResources.yourLocation,
-                  style: TextStyle(
-                    fontSize:
-                    DimensionsResources.FONT_SIZE_1X_EXTRA_SMALL.sp,
-                    color: AppColors.lightText,
+                  style: GoogleFonts.poppins(
+                    fontSize: DimensionsResources.FONT_SIZE_2X_EXTRA_SMALL.sp,
+                    fontWeight: FontWeight.w400
                   ),
                 ),
                 Text(
                   StringResources.locationAddress,
-                  style: TextStyle(
+                  style: GoogleFonts.poppins(
                     fontSize: DimensionsResources.FONT_SIZE_SMALL.sp,
                     fontWeight: FontWeight.w500,
                   ),
@@ -178,7 +175,7 @@ class HomeScreen extends StatelessWidget {
 
           const Icon(
             Icons.arrow_forward_ios,
-            size: 16,
+            size: DimensionsResources.FONT_SIZE_MEDIUM,
           ),
         ],
       ),

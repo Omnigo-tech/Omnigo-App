@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:grocery_app/core/helper/constants/dimensions-resource.dart';
 
 import '../core/helper/constants/strings-resource.dart';
@@ -33,7 +34,7 @@ class _VehicleServicesWidgetState extends State<VehicleServicesWidget> {
         final isSoon = item['title'] == "SOON";
 
         return Container(
-          padding: EdgeInsets.all(12.w),
+          padding: EdgeInsets.all(DimensionsResources.D_16.sp),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
@@ -67,9 +68,9 @@ class _VehicleServicesWidgetState extends State<VehicleServicesWidget> {
             children: [
               Text(
                 item['title']!,
-                style: TextStyle(
-                  fontSize: 13.sp,
-                  fontWeight: FontWeight.w600,
+                style: GoogleFonts.lora(
+                  fontSize: DimensionsResources.D_14.sp,
+                  fontWeight: FontWeight.w700,
                   color: Colors.blue,
                 ),
               ),

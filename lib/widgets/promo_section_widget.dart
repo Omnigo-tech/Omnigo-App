@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:grocery_app/core/helper/constants/colors_resources.dart';
 import 'package:grocery_app/core/helper/constants/strings-resource.dart';
 
@@ -33,7 +34,13 @@ class PromoSection extends StatelessWidget {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(DimensionsResources.D_18.r),
                         ),
-                        child: const Center(child: Text('${StringResources.fastFood}')),
+                        child:  Center(child: Text('${StringResources.fastFood}',
+                          style: GoogleFonts.lora(
+                            fontSize: DimensionsResources.D_14.sp,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.black,
+                          ),
+                        )),
                       ),
                       SizedBox(height: DimensionsResources.D_10.h),
                       Container(
@@ -52,6 +59,7 @@ class PromoSection extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: DimensionsResources.D_12.sp,
                                 fontWeight: FontWeight.w600,
+                                color: AppColors.red
                               ),
                             ),
                           ],
@@ -90,13 +98,14 @@ class PromoSection extends StatelessWidget {
       child:  Center(child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.access_time, size: DimensionsResources.D_21.sp),
+          Icon(Icons.access_time, size: DimensionsResources.D_21.sp,color: AppColors.red),
           SizedBox(height: DimensionsResources.D_4.h),
           Text(
             StringResources.soon,
-            style: TextStyle(
+            style: GoogleFonts.lora(
               fontSize: DimensionsResources.D_12.sp,
               fontWeight: FontWeight.w600,
+              color: AppColors.red,
             ),
           ),
         ],

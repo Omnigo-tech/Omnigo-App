@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:grocery_app/core/helper/constants/colors_resources.dart';
 import 'package:grocery_app/core/helper/constants/strings-resource.dart';
 
 import '../core/helper/constants/dimensions-resource.dart';
@@ -25,13 +27,13 @@ class _CategoriesWidgetState extends State<CategoriesWidget> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(StringResources.categories, style: TextStyle(fontSize: DimensionsResources.D_16.sp)),
-              Text(StringResources.seeAll, style: TextStyle(fontSize: DimensionsResources.D_14.sp)),
+              Text(StringResources.categories, style: GoogleFonts.quicksand(fontSize: DimensionsResources.D_17.sp,fontWeight: FontWeight.w700)),
+              Text(StringResources.seeAll, style: GoogleFonts.inter(fontSize: DimensionsResources.D_13.sp,fontWeight: FontWeight.w800)),
             ],
           ),
           SizedBox(height: DimensionsResources.D_10.h),
           SizedBox(
-            height: DimensionsResources.D_90.h,
+            height: DimensionsResources.D_72.h,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: widget.categories.length,
@@ -40,9 +42,10 @@ class _CategoriesWidgetState extends State<CategoriesWidget> {
 
                 return Container(
                   width: DimensionsResources.D_90.w,
+                  height: DimensionsResources.D_72.h,
                   margin: EdgeInsets.only(right: DimensionsResources.D_10.w),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: AppColors.white,
                     borderRadius: BorderRadius.circular(DimensionsResources.D_14.r),
                   ),
                   child: Column(
@@ -50,7 +53,7 @@ class _CategoriesWidgetState extends State<CategoriesWidget> {
                     children: [
                       Image.asset(item['image']!, height: DimensionsResources.D_40.h),
                       SizedBox(height: DimensionsResources.D_5.h),
-                      Text(item['title']!, style: TextStyle(fontSize: DimensionsResources.D_12.sp)),
+                      Text(item['title']!, style: GoogleFonts.inter(fontSize: DimensionsResources.D_11.sp,fontWeight: FontWeight.w500)),
                     ],
                   ),
                 );

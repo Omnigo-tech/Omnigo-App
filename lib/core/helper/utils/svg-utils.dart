@@ -7,6 +7,7 @@ class SvgUtils {
     const SvgAssetLoader(ImageResource.ICON_FAVOURITE),
     const SvgAssetLoader(ImageResource.ICON_HOME),
     const SvgAssetLoader(ImageResource.ICON_ORDER),
+    const SvgAssetLoader(ImageResource.ICON_USER),
   ];
 
   static Future<void> preCacheSVGs() async {

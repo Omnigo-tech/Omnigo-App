@@ -107,7 +107,7 @@ class DimensionsResources {
   static const int INT_2026 = 2026;
   static const int INT_634649 = 634649;
   static const int INT_300000 = 300000;
-  
+
   static const double FONT_SIZE_4X_EXTRA_SMALL = 8;
   static const double FONT_SIZE_3X_EXTRA_SMALL = 10;
   static const double FONT_SIZE_2X_EXTRA_SMALL = 11;

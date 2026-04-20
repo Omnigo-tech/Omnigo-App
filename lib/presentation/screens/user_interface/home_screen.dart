@@ -23,7 +23,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.homeBackground,
-      appBar:const  CustomAppBar(),
+      appBar: const CustomAppBar(),
       bottomNavigationBar: const AppBottomBar(),
       body: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
@@ -39,28 +39,30 @@ class HomeScreen extends StatelessWidget {
                   Transform.translate(
                     offset: Offset(0, -DimensionsResources.D_20),
                     child: Padding(
-                      padding:  EdgeInsets.symmetric(horizontal: DimensionsResources.D_4.sp),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: DimensionsResources.D_4.sp,
+                      ),
                       child: Container(
                         padding: EdgeInsets.all(DimensionsResources.D_16),
                         decoration: BoxDecoration(
                           color: AppColors.whiteTranslucent,
                           borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(DimensionsResources.D_25.r),
-                            topLeft: Radius.circular(DimensionsResources.D_25.r),),
+                            topRight: Radius.circular(
+                              DimensionsResources.D_25.r,
+                            ),
+                            topLeft: Radius.circular(
+                              DimensionsResources.D_25.r,
+                            ),
+                          ),
                           boxShadow: const [
-                            BoxShadow(
-                              blurRadius: 10,
-                              color: Colors.black12,
-                            )
+                            BoxShadow(blurRadius: 10, color: Colors.black12),
                           ],
                         ),
                         child: Column(
                           children: [
                             _locationCard(),
                             SizedBox(height: DimensionsResources.D_8.h),
-                            VehicleServicesWidget(
-                              services: state.services,
-                            ),
+                            VehicleServicesWidget(services: state.services),
                             SizedBox(height: DimensionsResources.D_20.h),
                             CarouselSlider.builder(
                               itemCount: ImageResource.banners.length,
@@ -89,9 +91,7 @@ class HomeScreen extends StatelessWidget {
 
                             SizedBox(height: DimensionsResources.D_10.h),
 
-                            CategoriesWidget(
-                              categories: state.categories,
-                            ),
+                            CategoriesWidget(categories: state.categories),
 
                             Padding(
                               padding: EdgeInsets.only(
@@ -135,19 +135,11 @@ class HomeScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(
           DimensionsResources.RADIUS_DEFAULT.r,
         ),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-          ),
-        ],
+        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 10)],
       ),
       child: Row(
         children: [
-          const Icon(
-            Icons.location_on,
-            color: AppColors.primary,
-          ),
+          const Icon(Icons.location_on, color: AppColors.primary),
 
           SizedBox(width: DimensionsResources.D_10.w),
 
@@ -159,7 +151,7 @@ class HomeScreen extends StatelessWidget {
                   StringResources.yourLocation,
                   style: GoogleFonts.poppins(
                     fontSize: DimensionsResources.FONT_SIZE_2X_EXTRA_SMALL.sp,
-                    fontWeight: FontWeight.w400
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
                 Text(

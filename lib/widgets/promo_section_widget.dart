@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,11 +14,9 @@ class PromoSection extends StatelessWidget {
     return Container(
       width: 402.w,
       height: 320.h,
-      decoration: BoxDecoration(
-        color:AppColors.brandedBlue
-      ),
+      decoration: BoxDecoration(color: AppColors.brandedBlue),
       child: Padding(
-        padding:  EdgeInsets.all(DimensionsResources.D_16.h),
+        padding: EdgeInsets.all(DimensionsResources.D_16.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -32,38 +29,50 @@ class PromoSection extends StatelessWidget {
                         height: DimensionsResources.D_120.h,
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(DimensionsResources.D_18.r),
-                        ),
-                        child:  Center(child: Text('${StringResources.fastFood}',
-                          style: GoogleFonts.lora(
-                            fontSize: DimensionsResources.D_14.sp,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.black,
+                          borderRadius: BorderRadius.circular(
+                            DimensionsResources.D_18.r,
                           ),
-                        )),
+                        ),
+                        child: Center(
+                          child: Text(
+                            StringResources.fastFood,
+                            style: GoogleFonts.lora(
+                              fontSize: DimensionsResources.D_14.sp,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.black,
+                            ),
+                          ),
+                        ),
                       ),
                       SizedBox(height: DimensionsResources.D_10.h),
                       Container(
                         height: DimensionsResources.D_120.h,
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(DimensionsResources.D_18.r),
+                          borderRadius: BorderRadius.circular(
+                            DimensionsResources.D_18.r,
+                          ),
                         ),
-                        child:  Center(  child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.access_time, size: DimensionsResources.D_20.sp),
-                            SizedBox(height: DimensionsResources.D_4.h),
-                            Text(
-                              StringResources.soon,
-                              style: TextStyle(
-                                fontSize: DimensionsResources.D_12.sp,
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.red
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.access_time,
+                                size: DimensionsResources.D_20.sp,
                               ),
-                            ),
-                          ],
-                        ),),
+                              SizedBox(height: DimensionsResources.D_4.h),
+                              Text(
+                                StringResources.soon,
+                                style: TextStyle(
+                                  fontSize: DimensionsResources.D_12.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.red,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -95,21 +104,27 @@ class PromoSection extends StatelessWidget {
         color: Colors.blue,
         borderRadius: BorderRadius.circular(DimensionsResources.D_14.r),
       ),
-      child:  Center(child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.access_time, size: DimensionsResources.D_21.sp,color: AppColors.red),
-          SizedBox(height: DimensionsResources.D_4.h),
-          Text(
-            StringResources.soon,
-            style: GoogleFonts.lora(
-              fontSize: DimensionsResources.D_12.sp,
-              fontWeight: FontWeight.w600,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.access_time,
+              size: DimensionsResources.D_21.sp,
               color: AppColors.red,
             ),
-          ),
-        ],
-      ),),
+            SizedBox(height: DimensionsResources.D_4.h),
+            Text(
+              StringResources.soon,
+              style: GoogleFonts.lora(
+                fontSize: DimensionsResources.D_12.sp,
+                fontWeight: FontWeight.w600,
+                color: AppColors.red,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

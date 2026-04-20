@@ -6,4 +6,5 @@ class AppRoutes {
   static const String location = '/location';
   static const String otp = '/otp';
   static const String phoneInput = '/phone-input';
+  static const String groceryhome = '/groceryhome';
 }

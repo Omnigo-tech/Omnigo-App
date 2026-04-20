@@ -19,7 +19,7 @@ class AppColors {
   static const border = Color(0xFFE2E2E2); // existing
   static const lightBackground = Color(0xFFEDF2F7); // rgba(237,242,247,1)
   static const lightGreen = Color(0xFFD6EEDD); // rgba(214,238,221,1)
-
+  static const itemBackground = Color(0xFFF2F3F2);
  //Error
   static const red = Color(0xFFFB0808); // rgba(251,8,8,1)
 }

@@ -1,14 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grocery_app/core/helper/constants/colors_resources.dart';
 import 'package:grocery_app/core/helper/constants/strings-resource.dart';
 
 import '../core/helper/constants/dimensions-resource.dart';
+import '../core/routes/AppRoutes.dart';
+import '../data/models/grocery-item.dart';
+import '../presentation/bloc/grocery_details/item_detail_bloc.dart';
+import '../presentation/bloc/grocery_details/item_detail_event.dart';
+import '../presentation/screens/user_interface/details/grocery_details.dart';
 
 class CategoriesWidget extends StatefulWidget {
-   List<Map<String, String>> categories;
+  List<GroceryItemModel> categories;
    CategoriesWidget({super.key,
    required this.categories
   });
@@ -39,22 +45,34 @@ class _CategoriesWidgetState extends State<CategoriesWidget> {
               itemCount: widget.categories.length,
               itemBuilder: (_, i) {
                 final item = widget.categories[i];
-
-                return Container(
-                  width: DimensionsResources.D_90.w,
-                  height: DimensionsResources.D_72.h,
-                  margin: EdgeInsets.only(right: DimensionsResources.D_10.w),
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(DimensionsResources.D_14.r),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(item['image']!, height: DimensionsResources.D_40.h),
-                      SizedBox(height: DimensionsResources.D_5.h),
-                      Text(item['title']!, style: GoogleFonts.inter(fontSize: DimensionsResources.D_11.sp,fontWeight: FontWeight.w500)),
-                    ],
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => BlocProvider.value(
+                          value: context.read<GroceryDetailBloc>()..add(LoadItemsEvent()),
+                          child: DetailScreen(item: item),
+                        ),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    width: DimensionsResources.D_90.w,
+                    height: DimensionsResources.D_72.h,
+                    margin: EdgeInsets.only(right: DimensionsResources.D_10.w),
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.circular(DimensionsResources.D_14.r),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(item.image!, height: DimensionsResources.D_40.h),
+                        SizedBox(height: DimensionsResources.D_5.h),
+                        Text(item.name!, style: GoogleFonts.inter(fontSize: DimensionsResources.D_11.sp,fontWeight: FontWeight.w500)),
+                      ],
+                    ),
                   ),
                 );
               },

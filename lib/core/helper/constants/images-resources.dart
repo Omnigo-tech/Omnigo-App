@@ -14,6 +14,10 @@ class ImageResource {
   static const String BANNER_IMAGE2 = '${DIR_IMAGE}banner_img.png';
   static const String BANNER_IMAGE3 = '${DIR_IMAGE}banner_img.png';
   static const String COMPANY_LOGO = '${DIR_IMAGE}omingo_logo.png';
+  static const String CALENDER = '${DIR_IMAGE}calendar.png';
+  static const String ORGANIC = '${DIR_IMAGE}organic.png';
+  static const String RATING = '${DIR_IMAGE}rating.png';
+  static const String KACL = '${DIR_IMAGE}cacal.png';
 
   static const List<String> banners = [
     BANNER_IMAGE1,

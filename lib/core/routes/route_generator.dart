@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:grocery_app/presentation/screens/user_interface/home_screen.dart';
+import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_bloc.dart';
+import 'package:grocery_app/presentation/screens/user_interface/details/grocery_details.dart';
+import 'package:grocery_app/presentation/screens/user_interface/home/home_screen.dart';
+import 'package:grocery_app/presentation/screens/user_interface/my_cart/my_cart_screen.dart';
 
+import '../../data/models/grocery-item.dart';
+import '../../presentation/bloc/grocery_details/item_detail_event.dart';
 import '../../presentation/bloc/home/home_bloc.dart';
 import '../../presentation/bloc/home/home_event.dart';
 import '../../presentation/screens/authentication/location_screen.dart';
@@ -40,10 +45,21 @@ class RouteGenerator {
         );
       case AppRoutes.home:
         return MaterialPageRoute(
-          builder: (_) => BlocProvider(
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider(
                 create: (_) => HomeBloc()..add(LoadHomeData()),
-                child: const HomeScreen(),
               ),
+              BlocProvider(
+                create: (_) => GroceryDetailBloc()..add(LoadItemsEvent()), // ✅ ADD THIS
+              ),
+            ],
+            child: const HomeScreen(),
+          ),
+        );
+      case AppRoutes.myCart:
+        return MaterialPageRoute(
+          builder: (_) => const MyCartScreen(),
         );
 
       default:

@@ -7,14 +7,14 @@ import 'package:grocery_app/core/helper/constants/colors_resources.dart';
 import 'package:grocery_app/widgets/bottom_navigation_bar.dart';
 import 'package:grocery_app/widgets/header_widget.dart';
 
-import '../../../core/helper/constants/dimensions-resource.dart';
-import '../../../core/helper/constants/images-resources.dart';
-import '../../../core/helper/constants/strings-resource.dart';
-import '../../../widgets/categories_widget.dart';
-import '../../../widgets/promo_section_widget.dart';
-import '../../../widgets/vehicle_services_widget.dart';
-import '../../bloc/home/home_bloc.dart';
-import '../../bloc/home/home_state.dart';
+import '../../../../core/helper/constants/dimensions-resource.dart';
+import '../../../../core/helper/constants/images-resources.dart';
+import '../../../../core/helper/constants/strings-resource.dart';
+import '../../../../widgets/categories_widget.dart';
+import '../../../../widgets/promo_section_widget.dart';
+import '../../../../widgets/vehicle_services_widget.dart';
+import '../../../bloc/home/home_bloc.dart';
+import '../../../bloc/home/home_state.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

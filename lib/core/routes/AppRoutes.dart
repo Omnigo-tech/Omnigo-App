@@ -8,4 +8,5 @@ class AppRoutes {
   static const String phoneInput = '/phone-input';
   static const String groceryDetails = '/grocery-details';
   static const String myCart = '/my_cart';
+  static const String groceryhome = '/groceryhome';
 }

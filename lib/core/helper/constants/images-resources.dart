@@ -25,16 +25,10 @@ class ImageResource {
     BANNER_IMAGE3,
   ];
 
-
-
-  
-
   static const String DIR_ICON = 'assets/icons/';
   static const String ICON_EMAIL = '${DIR_ICON}icon_email.svg';
   static const String ICON_HOME = '${DIR_ICON}home_icon.svg';
   static const String ICON_ORDER = '${DIR_ICON}order_icon.svg';
   static const String ICON_FAVOURITE = '${DIR_ICON}favourite_icon.svg';
   static const String ICON_USER = '${DIR_ICON}user_icon.svg';
-
-
 }

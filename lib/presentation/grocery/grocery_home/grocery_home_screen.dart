@@ -5,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery_app/core/helper/constants/colors_resources.dart';
 import 'package:grocery_app/core/helper/constants/dimensions-resource.dart';
 import 'package:grocery_app/core/helper/constants/images-resources.dart';
+import 'package:grocery_app/presentation/grocery/grocery_home/filter_bottom_sheet.dart';
+import 'package:grocery_app/presentation/grocery/grocery_home/search_screen.dart';
 import '../grocery_bloc/grocery_bloc.dart';
 import '../grocery_bloc/grocery_event.dart';
 import '../grocery_bloc/grocery_state.dart';
@@ -44,12 +46,27 @@ class GroceryView extends StatelessWidget {
             SizedBox(height: DimensionsResources.D_10),
             _buildSearchBar(context),
             SizedBox(height: DimensionsResources.D_12),
-            Align(
-              alignment: AlignmentGeometry.topLeft,
-              child: Text(
-                "    Categories",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "    Categories",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                IconButton(
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (_) => BlocProvider.value(
+                        value: context.read<GroceryBloc>(),
+                        child: const FilterBottomSheet(),
+                      ),
+                    );
+                  },
+                  icon: Icon(Icons.format_align_center),
+                ),
+              ],
             ),
             SizedBox(height: DimensionsResources.D_10),
             _buildCategories(context),
@@ -67,7 +84,7 @@ class GroceryView extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       child: Row(
         children: [
-          const Icon(Icons.location_on, color: Colors.green),
+          const Icon(Icons.location_on_outlined, color: Colors.blue),
           const SizedBox(width: 6),
           const Expanded(
             child: Column(
@@ -84,7 +101,7 @@ class GroceryView extends StatelessWidget {
 
           IconButton(
             onPressed: () {},
-            icon: const Icon(Icons.shopping_cart_outlined),
+            icon: const Icon(Icons.local_mall_outlined),
           ),
         ],
       ),
@@ -96,7 +113,15 @@ class GroceryView extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: GestureDetector(
         onTap: () {
-          // Navigate later
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => BlocProvider.value(
+                value: context.read<GroceryBloc>(),
+                child: const SearchScreen(),
+              ),
+            ),
+          );
         },
         child: Container(
           height: 50,
@@ -195,8 +220,8 @@ class GroceryView extends StatelessWidget {
             BlocBuilder<GroceryBloc, GroceryState>(
               builder: (context, state) {
                 return GridView.builder(
-                  shrinkWrap: true, // ✅ IMPORTANT
-                  physics: const NeverScrollableScrollPhysics(), // ✅ IMPORTANT
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,

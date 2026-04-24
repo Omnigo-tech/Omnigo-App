@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,8 +9,9 @@ import 'package:grocery_app/core/helper/constants/dimensions-resource.dart';
 import 'package:grocery_app/core/helper/constants/images-resources.dart';
 import 'package:grocery_app/data/models/grocery-item.dart';
 import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_bloc.dart';
-import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_event.dart';
 import 'package:grocery_app/presentation/screens/user_interface/details/grocery_details.dart';
+import 'package:grocery_app/presentation/grocery/grocery_home/filter_bottom_sheet.dart';
+import 'package:grocery_app/presentation/grocery/grocery_home/search_screen.dart';
 import '../grocery_bloc/grocery_bloc.dart';
 import '../grocery_bloc/grocery_event.dart';
 import '../grocery_bloc/grocery_state.dart';
@@ -19,13 +21,9 @@ class GroceryHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (_) => GroceryBloc()..add(LoadGroceryEvent()),
-        ),
-      ],
-      child:  GroceryView(),
+    return BlocProvider(
+      create: (_) => GroceryBloc()..add(LoadGroceryEvent()),
+      child: GroceryView(),
     );
   }
 }
@@ -33,22 +31,22 @@ class GroceryHomeScreen extends StatelessWidget {
 class GroceryView extends StatelessWidget {
    GroceryView({super.key});
 
-  final List<Map<String, String>> categories = [
+  final List<Map<String, String>> categories = const [
     {
       "name": "Vegetables",
-      "image": ImageResource.VEGETABLE_IMAGE,
+      "image": ImageResource.VEGETABLE_IMAGE, // Path to your asset
     },
     {
       "name": "Fruits",
-      "image": ImageResource.FRUIT,
+      "image": ImageResource.FRUIT_IMAGE,
     },
     {
       "name": "Meat",
-      "image": ImageResource.MEAT,
+      "image": ImageResource.MEAT_IMG,
     },
     {
       "name": "Drinks",
-      "image": ImageResource.DRINK,
+      "image": ImageResource.DRINK_IMG,
     },
     {
       "name": "Dairy",
@@ -67,12 +65,27 @@ class GroceryView extends StatelessWidget {
             SizedBox(height: DimensionsResources.D_10),
             _buildSearchBar(context),
             SizedBox(height: DimensionsResources.D_12),
-            const Align(
-              alignment: Alignment.topLeft,
-              child: Text(
-                "Categories",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Categories",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                IconButton(
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (_) => BlocProvider.value(
+                        value: context.read<GroceryBloc>(),
+                        child: const FilterBottomSheet(),
+                      ),
+                    );
+                  },
+                  icon: Icon(Icons.format_align_center),
+                ),
+              ],
             ),
             SizedBox(height: DimensionsResources.D_10),
             _buildCategories(context),
@@ -120,7 +133,19 @@ class GroceryView extends StatelessWidget {
   Widget _buildSearchBar(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Container(
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => BlocProvider.value(
+                value: context.read<GroceryBloc>(),
+                child: const SearchScreen(),
+              ),
+            ),
+          );
+        },
+        child: Container(
         height: 50,
         padding: const EdgeInsets.symmetric(horizontal: 12),
         decoration: BoxDecoration(
@@ -135,6 +160,7 @@ class GroceryView extends StatelessWidget {
           ],
         ),
       ),
+    ),
     );
   }
 
@@ -149,8 +175,8 @@ class GroceryView extends StatelessWidget {
             itemCount: categories.length,
             itemBuilder: (_, index) {
               final category = categories[index];
-              final String categoryName = categories[index]["name"]!;
-              final String categoryImge = categories[index]["image"]!;
+              final String categoryName = category["name"]!;
+              final String categoryImge = category["image"]!;
               final isSelected = state.selectedCategory == categoryName;
               return GestureDetector(
                 onTap: () {

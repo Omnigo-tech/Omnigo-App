@@ -2,9 +2,14 @@ import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:grocery_app/core/helper/constants/colors_resources.dart';
 import 'package:grocery_app/core/helper/constants/dimensions-resource.dart';
 import 'package:grocery_app/core/helper/constants/images-resources.dart';
+import 'package:grocery_app/data/models/grocery-item.dart';
+import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_bloc.dart';
+import 'package:grocery_app/presentation/screens/user_interface/details/grocery_details.dart';
 import 'package:grocery_app/presentation/grocery/grocery_home/filter_bottom_sheet.dart';
 import 'package:grocery_app/presentation/grocery/grocery_home/search_screen.dart';
 import '../grocery_bloc/grocery_bloc.dart';
@@ -18,27 +23,41 @@ class GroceryHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => GroceryBloc()..add(LoadGroceryEvent()),
-      child: const GroceryView(),
+      child: GroceryView(),
     );
   }
 }
 
 class GroceryView extends StatelessWidget {
-  const GroceryView({super.key});
+   GroceryView({super.key});
 
-  final List<String> categories = const [
-    "Vegetables",
-    "Fruits",
-    "Meat",
-    "Drinks",
-    "Dairy",
+  final List<Map<String, String>> categories = const [
+    {
+      "name": "Vegetables",
+      "image": ImageResource.VEGETABLE_IMAGE, // Path to your asset
+    },
+    {
+      "name": "Fruits",
+      "image": ImageResource.FRUIT_IMAGE,
+    },
+    {
+      "name": "Meat",
+      "image": ImageResource.MEAT_IMG,
+    },
+    {
+      "name": "Drinks",
+      "image": ImageResource.DRINK_IMG,
+    },
+    {
+      "name": "Dairy",
+      "image": ImageResource.BYKERY_IMG,
+    },
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-
       body: SafeArea(
         child: Column(
           children: [
@@ -50,7 +69,7 @@ class GroceryView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "    Categories",
+                  "Categories",
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 IconButton(
@@ -71,7 +90,6 @@ class GroceryView extends StatelessWidget {
             SizedBox(height: DimensionsResources.D_10),
             _buildCategories(context),
             SizedBox(height: DimensionsResources.D_10),
-            //_buildBanner(),
             _buildProducts(),
           ],
         ),
@@ -84,7 +102,12 @@ class GroceryView extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       child: Row(
         children: [
-          const Icon(Icons.location_on_outlined, color: Colors.blue),
+          CircleAvatar(
+            backgroundColor: AppColors.white,
+            child: BackButton(),
+          ),
+          const SizedBox(width: 6),
+          const Icon(Icons.location_on, color: Colors.green),
           const SizedBox(width: 6),
           const Expanded(
             child: Column(
@@ -98,10 +121,9 @@ class GroceryView extends StatelessWidget {
               ],
             ),
           ),
-
           IconButton(
             onPressed: () {},
-            icon: const Icon(Icons.local_mall_outlined),
+            icon: const Icon(Icons.shopping_cart_outlined),
           ),
         ],
       ),
@@ -124,21 +146,21 @@ class GroceryView extends StatelessWidget {
           );
         },
         child: Container(
-          height: 50,
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          decoration: BoxDecoration(
-            color: Colors.grey.shade100,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Row(
-            children: const [
-              Icon(Icons.search, color: Colors.grey),
-              SizedBox(width: 10),
-              Text("Search groceries...", style: TextStyle(color: Colors.grey)),
-            ],
-          ),
+        height: 50,
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        decoration: BoxDecoration(
+          color: Colors.grey.shade100,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: const [
+            Icon(Icons.search, color: Colors.grey),
+            SizedBox(width: 10),
+            Text("Search groceries...", style: TextStyle(color: Colors.grey)),
+          ],
         ),
       ),
+    ),
     );
   }
 
@@ -153,12 +175,13 @@ class GroceryView extends StatelessWidget {
             itemCount: categories.length,
             itemBuilder: (_, index) {
               final category = categories[index];
-              final isSelected = state.selectedCategory == category;
-
+              final String categoryName = category["name"]!;
+              final String categoryImge = category["image"]!;
+              final isSelected = state.selectedCategory == categoryName;
               return GestureDetector(
                 onTap: () {
                   context.read<GroceryBloc>().add(
-                    SelectCategoryEvent(category),
+                    SelectCategoryEvent(categoryName),
                   );
                 },
                 child: Container(
@@ -172,12 +195,25 @@ class GroceryView extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   alignment: Alignment.center,
-                  child: Text(
-                    category,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: isSelected ? Colors.green : Colors.blueGrey,
-                    ),
+                  child: Row(
+                    children: [
+                      Text(
+                        categoryName,
+                        style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w400,
+                          fontSize: DimensionsResources.D_14.sp,
+                          color: isSelected ? AppColors.darkGreen : AppColors.grey,
+                        ),
+                      ),
+                      SizedBox(width: DimensionsResources.D_4.w),
+                      Image.asset(
+                        categoryImge,
+                        width: DimensionsResources.D_32.w,
+                        height: DimensionsResources.D_32.h,
+                        fit: BoxFit.contain,
+                      ),
+
+                    ],
                   ),
                 ),
               );
@@ -193,7 +229,7 @@ class GroceryView extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
             CarouselSlider.builder(
               itemCount: ImageResource.banners.length,
               itemBuilder: (context, index, realIndex) {
@@ -215,7 +251,6 @@ class GroceryView extends StatelessWidget {
                 viewportFraction: 1,
               ),
             ),
-
             const SizedBox(height: 10),
             BlocBuilder<GroceryBloc, GroceryState>(
               builder: (context, state) {
@@ -233,39 +268,64 @@ class GroceryView extends StatelessWidget {
                   itemBuilder: (_, index) {
                     final item = state.filteredItems[index];
 
-                    return Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: Center(
-                              child: Image.asset(
-                                item.image,
-                                fit: BoxFit.contain,
+                    return GestureDetector(
+                      onTap: () {
+                        final detailItem = GroceryItemModel(
+                          id: item.id,
+                          name: item.name,
+                          image: item.image,
+                          price: item.price,
+                          description: item.description ?? "No description available.",
+                          weight: item.weight ?? "N/A",
+                        );
+
+                        // Use the existing GroceryDetailBloc by passing it to the new screen
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => BlocProvider.value(
+                              value: context.read<GroceryDetailBloc>(),
+                              child: DetailScreen(item: detailItem),
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Center(
+                                child: Image.asset(
+                                  item.image,
+                                  fit: BoxFit.contain,
+                                ),
                               ),
                             ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            item.name,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: AppColors.lightText,
+                            const SizedBox(height: 8),
+                            Text(
+                              item.name,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: AppColors.lightText,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                          ),
-                          Text(
-                            "Rs ${item.price}",
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
+                            Text(
+                              "Rs ${item.price}",
+                              style: const TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     );
                   },

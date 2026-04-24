@@ -3,7 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery_app/presentation/grocery/grocery_bloc/grocery_bloc.dart';
 import 'package:grocery_app/presentation/grocery/grocery_bloc/grocery_event.dart';
 import 'package:grocery_app/presentation/grocery/grocery_home/grocery_home_screen.dart';
-import 'package:grocery_app/presentation/screens/user_interface/home_screen.dart';
+import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_bloc.dart';
+import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_event.dart';
+import 'package:grocery_app/presentation/screens/user_interface/home/home_screen.dart';
+import 'package:grocery_app/presentation/screens/user_interface/my_cart/my_cart_screen.dart';
+import 'package:grocery_app/widgets/bottom_navigation_bar.dart';
 
 import '../../presentation/bloc/home/home_bloc.dart';
 import '../../presentation/bloc/home/home_event.dart';
@@ -19,42 +23,59 @@ class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case AppRoutes.splash:
-        return MaterialPageRoute(builder: (_) => SplashScreen());
+        return MaterialPageRoute(builder: (_) => const SplashScreen());
 
       case AppRoutes.login:
-        return MaterialPageRoute(builder: (_) => LoginScreen());
+        return MaterialPageRoute(builder: (_) => const LoginScreen());
 
       case AppRoutes.signup:
-        return MaterialPageRoute(builder: (_) => SignupScreen());
+        return MaterialPageRoute(builder: (_) => const SignupScreen());
 
       case AppRoutes.otp:
         return MaterialPageRoute(
-          builder: (_) => OtpScreen(phone: "", userId: ""),
+          builder: (_) => const OtpScreen(phone: "", userId: ""),
         );
       case AppRoutes.location:
-        return MaterialPageRoute(builder: (_) => LocationScreen());
+        return MaterialPageRoute(
+          builder: (_) => const LocationScreen(),
+        );
       case AppRoutes.phoneInput:
-        return MaterialPageRoute(builder: (_) => PhoneInputScreen(id: ""));
+        return MaterialPageRoute(
+          builder: (_) => const PhoneInputScreen(id: ""),
+        );
       case AppRoutes.home:
         return MaterialPageRoute(
-          builder: (_) => BlocProvider(
-            create: (_) => HomeBloc()..add(LoadHomeData()),
-            child: const HomeScreen(),
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (_) => HomeBloc()..add(LoadHomeData()),
+              ),
+            ],
+            child: const AppBottomBar(),
           ),
+        );
+      case AppRoutes.myCart:
+        return MaterialPageRoute(
+          builder: (_) => const MyCartScreen(),
         );
 
       case AppRoutes.groceryhome:
         return MaterialPageRoute(
-          builder: (_) => BlocProvider(
-            create: (_) => GroceryBloc()..add(LoadGroceryEvent()),
-            child: const GroceryView(),
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (_) => GroceryBloc()..add(LoadGroceryEvent()),
+              ),
+            ],
+            child: const GroceryHomeScreen(),
           ),
         );
 
       default:
         return MaterialPageRoute(
-          builder: (_) =>
-              Scaffold(body: Center(child: Text("Route Not Found"))),
+          builder: (_) => const Scaffold(
+            body: Center(child: Text("Route Not Found")),
+          ),
         );
     }
   }

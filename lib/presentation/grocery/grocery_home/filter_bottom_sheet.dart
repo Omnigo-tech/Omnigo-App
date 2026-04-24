@@ -116,7 +116,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
         children: [
           _buildHeader(),
           //const SizedBox(height: 10),
-          Text("    Sort", style: TextStyle(fontWeight: FontWeight.w500)),
+          Text("Sort", style: TextStyle(fontWeight: FontWeight.w500)),
           _buildCheckboxes(),
           const SizedBox(height: 30),
           Expanded(child: _buildCategorySections()),

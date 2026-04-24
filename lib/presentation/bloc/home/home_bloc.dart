@@ -13,12 +13,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       emit(
         HomeLoaded(
           [
-            {"title": "SOON", "image":""},
-            {"title": "Rider", "image": ImageResource.BYKE_IMAGE},
-            {"title": "Comfort", "image": ImageResource.COMFORT_IMAGE},
-            {"title": "Courier", "image": ImageResource.COURIER_IMAGE},
-            {"title": "Economy", "image": ImageResource.ECONOMY_IMAGE},
-            {"title": "Ricksha", "image": ImageResource.RICKSHAW_IMAGE},
+            {"title": "SOON", "image": ""},          // Index 0
+            {"title": "SOON", "image": ""},          // Index 1
+            {"title": "Comfort", "image": ImageResource.COMFORT_IMAGE}, // Index 2
+            {"title": "Rider", "image": ImageResource.BYKE_IMAGE},      // Index 3
+            {"title": "Economy", "image": ImageResource.ECONOMY_IMAGE}, // Index 4
+            {"title": "Couriers", "image": ImageResource.COURIER_IMAGE}, // Index 5
+            {"title": "Ricksha", "image": ImageResource.RICKSHAW_IMAGE}, // Index 6
+            {"title": "SOON", "image": ""},          // Index 7
           ],
           [
             GroceryItemModel(
@@ -26,28 +28,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               name: "Vegetables",
               image: ImageResource.VEGETABLE_IMAGE,
               weight: "1kg",
-              description: "Ginger is a flowering plant whose rhizome, ginger root or ginger, is widely used as a spice and a folk medicine.",
-            ),
-            GroceryItemModel(
-              id: "2",
-              name: "Fruits",
-              weight: "1kg",
-              image: ImageResource.FRUIT_IMAGE,
-              description: "Ginger is a flowering plant whose rhizome, ginger root or ginger, is widely used as a spice and a folk medicine.",
-            ),
-            GroceryItemModel(
-              id: "3",
-              name: "Vegetables",
-              weight: "1kg",
-              image: ImageResource.VEGETABLE_IMAGE,
-              description: "Ginger is a flowering plant whose rhizome, ginger root or ginger, is widely used as a spice and a folk medicine.",
-            ),
-            GroceryItemModel(
-              id: "4",
-              name: "Fruits",
-              weight: "1kg",
-              image: ImageResource.FRUIT_IMAGE,
-              description: "Ginger is a flowering plant whose rhizome, ginger root or ginger, is widely used as a spice and a folk medicine.",
+              price: 20.0,
+              description: "Fresh vegetables.",
             ),
           ],
         ),

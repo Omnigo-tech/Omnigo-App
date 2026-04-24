@@ -18,6 +18,14 @@ class ImageResource {
   static const String ORGANIC = '${DIR_IMAGE}organic.png';
   static const String RATING = '${DIR_IMAGE}rating.png';
   static const String KACL = '${DIR_IMAGE}cacal.png';
+  static const String FRUIT = '${DIR_IMAGE}fruit.png';
+  static const String FRUIT_IMG = '${DIR_IMAGE}fruit_img.png';
+  static const String DRINK = '${DIR_IMAGE}drink.png';
+  static const String DRINK_IMG = '${DIR_IMAGE}drink_img.png';
+  static const String MEAT = '${DIR_IMAGE}meat.png';
+  static const String MEAT_IMG = '${DIR_IMAGE}meat_img.png';
+  static const String BYKERY_IMG = '${DIR_IMAGE}bykery_image.png';
+
 
   static const List<String> banners = [
     BANNER_IMAGE1,
@@ -31,4 +39,7 @@ class ImageResource {
   static const String ICON_ORDER = '${DIR_ICON}order_icon.svg';
   static const String ICON_FAVOURITE = '${DIR_ICON}favourite_icon.svg';
   static const String ICON_USER = '${DIR_ICON}user_icon.svg';
+  static const String FORWARD_ICON = '${DIR_ICON}forward_icon';
+  static const String BACK_ICON = '${DIR_ICON}back_icon';
+
 }

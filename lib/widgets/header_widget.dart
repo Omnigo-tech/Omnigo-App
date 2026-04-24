@@ -7,8 +7,8 @@ import '../core/helper/constants/dimensions-resource.dart';
 import '../core/helper/constants/images-resources.dart';
 import '../core/helper/constants/strings-resource.dart';
 
-class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CustomAppBar({super.key});
+class HeaderWidget extends StatelessWidget implements PreferredSizeWidget {
+  const HeaderWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

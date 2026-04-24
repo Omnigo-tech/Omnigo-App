@@ -8,6 +8,9 @@ class GroceryDetailState {
     required this.cart,
   });
 
+  List<GroceryItemModel> get favoriteItems =>
+      items.where((item) => item.isFavorite).toList();
+
   GroceryDetailState copyWith({
     List<GroceryItemModel>? items,
     List<GroceryItemModel>? cart,

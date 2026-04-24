@@ -23,3 +23,10 @@ class DecrementQtyEvent extends GroceryDetailEvent {
   final String id;
   DecrementQtyEvent(this.id);
 }
+
+class RemoveFromCartEvent extends GroceryDetailEvent {
+  final String id;
+  RemoveFromCartEvent(this.id);
+}
+
+class PlaceOrderEvent extends GroceryDetailEvent {}

@@ -1,17 +1,21 @@
-class GroceryItemModel {
+import 'package:equatable/equatable.dart';
+
+class GroceryItemModel extends Equatable {
   final String id;
   final String name;
-  String? weight;
+  final String? weight;
   final String image;
   final String description;
+  final double price;
 
-  bool isFavorite;
-  int quantity;
+  final bool isFavorite;
+  final int quantity;
 
-  GroceryItemModel({
+  const GroceryItemModel({
     required this.id,
     required this.name,
     required this.image,
+    required this.price,
     this.weight,
     required this.description,
     this.isFavorite = false,
@@ -21,6 +25,7 @@ class GroceryItemModel {
   GroceryItemModel copyWith({
     bool? isFavorite,
     int? quantity,
+    double? price,
   }) {
     return GroceryItemModel(
       id: id,
@@ -28,8 +33,12 @@ class GroceryItemModel {
       image: image,
       description: description,
       weight: weight,
+      price: price ?? this.price,
       isFavorite: isFavorite ?? this.isFavorite,
       quantity: quantity ?? this.quantity,
     );
   }
+
+  @override
+  List<Object?> get props => [id, name, weight, image, description, price, isFavorite, quantity];
 }

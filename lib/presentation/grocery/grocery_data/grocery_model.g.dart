@@ -6,8 +6,6 @@ part of 'grocery_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-import 'grocery_model.dart';
-
 GroceryModel _$GroceryModelFromJson(Map<String, dynamic> json) => GroceryModel(
   id: json['id'] as String,
   name: json['name'] as String,

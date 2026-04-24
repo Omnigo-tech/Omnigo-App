@@ -34,8 +34,6 @@ class WelcomeScreen extends StatelessWidget {
                         ),
 
                         SizedBox(height: 20),
-
-                        /// Phone Input
                         SocialButton(
                           text: "Create new account",
                           icon: Icons.g_mobiledata,

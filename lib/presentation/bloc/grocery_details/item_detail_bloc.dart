@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../data/datasource/local/grocery_local_data_source.dart';
+import '../../../data/datasource/repositories/glocery_data.dart';
 import '../../../data/models/grocery-item.dart';
 import 'item_detail_event.dart';
 import 'item_detail_state.dart';
@@ -9,10 +8,17 @@ import 'item_detail_state.dart';
 class GroceryDetailBloc extends Bloc<GroceryDetailEvent, GroceryDetailState> {
   GroceryDetailBloc()
       : super(GroceryDetailState(items: [], cart: [])) {
-    final GroceryLocalDataSource dataSource = GroceryLocalDataSource();
 
     on<LoadItemsEvent>((event, emit) {
-      final items = dataSource.getGroceryItems();
+      final items = GroceryData.getGroceryList().map((item) => GroceryItemModel(
+        id: item.id,
+        name: item.name,
+        image: item.image,
+        price: item.price,
+        description: item.description ?? "",
+        weight: item.weight ?? "",
+      )).toList();
+      
       emit(state.copyWith(items: items));
     });
 
@@ -28,7 +34,6 @@ class GroceryDetailBloc extends Bloc<GroceryDetailEvent, GroceryDetailState> {
     });
 
     on<IncrementQtyEvent>((event, emit) {
-      print("Incrementing ID: ${event.id}"); // Debugging
       final updated = state.items.map((item) {
         if (item.id == event.id) {
           return item.copyWith(quantity: item.quantity + 1);
@@ -36,7 +41,14 @@ class GroceryDetailBloc extends Bloc<GroceryDetailEvent, GroceryDetailState> {
         return item;
       }).toList();
 
-      emit(state.copyWith(items: updated));
+      final updatedCart = state.cart.map((item) {
+        if (item.id == event.id) {
+          return item.copyWith(quantity: item.quantity + 1);
+        }
+        return item;
+      }).toList();
+
+      emit(state.copyWith(items: updated, cart: updatedCart));
     });
 
     on<DecrementQtyEvent>((event, emit) {
@@ -47,7 +59,14 @@ class GroceryDetailBloc extends Bloc<GroceryDetailEvent, GroceryDetailState> {
         return item;
       }).toList();
 
-      emit(state.copyWith(items: updated));
+      final updatedCart = state.cart.map((item) {
+        if (item.id == event.id && item.quantity > 1) {
+          return item.copyWith(quantity: item.quantity - 1);
+        }
+        return item;
+      }).toList();
+
+      emit(state.copyWith(items: updated, cart: updatedCart));
     });
 
     on<AddToCartEvent>((event, emit) {
@@ -63,6 +82,15 @@ class GroceryDetailBloc extends Bloc<GroceryDetailEvent, GroceryDetailState> {
       }
 
       emit(state.copyWith(cart: updatedCart));
+    });
+
+    on<RemoveFromCartEvent>((event, emit) {
+      final updatedCart = state.cart.where((item) => item.id != event.id).toList();
+      emit(state.copyWith(cart: updatedCart));
+    });
+
+    on<PlaceOrderEvent>((event, emit) {
+      emit(state.copyWith(cart: []));
     });
   }
 }

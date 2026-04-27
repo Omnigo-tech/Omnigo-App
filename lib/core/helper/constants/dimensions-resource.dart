@@ -86,6 +86,7 @@ class DimensionsResources {
   static const double D_812 = 812.0;
   static const double D_690 = 690.0;
   static const double D_741 = 741.0;
+  static const double D_770 = 770.0;
 
   static const double D_1_2 = 1.2;
   static const double D_1_4 = 1.4;

@@ -9,4 +9,7 @@ class AppRoutes {
   static const String groceryDetails = '/grocery-details';
   static const String myCart = '/my_cart';
   static const String groceryhome = '/groceryhome';
+  static const String addressdetail = '/addressdetail';
+
+  static get addressdetails => null;
 }

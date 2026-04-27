@@ -39,7 +39,7 @@ class ImageResource {
   static const String ICON_ORDER = '${DIR_ICON}order_icon.svg';
   static const String ICON_FAVOURITE = '${DIR_ICON}favourite_icon.svg';
   static const String ICON_USER = '${DIR_ICON}user_icon.svg';
-  static const String FORWARD_ICON = '${DIR_ICON}forward_icon';
-  static const String BACK_ICON = '${DIR_ICON}back_icon';
-
+  static const String FORWARD_ICON = '${DIR_ICON}forward_icon.svg';
+  static const String BACK_ICON = '${DIR_ICON}back_icon.svg';
+  static const String FILTER_ICON = '${DIR_ICON}filter_icon.svg';
 }

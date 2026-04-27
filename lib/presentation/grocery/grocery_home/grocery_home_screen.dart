@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grocery_app/core/helper/constants/colors_resources.dart';
 import 'package:grocery_app/core/helper/constants/dimensions-resource.dart';
@@ -65,27 +66,38 @@ class GroceryView extends StatelessWidget {
             SizedBox(height: DimensionsResources.D_10),
             _buildSearchBar(context),
             SizedBox(height: DimensionsResources.D_12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Categories",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                IconButton(
-                  onPressed: () {
-                    showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      builder: (_) => BlocProvider.value(
-                        value: context.read<GroceryBloc>(),
-                        child: const FilterBottomSheet(),
+            Padding(
+              padding:  EdgeInsets.symmetric(horizontal: DimensionsResources.D_12.sp),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Categories",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (_) => BlocProvider.value(
+                          value: context.read<GroceryBloc>(),
+                          child: const FilterBottomSheet(),
+                        ),
+                      );
+                    },
+                    icon: SvgPicture.asset(
+                      ImageResource.FILTER_ICON,
+                      width: DimensionsResources.D_30.w,
+                      height: DimensionsResources.D_30.h,
+                      colorFilter: ColorFilter.mode(
+                        AppColors.black,
+                        BlendMode.srcIn,
                       ),
-                    );
-                  },
-                  icon: Icon(Icons.format_align_center),
-                ),
-              ],
+                    ),
+                  ),
+                ],
+              ),
             ),
             SizedBox(height: DimensionsResources.D_10),
             _buildCategories(context),
@@ -99,14 +111,22 @@ class GroceryView extends StatelessWidget {
 
   Widget _buildHeader(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 10),
       child: Row(
         children: [
-          CircleAvatar(
-            backgroundColor: AppColors.white,
-            child: BackButton(),
+          IconButton(
+            onPressed: () {},
+            icon:  SvgPicture.asset(
+              ImageResource.BACK_ICON,
+              width: DimensionsResources.D_30.w,
+              height: DimensionsResources.D_30.h,
+              colorFilter: ColorFilter.mode(
+                AppColors.darkSecondary,
+                BlendMode.srcIn,
+              ),
+            ),
           ),
-          const SizedBox(width: 6),
+          const SizedBox(width: 2),
           const Icon(Icons.location_on, color: Colors.green),
           const SizedBox(width: 6),
           const Expanded(

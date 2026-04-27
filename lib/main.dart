@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:grocery_app/core/helper/constants/theme/app_theme.dart';
+import 'package:grocery_app/presentation/bloc/address/address_bloc.dart';
+import 'package:grocery_app/presentation/bloc/address/address_event.dart';
 
 import 'core/helper/constants/dimensions-resource.dart';
 import 'core/helper/utils/svg-utils.dart';
@@ -16,12 +18,14 @@ import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_event.
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
-    statusBarIconBrightness: Brightness.dark,
-    systemNavigationBarColor: Colors.white,
-    systemNavigationBarIconBrightness: Brightness.dark,
-  ));
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+      systemNavigationBarColor: Colors.white,
+      systemNavigationBarIconBrightness: Brightness.dark,
+    ),
+  );
 
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   await SvgUtils.preCacheSVGs();
@@ -29,9 +33,8 @@ void main() async {
   runApp(
     MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (_) => GroceryDetailBloc()..add(LoadItemsEvent()),
-        ),
+        BlocProvider(create: (_) => GroceryDetailBloc()..add(LoadItemsEvent())),
+        BlocProvider(create: (_) => AddressBloc()..add(LoadAddresses())),
       ],
       child: const MyApp(),
     ),
@@ -58,9 +61,9 @@ class MyApp extends StatelessWidget {
           onGenerateRoute: AppRouter.onGenerateRoute,
           builder: (context, widget) {
             return MediaQuery(
-              data: MediaQuery.of(context).copyWith(
-                textScaler: const TextScaler.linear(1.0),
-              ),
+              data: MediaQuery.of(
+                context,
+              ).copyWith(textScaler: const TextScaler.linear(1.0)),
               child: widget!,
             );
           },

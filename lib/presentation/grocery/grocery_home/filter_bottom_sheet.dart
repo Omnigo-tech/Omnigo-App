@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:grocery_app/core/helper/constants/colors_resources.dart';
+import 'package:grocery_app/core/helper/constants/dimensions-resource.dart';
+import 'package:grocery_app/presentation/grocery/grocery_home/grocery_home_screen.dart';
 import '../grocery_bloc/grocery_bloc.dart';
 import '../grocery_bloc/grocery_event.dart';
 
 class FilterBottomSheet extends StatefulWidget {
-  const FilterBottomSheet({super.key});
+  final int flag;
+  const FilterBottomSheet({super.key, required this.flag});
 
   @override
   State<FilterBottomSheet> createState() => _FilterBottomSheetState();
@@ -104,24 +108,28 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.95,
-      padding: const EdgeInsets.all(16),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildHeader(),
-          //const SizedBox(height: 10),
-          Text("Sort", style: TextStyle(fontWeight: FontWeight.w500)),
-          _buildCheckboxes(),
-          const SizedBox(height: 30),
-          Expanded(child: _buildCategorySections()),
-          _buildApplyButton(context),
-        ],
+    return SafeArea(
+      child: Container(
+        height: DimensionsResources
+            .D_770
+            .h, //MediaQuery.of(context).size.height * 0.95,
+        padding: const EdgeInsets.all(16),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHeader(),
+            //const SizedBox(height: 10),
+            Text("Sort", style: TextStyle(fontWeight: FontWeight.w500)),
+            _buildCheckboxes(),
+            const SizedBox(height: 30),
+            Expanded(child: _buildCategorySections()),
+            _buildApplyButton(context),
+          ],
+        ),
       ),
     );
   }
@@ -252,19 +260,21 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
   Widget _buildApplyButton(BuildContext context) {
     return SizedBox(
-      width: double.infinity,
+      width: double.infinity.w,
       child: ElevatedButton(
         onPressed: () {
           if (selectedItem != null) {
             context.read<GroceryBloc>().add(
               ApplyItemFilterEvent(selectedItem!),
             );
+            if (widget.flag == 2) {
+              Navigator.pop(context);
+            }
           }
-
           Navigator.pop(context);
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.blue,
+          backgroundColor: AppColors.homeBackground,
           padding: const EdgeInsets.symmetric(vertical: 14),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),

@@ -11,11 +11,12 @@ class StringResources {
   static const String myOrder = 'My Order';
   static const String favourite = 'Favourite';
   static const String account = 'Account';
-  
+
   // Grocery Details & Cart
   static const String myCart = 'My Cart';
   static const String addedToCart = 'Added to Cart';
-  static const String itemAddedSuccess = 'Your item has been successfully added to the cart.';
+  static const String itemAddedSuccess =
+      'Your item has been successfully added to the cart.';
   static const String goToCart = 'Go to Cart';
   static const String continueShopping = 'Continue Shopping';
   static const String cartEmpty = 'Your cart is empty';
@@ -36,7 +37,8 @@ class StringResources {
   static const String promoCode = 'Promo Code';
   static const String pickDiscount = 'Pick discount';
   static const String totalCost = 'Total Cost';
-  static const String termsAndConditionsText = 'By placing an order you agree to our ';
+  static const String termsAndConditionsText =
+      'By placing an order you agree to our ';
   static const String terms = 'Terms';
   static const String and = ' And ';
   static const String conditions = 'Conditions';
@@ -57,4 +59,5 @@ class StringResources {
   // Favourite Screen
   static const String addAllToCart = 'Add all to cart';
   static const String noFavoritesYet = 'No Favorites Yet';
+  static const String cancel = 'Cancel';
 }

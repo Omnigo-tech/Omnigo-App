@@ -34,11 +34,19 @@ class _CategoriesWidgetState extends State<CategoriesWidget> {
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              Text(
-                StringResources.seeAll,
-                style: GoogleFonts.inter(
-                  fontSize: DimensionsResources.D_13.sp,
-                  fontWeight: FontWeight.w800,
+              GestureDetector(
+                onTap: (){
+                  Navigator.pushReplacementNamed(
+                      context,
+                      AppRoutes.groceryhome,
+                    );
+                },
+                child: Text(
+                  StringResources.seeAll,
+                  style: GoogleFonts.inter(
+                    fontSize: DimensionsResources.D_13.sp,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
               ),
             ],
@@ -57,8 +65,8 @@ class _CategoriesWidgetState extends State<CategoriesWidget> {
                     Navigator.pushReplacementNamed(
                       context,
                       AppRoutes.groceryhome,
+                      arguments: StringResources.vegetables
                     );
-                    //Navigator.pushNamed(context, AppRoutes.groceryhome);
                   },
                   child: Container(
                     width: DimensionsResources.D_90.w,

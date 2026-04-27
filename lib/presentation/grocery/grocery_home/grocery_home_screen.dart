@@ -22,14 +22,12 @@ import '../grocery_bloc/grocery_event.dart';
 import '../grocery_bloc/grocery_state.dart';
 
 class GroceryHomeScreen extends StatelessWidget {
-  const GroceryHomeScreen({super.key});
+  final String nameCategories;
+   GroceryHomeScreen({super.key, required this.nameCategories});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => GroceryBloc()..add(LoadGroceryEvent()),
-      child: SafeArea(child: GroceryView()),
-    );
+    return SafeArea(child: GroceryView());
   }
 }
 
@@ -39,7 +37,7 @@ class GroceryView extends StatelessWidget {
   final List<Map<String, String>> categories = const [
     {
       "name": "Vegetables",
-      "image": ImageResource.VEGETABLE_IMAGE, // Path to your asset
+      "image": ImageResource.VEGETABLE_IMAGE,
     },
     {"name": "Fruits", "image": ImageResource.FRUIT_IMAGE},
     {"name": "Meat", "image": ImageResource.MEAT_IMG},
@@ -62,7 +60,7 @@ class GroceryView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "   ${StringResources.categories}",
+                  "${StringResources.categories}",
                   style: TextStyle(
                     fontSize: DimensionsResources.FONT_SIZE_MEDIUM,
                     fontWeight: FontWeight.bold,

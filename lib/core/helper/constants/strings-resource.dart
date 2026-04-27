@@ -11,6 +11,7 @@ class StringResources {
   static const String myOrder = 'My Order';
   static const String favourite = 'Favourite';
   static const String account = 'Account';
+  static const String vegetables = 'Vegetables';
 
   // Grocery Details & Cart
   static const String myCart = 'My Cart';

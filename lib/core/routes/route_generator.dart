@@ -57,14 +57,16 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const MyCartScreen());
 
       case AppRoutes.groceryhome:
+        final category = settings.arguments as String? ?? '';
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
             providers: [
               BlocProvider(
-                create: (_) => GroceryBloc()..add(LoadGroceryEvent()),
+                create: (_) => GroceryBloc()..add(LoadGroceryEvent())
+                ..add(SelectCategoryEvent(category))
               ),
             ],
-            child: const GroceryHomeScreen(),
+            child:  GroceryHomeScreen(nameCategories: category),
           ),
         );
       case AppRoutes.addressdetail:

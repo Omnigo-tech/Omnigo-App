@@ -8,13 +8,14 @@ class SvgUtils {
     const SvgAssetLoader(ImageResource.ICON_HOME),
     const SvgAssetLoader(ImageResource.ICON_ORDER),
     const SvgAssetLoader(ImageResource.ICON_USER),
+    const SvgAssetLoader(ImageResource.FILTER_ICON),
   ];
 
   static Future<void> preCacheSVGs() async {
     for (var icons in svgAssets) {
       await svg.cache.putIfAbsent(
         icons.cacheKey(null),
-            () => icons.loadBytes(null),
+        () => icons.loadBytes(null),
       );
     }
   }

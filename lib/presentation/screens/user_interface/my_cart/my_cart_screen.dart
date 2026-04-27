@@ -8,6 +8,7 @@ import 'package:grocery_app/core/helper/constants/strings-resource.dart';
 import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_bloc.dart';
 import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_event.dart';
 import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_state.dart';
+import 'package:grocery_app/presentation/screens/user_interface/checkout_summary/checkout_summary_screen.dart';
 import 'package:grocery_app/widgets/checkout_bottom_sheet.dart';
 import 'package:grocery_app/widgets/cutom_button.dart';
 import '../../../../widgets/circle_button_widget.dart';
@@ -38,7 +39,9 @@ class MyCartScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.r),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -86,10 +89,7 @@ class MyCartScreen extends StatelessWidget {
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
-          child: Container(
-            color: AppColors.border,
-            height: 1.0,
-          ),
+          child: Container(color: AppColors.border, height: 1.0),
         ),
       ),
       body: BlocBuilder<GroceryDetailBloc, GroceryDetailState>(
@@ -125,7 +125,10 @@ class MyCartScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final item = cartList[index];
                     return Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16.w,
+                        vertical: 10.h,
+                      ),
                       child: Row(
                         children: [
                           Image.asset(
@@ -140,7 +143,8 @@ class MyCartScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       item.name,
@@ -153,9 +157,13 @@ class MyCartScreen extends StatelessWidget {
                                     GestureDetector(
                                       onTap: () {
                                         context.read<GroceryDetailBloc>().add(
-                                            RemoveFromCartEvent(item.id));
+                                          RemoveFromCartEvent(item.id),
+                                        );
                                       },
-                                      child: const Icon(Icons.close, color: AppColors.grey),
+                                      child: const Icon(
+                                        Icons.close,
+                                        color: AppColors.grey,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -168,7 +176,8 @@ class MyCartScreen extends StatelessWidget {
                                 ),
                                 SizedBox(height: 12.h),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Row(
                                       children: [
@@ -178,12 +187,17 @@ class MyCartScreen extends StatelessWidget {
                                           size: 40,
                                           borderRadius: 14,
                                           onTap: () {
-                                            context.read<GroceryDetailBloc>().add(
-                                                DecrementQtyEvent(item.id));
+                                            context
+                                                .read<GroceryDetailBloc>()
+                                                .add(
+                                                  DecrementQtyEvent(item.id),
+                                                );
                                           },
                                         ),
                                         Padding(
-                                          padding: EdgeInsets.symmetric(horizontal: 15.w),
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 15.w,
+                                          ),
                                           child: Text(
                                             item.quantity.toString(),
                                             style: GoogleFonts.dmSans(
@@ -198,8 +212,11 @@ class MyCartScreen extends StatelessWidget {
                                           size: 40,
                                           borderRadius: 14,
                                           onTap: () {
-                                            context.read<GroceryDetailBloc>().add(
-                                                IncrementQtyEvent(item.id));
+                                            context
+                                                .read<GroceryDetailBloc>()
+                                                .add(
+                                                  IncrementQtyEvent(item.id),
+                                                );
                                           },
                                         ),
                                       ],
@@ -238,7 +255,17 @@ class MyCartScreen extends StatelessWidget {
                 child: SafeArea(
                   top: false,
                   child: CustomButton(
-                    onClick: () => _showCheckoutBottomSheet(context, totalCost),
+                    onClick: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => BlocProvider.value(
+                            value: context.read<GroceryDetailBloc>(),
+                            child: CheckoutSummaryScreen(),
+                          ),
+                        ),
+                      );
+                    }, //=> _showCheckoutBottomSheet(context, totalCost),
                     text: StringResources.goToCheckout,
                     textColor: AppColors.white,
                     borderRadius: 19.r,

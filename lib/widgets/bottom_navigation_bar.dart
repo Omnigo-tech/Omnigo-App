@@ -43,24 +43,32 @@ class _AppBottomBarState extends State<AppBottomBar> {
         selectedItemColor: AppColors.primary,
         unselectedItemColor: AppColors.black,
         selectedLabelStyle: Theme.of(context).textTheme.labelLarge?.copyWith(
-              fontSize: 12.sp,
-              color: AppColors.primary,
-            ),
+          fontSize: 12.sp,
+          color: AppColors.primary,
+        ),
         unselectedLabelStyle: Theme.of(context).textTheme.labelLarge?.copyWith(
-              fontSize: 12.sp,
-              color: AppColors.black,
-            ),
+          fontSize: 12.sp,
+          color: AppColors.black,
+        ),
         items: [
           _buildNavItem(ImageResource.ICON_HOME, StringResources.home, 0),
           _buildNavItem(ImageResource.ICON_ORDER, StringResources.myOrder, 1),
-          _buildNavItem(ImageResource.ICON_FAVOURITE, StringResources.favourite, 2),
+          _buildNavItem(
+            ImageResource.ICON_FAVOURITE,
+            StringResources.favourite,
+            2,
+          ),
           _buildNavItem(ImageResource.ICON_USER, StringResources.account, 3),
         ],
       ),
     );
   }
 
-  BottomNavigationBarItem _buildNavItem(String iconPath, String label, int index) {
+  BottomNavigationBarItem _buildNavItem(
+    String iconPath,
+    String label,
+    int index,
+  ) {
     return BottomNavigationBarItem(
       icon: SvgPicture.asset(
         iconPath,

@@ -53,41 +53,45 @@ class GroceryView extends StatelessWidget {
         child: Column(
           children: [
             _buildHeader(context),
-            //SizedBox(height: DimensionsResources.D_10),
+            SizedBox(height: DimensionsResources.D_10),
             _buildSearchBar(context),
-            //SizedBox(height: DimensionsResources.D_12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "${StringResources.categories}",
-                  style: TextStyle(
-                    fontSize: DimensionsResources.FONT_SIZE_MEDIUM,
-                    fontWeight: FontWeight.bold,
+            SizedBox(height: DimensionsResources.D_12),
+            Padding(
+              padding:  EdgeInsets.symmetric(horizontal: DimensionsResources.D_12.sp),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Categories",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      builder: (_) => BlocProvider.value(
-                        value: context.read<GroceryBloc>(),
-                        child: const FilterBottomSheet(flag: 1),
+                  IconButton(
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (_) => BlocProvider.value(
+                          value: context.read<GroceryBloc>(),
+                          child: const FilterBottomSheet(flag:0),
+                        ),
+                      );
+                    },
+                    icon: SvgPicture.asset(
+                      ImageResource.FILTER_ICON,
+                      width: DimensionsResources.D_30.w,
+                      height: DimensionsResources.D_30.h,
+                      colorFilter: ColorFilter.mode(
+                        AppColors.black,
+                        BlendMode.srcIn,
                       ),
-                    );
-                  },
-                  icon: SvgPicture.asset(
-                    ImageResource.FILTER_ICON,
-                    width: DimensionsResources.D_36.w,
-                    height: DimensionsResources.D_36.h,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-            //SizedBox(height: DimensionsResources.D_10),
+            SizedBox(height: DimensionsResources.D_10),
             _buildCategories(context),
-            //SizedBox(height: DimensionsResources.D_10),
+            SizedBox(height: DimensionsResources.D_10),
             _buildProducts(),
           ],
         ),
@@ -97,14 +101,23 @@ class GroceryView extends StatelessWidget {
 
   Widget _buildHeader(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: DimensionsResources.D_16.sp,
-        vertical: DimensionsResources.D_10.h,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 10),
       child: Row(
         children: [
-          const SizedBox(width: 6),
-          const Icon(Icons.location_on_outlined, color: Colors.blue),
+          IconButton(
+            onPressed: () {},
+            icon:  SvgPicture.asset(
+              ImageResource.BACK_ICON,
+              width: DimensionsResources.D_30.w,
+              height: DimensionsResources.D_30.h,
+              colorFilter: ColorFilter.mode(
+                AppColors.darkSecondary,
+                BlendMode.srcIn,
+              ),
+            ),
+          ),
+          const SizedBox(width: 2),
+          const Icon(Icons.location_on, color: Colors.green),
           const SizedBox(width: 6),
           BlocBuilder<AddressBloc, AddressState>(
             builder: (context, state) {

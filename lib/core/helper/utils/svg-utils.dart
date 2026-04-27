@@ -8,6 +8,8 @@ class SvgUtils {
     const SvgAssetLoader(ImageResource.ICON_HOME),
     const SvgAssetLoader(ImageResource.ICON_ORDER),
     const SvgAssetLoader(ImageResource.ICON_USER),
+    const SvgAssetLoader(ImageResource.FORWARD_ICON),
+    const SvgAssetLoader(ImageResource.BACK_ICON),
     const SvgAssetLoader(ImageResource.FILTER_ICON),
   ];
 
@@ -15,7 +17,7 @@ class SvgUtils {
     for (var icons in svgAssets) {
       await svg.cache.putIfAbsent(
         icons.cacheKey(null),
-        () => icons.loadBytes(null),
+            () => icons.loadBytes(null),
       );
     }
   }

@@ -10,8 +10,12 @@ import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_bloc.d
 import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_event.dart';
 import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_state.dart';
 import 'package:grocery_app/presentation/screens/user_interface/address_list/address_screen.dart';
+import 'package:grocery_app/widgets/app_bar_widget.dart';
 import 'package:grocery_app/widgets/circle_button_widget.dart';
 import 'package:grocery_app/widgets/cutom_button.dart';
+import 'package:http/http.dart';
+
+import '../../../../core/helper/constants/strings-resource.dart';
 
 class CheckoutSummaryScreen extends StatelessWidget {
   const CheckoutSummaryScreen({super.key});
@@ -20,20 +24,8 @@ class CheckoutSummaryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.lightBackground,
-      appBar: AppBar(
-        title: Text(
-          "Checkout Summary",
-          style: GoogleFonts.dmSans(
-            fontSize: DimensionsResources.D_18.sp,
-            fontWeight: FontWeight.bold,
-            color: AppColors.black,
-          ),
-        ),
-        centerTitle: false,
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: Icon(Icons.arrow_back_ios_new),
-        ),
+      appBar: CustomAppBar(
+        title: StringResources.checkoutSummary,
       ),
 
       body: BlocBuilder<GroceryDetailBloc, GroceryDetailState>(

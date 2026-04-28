@@ -9,6 +9,8 @@ import 'package:grocery_app/core/helper/constants/colors_resources.dart';
 import 'package:grocery_app/core/helper/constants/dimensions-resource.dart';
 import 'package:grocery_app/core/helper/constants/images-resources.dart';
 import 'package:grocery_app/core/helper/constants/strings-resource.dart';
+import 'package:grocery_app/core/routes/AppRoutes.dart';
+import 'package:grocery_app/core/services/app_router.dart';
 import 'package:grocery_app/data/models/grocery-item.dart';
 import 'package:grocery_app/presentation/bloc/address/address_bloc.dart';
 import 'package:grocery_app/presentation/bloc/address/address_state.dart';
@@ -105,7 +107,13 @@ class GroceryView extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                AppRoutes.home,
+                (route) => false,
+              );
+            },
             icon:  SvgPicture.asset(
               ImageResource.BACK_ICON,
               width: DimensionsResources.D_30.w,
@@ -128,11 +136,11 @@ class GroceryView extends StatelessWidget {
                   children: [
                     Text(
                       address?.locationname ?? "Select Address",
-                      style: TextStyle(fontWeight: .bold),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Text(
                       address?.address ?? "",
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: DimensionsResources.FONT_SIZE_1X_EXTRA_SMALL,
                       ),
                     ),
@@ -182,8 +190,8 @@ class GroceryView extends StatelessWidget {
             color: Colors.grey.shade100,
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Row(
-            children: const [
+          child: const Row(
+            children: [
               Icon(Icons.search, color: Colors.grey),
               SizedBox(width: 10),
               Text("Search groceries...", style: TextStyle(color: Colors.grey)),
@@ -342,7 +350,7 @@ class GroceryView extends StatelessWidget {
                             const SizedBox(height: 8),
                             Text(
                               item.name,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 12,
                                 color: AppColors.lightText,
                               ),

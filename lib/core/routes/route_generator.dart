@@ -10,6 +10,7 @@ import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_event.
 import 'package:grocery_app/presentation/screens/user_interface/checkout_summary/checkout_summary_screen.dart';
 import 'package:grocery_app/presentation/screens/user_interface/home/home_screen.dart';
 import 'package:grocery_app/presentation/screens/user_interface/my_cart/my_cart_screen.dart';
+import 'package:grocery_app/presentation/screens/user_interface/my_cart/payment_method_screen.dart';
 import 'package:grocery_app/widgets/bottom_navigation_bar.dart';
 
 import '../../presentation/bloc/home/home_bloc.dart';
@@ -66,7 +67,9 @@ class RouteGenerator {
                 ..add(SelectCategoryEvent(category))
               ),
             ],
-            child:  GroceryHomeScreen(nameCategories: category),
+            child: AppBottomBar(
+              body: GroceryHomeScreen(nameCategories: category),
+            ),
           ),
         );
       case AppRoutes.addressdetail:
@@ -78,6 +81,8 @@ class RouteGenerator {
             child: const CheckoutSummaryScreen(),
           ),
         );
+      case AppRoutes.paymentmethodScreen:
+        return MaterialPageRoute(builder: (_) => const PaymentMethodScreen());
 
       default:
         return MaterialPageRoute(

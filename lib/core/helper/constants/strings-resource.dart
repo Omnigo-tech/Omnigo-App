@@ -33,6 +33,7 @@ class StringResources {
   // Checkout
   static const String checkout = 'Checkout';
   static const String delivery = 'Delivery';
+  static const String checkoutSummary = 'Checkout Summary';
   static const String cashOnDelivery = 'cash on delivery';
   static const String payment = 'Payment';
   static const String promoCode = 'Promo Code';
@@ -48,6 +49,7 @@ class StringResources {
 
   // Payment Method
   static const String paymentMethod = 'Payment Method';
+  static const String selectMethod = 'Select Method';
   static const String totalAmountPayable = 'Total Amount Payable: Rs. ';
   static const String mobileWallets = 'Mobile Wallets (Linked Accounts)';
   static const String jazzCashWallet = 'JazzCash Wallet';
@@ -56,6 +58,25 @@ class StringResources {
   static const String cod = 'Cash on Delivery (COD)';
   static const String codSubtitle = 'Pay at your doorstep on delivery';
   static const String confirmAndContinue = 'Confirm & Continue to Checkout';
+  static const String creditCard = 'Credit Card';
+  static const String card = 'Card';
+  static const String eWallet = 'E-Wallet';
+  static const String save = 'Save';
+  static const String accountNumber = 'Account Number';
+  static const String linkAccount = 'Link Account';
+  static const String enterAccountNumber = 'Enter your account number to link for payments.';
+  
+  // Checkout/Payment V2
+  static const String shippingAddress = 'Shipping Address';
+  static const String cashDelivery = 'Cash Delivery';
+  static const String mobileWalletShort = 'Mobile Wallet';
+  static const String debitCard = 'Debit Card';
+  static const String bankAccount = 'Bank Account';
+  static const String cardHolderName = 'Card Holder Name';
+  static const String cardNumber = 'Card Number';
+  static const String expiryDate = 'expiry date';
+  static const String cvv = 'cvv';
+  static const String pay = 'PAY';
 
   // Favourite Screen
   static const String addAllToCart = 'Add all to cart';

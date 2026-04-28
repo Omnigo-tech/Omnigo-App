@@ -34,11 +34,12 @@ class _CategoriesWidgetState extends State<CategoriesWidget> {
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              GestureDetector(
+              InkWell(
                 onTap: (){
-                  Navigator.pushReplacementNamed(
+                  Navigator.pushNamed(
                       context,
                       AppRoutes.groceryhome,
+                      arguments: StringResources.vegetables,
                     );
                 },
                 child: Text(
@@ -51,7 +52,7 @@ class _CategoriesWidgetState extends State<CategoriesWidget> {
               ),
             ],
           ),
-          SizedBox(height: DimensionsResources.D_10.h),
+          SizedBox(height: DimensionsResources.D_20.h),
           SizedBox(
             height: DimensionsResources.D_72.h,
             child: ListView.builder(
@@ -59,13 +60,12 @@ class _CategoriesWidgetState extends State<CategoriesWidget> {
               itemCount: widget.categories.length,
               itemBuilder: (_, i) {
                 final item = widget.categories[i];
-
                 return InkWell(
                   onTap: () {
-                    Navigator.pushReplacementNamed(
+                    Navigator.pushNamed(
                       context,
                       AppRoutes.groceryhome,
-                      arguments: StringResources.vegetables
+                      arguments: item.name,
                     );
                   },
                   child: Container(

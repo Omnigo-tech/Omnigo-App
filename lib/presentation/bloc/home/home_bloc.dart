@@ -37,7 +37,15 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           [
             GroceryItemModel(
               id: "2",
-              name: "Fruit",
+              name: "Vegetables",
+              image: ImageResource.VEGETABLE_IMAGE,
+              weight: "1kg",
+              price: 15.0,
+              description: "Fresh Vegetables.",
+            ),
+            GroceryItemModel(
+              id: "2",
+              name: "Fruits",
               image: ImageResource.FRUIT_IMAGE,
               weight: "1kg",
               price: 15.0,
@@ -53,7 +61,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             ),
             GroceryItemModel(
               id: "4",
-              name: "Drink",
+              name: "Drinks",
               image: ImageResource.DRINK_IMG,
               weight: "1kg",
               price: 5.0,

@@ -9,20 +9,33 @@ import '../presentation/screens/user_interface/favourite/favourite_screen.dart';
 import '../presentation/screens/user_interface/home/home_screen.dart';
 
 class AppBottomBar extends StatefulWidget {
-  const AppBottomBar({super.key});
+  final Widget? body;
+  final int initialIndex;
+
+  const AppBottomBar({
+    super.key,
+    this.body,
+    this.initialIndex = 0,
+  });
 
   @override
   State<AppBottomBar> createState() => _AppBottomBarState();
 }
 
 class _AppBottomBarState extends State<AppBottomBar> {
-  int _selectedIndex = 0;
+  late int _selectedIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.initialIndex;
+  }
 
   final List<Widget> _screens = [
     const HomeScreen(),
-    const HomeScreen(), // Placeholder for Orders
+    const HomeScreen(),
     const FavouriteScreen(),
-    const HomeScreen(), // Placeholder for Account
+    const HomeScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -33,8 +46,14 @@ class _AppBottomBarState extends State<AppBottomBar> {
 
   @override
   Widget build(BuildContext context) {
+    // If a custom body is provided (like GroceryHomeScreen), use it.
+    // Otherwise, use the screen based on the selected index.
+    Widget currentBody = widget.body != null && _selectedIndex == widget.initialIndex
+        ? widget.body!
+        : _screens[_selectedIndex];
+
     return Scaffold(
-      body: _screens[_selectedIndex],
+      body: currentBody,
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: AppColors.white,
         currentIndex: _selectedIndex,
@@ -43,13 +62,13 @@ class _AppBottomBarState extends State<AppBottomBar> {
         selectedItemColor: AppColors.primary,
         unselectedItemColor: AppColors.black,
         selectedLabelStyle: Theme.of(context).textTheme.labelLarge?.copyWith(
-          fontSize: 12.sp,
-          color: AppColors.primary,
-        ),
+              fontSize: 12.sp,
+              color: AppColors.primary,
+            ),
         unselectedLabelStyle: Theme.of(context).textTheme.labelLarge?.copyWith(
-          fontSize: 12.sp,
-          color: AppColors.black,
-        ),
+              fontSize: 12.sp,
+              color: AppColors.black,
+            ),
         items: [
           _buildNavItem(ImageResource.ICON_HOME, StringResources.home, 0),
           _buildNavItem(ImageResource.ICON_ORDER, StringResources.myOrder, 1),

@@ -5,12 +5,8 @@ import 'package:grocery_app/presentation/bloc/address/address_event.dart';
 import 'package:grocery_app/presentation/grocery/grocery_bloc/grocery_bloc.dart';
 import 'package:grocery_app/presentation/grocery/grocery_bloc/grocery_event.dart';
 import 'package:grocery_app/presentation/grocery/grocery_home/grocery_home_screen.dart';
-import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_bloc.dart';
-import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_event.dart';
 import 'package:grocery_app/presentation/screens/user_interface/checkout_summary/checkout_summary_screen.dart';
-import 'package:grocery_app/presentation/screens/user_interface/home/home_screen.dart';
 import 'package:grocery_app/presentation/screens/user_interface/my_cart/my_cart_screen.dart';
-import 'package:grocery_app/presentation/screens/user_interface/my_cart/payment_method_screen.dart';
 import 'package:grocery_app/widgets/bottom_navigation_bar.dart';
 
 import '../../presentation/bloc/home/home_bloc.dart';
@@ -21,6 +17,7 @@ import '../../presentation/screens/authentication/otp_screen.dart';
 import '../../presentation/screens/authentication/phone_input_screen.dart';
 import '../../presentation/screens/authentication/signup_screen.dart';
 import '../../presentation/screens/splash_screen.dart';
+import '../../presentation/screens/user_interface/payment/payment_method_screen.dart';
 import 'AppRoutes.dart';
 
 class RouteGenerator {

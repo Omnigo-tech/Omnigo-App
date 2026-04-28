@@ -6,8 +6,6 @@ import 'package:grocery_app/core/helper/constants/dimensions-resource.dart';
 import 'package:grocery_app/core/helper/constants/strings-resource.dart';
 import 'package:grocery_app/core/routes/AppRoutes.dart';
 import 'package:grocery_app/presentation/screens/user_interface/checkout_summary/checkout_summary_screen.dart';
-import 'package:grocery_app/presentation/screens/user_interface/my_cart/payment_method_screen.dart';
-import 'package:grocery_app/presentation/screens/user_interface/payment/payment_method_screen.dart';
 import 'package:grocery_app/widgets/cutom_button.dart';
 
 class CheckoutBottomSheet extends StatelessWidget {

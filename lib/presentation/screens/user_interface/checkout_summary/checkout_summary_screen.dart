@@ -13,15 +13,22 @@ import 'package:grocery_app/presentation/screens/user_interface/address_list/add
 import 'package:grocery_app/widgets/app_bar_widget.dart';
 import 'package:grocery_app/widgets/circle_button_widget.dart';
 import 'package:grocery_app/widgets/cutom_button.dart';
-import 'package:http/http.dart';
-
 import '../../../../core/helper/constants/strings-resource.dart';
 
-class CheckoutSummaryScreen extends StatelessWidget {
-  const CheckoutSummaryScreen({super.key});
+class CheckoutSummaryScreen extends StatefulWidget {
+  String? selectedMethod;
+   CheckoutSummaryScreen({super.key,
+  required this.selectedMethod
+  });
 
   @override
+  State<CheckoutSummaryScreen> createState() => _CheckoutSummaryScreenState();
+}
+
+class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
+  @override
   Widget build(BuildContext context) {
+    print("Method is ${widget.selectedMethod}");
     return Scaffold(
       backgroundColor: AppColors.lightBackground,
       appBar: CustomAppBar(
@@ -235,6 +242,37 @@ class CheckoutSummaryScreen extends StatelessWidget {
                                 ),
                               );
                             },
+                          ),
+                        ),
+                        SizedBox(height: 15.h),
+                        Text(
+                          "Payment Method",
+                          style: GoogleFonts.dmSans(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 10.h),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(12.r),
+                          child: SizedBox(
+                            height: 60.h,
+                            width: 160.w,
+                            child: Container(
+                              padding: EdgeInsets.all(12.w),
+                              decoration: BoxDecoration(
+                                color: AppColors.white,
+                                borderRadius: BorderRadius.circular(12.r),
+                              ),
+                             child: Text("${widget.selectedMethod}",
+                             textAlign: TextAlign.center,
+                               maxLines: 2,
+                               overflow: TextOverflow.ellipsis,
+                               style: GoogleFonts.dmSans(
+                                   fontWeight: FontWeight.bold,
+                                 ),
+                             ),
+                            ),
                           ),
                         ),
                         SizedBox(height: 25.h),

@@ -2,15 +2,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery_app/presentation/bloc/payment/payment_event.dart';
 import 'package:grocery_app/presentation/bloc/payment/payment_state.dart';
 
-class CreditCardBloc extends Bloc<PaymentEvent, PaymentState> {
+class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
   PaymentBloc() : super(PaymentState()) {
 
     on<UpdateHolder>((event, emit) {
       emit(state.copyWith(holder: event.value));
     });
 
-    on<UpdateNumber>((event, emit) {
-      emit(state.copyWith(number: event.value));
+    on<UpdateCardNumber>((event, emit) {
+      emit(state.copyWith(cardNumber: event.value));
+    });
+
+    on<UpdatePhoneNumber>((event, emit) {
+      emit(state.copyWith(phoneNumber: event.value));
     });
 
     on<UpdateExpiry>((event, emit) {
@@ -27,6 +31,13 @@ class CreditCardBloc extends Bloc<PaymentEvent, PaymentState> {
 
     on<ChangeCardIndex>((event, emit) {
       emit(state.copyWith(selectedIndex: event.index));
+    });
+    on<ChangeWalletIndex>((event, emit) {
+      emit(state.copyWith(walletIndex: event.index));
+    });
+
+    on<ChangeBankIndex>((event, emit) {
+      emit(state.copyWith(bankIndex: event.index));
     });
   }
 }

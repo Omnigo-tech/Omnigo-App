@@ -33,4 +33,9 @@ class AppColors {
   static const itemBackground = Color(0xFFF2F3F2);
   //Error
   static const red = Color(0xFFFB0808); // rgba(251,8,8,1)
+
+  static const Color fieldBg = Color(0xFFF3F3F3);
+  static const Color primaryBlue = Color(0xFF007AFF);
+  static const Color cardGoldGradientStart = Color(0xFFFFF6B7);
+  static const Color cardGoldGradientEnd = Color(0xFF8C6B1F);
 }

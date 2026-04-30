@@ -11,6 +11,7 @@ import 'package:grocery_app/widgets/bottom_navigation_bar.dart';
 
 import '../../presentation/bloc/home/home_bloc.dart';
 import '../../presentation/bloc/home/home_event.dart';
+import '../../presentation/bloc/payment/payment_bloc.dart';
 import '../../presentation/screens/authentication/location_screen.dart';
 import '../../presentation/screens/authentication/login_screen.dart';
 import '../../presentation/screens/authentication/otp_screen.dart';
@@ -70,16 +71,22 @@ class RouteGenerator {
           ),
         );
       case AppRoutes.addressdetail:
+        final method = settings.arguments as String;
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
             providers: [
               BlocProvider(create: (_) => AddressBloc()..add(LoadAddresses())),
             ],
-            child: const CheckoutSummaryScreen(),
+            child:  CheckoutSummaryScreen(selectedMethod: method),
           ),
         );
       case AppRoutes.paymentmethodScreen:
-        return MaterialPageRoute(builder: (_) => const PaymentMethodScreen());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => PaymentBloc(),
+            child:  PaymentMethodScreen(),
+          ),
+        );
 
       default:
         return MaterialPageRoute(

@@ -29,6 +29,7 @@ class DimensionsResources {
   static const double D_24 = 24.0;
   static const double D_25 = 25.0;
   static const double D_26 = 26.0;
+  static const double D_28 = 28.0;
   static const double D_30 = 30.0;
   static const double D_32 = 32.0;
   static const double D_36 = 36.0;

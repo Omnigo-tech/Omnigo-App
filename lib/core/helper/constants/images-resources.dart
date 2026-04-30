@@ -26,6 +26,13 @@ class ImageResource {
   static const String MEAT_IMG = '${DIR_IMAGE}meat_img.png';
   static const String BYKERY_IMG = '${DIR_IMAGE}bykery_image.png';
   static const String WORD_MAP = '${DIR_IMAGE}word_map.png';
+  static const String EASY_PAISA_LOGO = '${DIR_IMAGE}easypaisa_logo.png';
+  static const String JaAZZ_CASH_LOGO = '${DIR_IMAGE}jazzcash_logo.png';
+  static const String UPAISA_LOGO = '${DIR_IMAGE}upaisa_logo.png';
+  static const String ZINDGHI_LOGO = '${DIR_IMAGE}zindghi_logo.png';
+  static const String MEZAN_BANK = '${DIR_IMAGE}mezan_bank.png';
+  static const String HBL_BANK = '${DIR_IMAGE}hbl_bank.png';
+  static const String ALFALAH_BANK = '${DIR_IMAGE}bank_alfalah.png';
 
   static const List<String> banners = [
     BANNER_IMAGE1,

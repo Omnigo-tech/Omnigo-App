@@ -6,6 +6,7 @@ import 'package:grocery_app/core/helper/constants/dimensions-resource.dart';
 import 'package:grocery_app/presentation/bloc/address/address_bloc.dart';
 import 'package:grocery_app/presentation/bloc/address/address_event.dart';
 import 'package:grocery_app/presentation/bloc/address/address_state.dart';
+import 'package:grocery_app/presentation/screens/user_interface/address_list/add_address_screen.dart';
 
 class AddressListScreen extends StatelessWidget {
   const AddressListScreen({super.key});
@@ -72,7 +73,17 @@ class AddressListScreen extends StatelessWidget {
                 } else {
                   return Center(
                     child: GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => BlocProvider.value(
+                              value: context.read<AddressBloc>(),
+                              child: const AddAddressScreen(),
+                            ),
+                          ),
+                        );
+                      },
                       child: Column(
                         children: [
                           SizedBox(height: DimensionsResources.D_36.h),

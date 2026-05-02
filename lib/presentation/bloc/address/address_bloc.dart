@@ -32,5 +32,20 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
     on<SelectAddressEvent>((event, emit) {
       emit(state.copyWith(selectedAddress: event.address));
     });
+
+    on<AddAddressEvent>((event, emit) {
+      List<AddressModel> updatedList = List.from(state.addresses);
+
+      if (event.save) {
+        updatedList.add(event.address);
+      }
+
+      emit(
+        state.copyWith(
+          addresses: updatedList,
+          selectedAddress: event.address, // ✅ instantly selected
+        ),
+      );
+    });
   }
 }

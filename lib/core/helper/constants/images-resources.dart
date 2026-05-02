@@ -25,6 +25,8 @@ class ImageResource {
   static const String MEAT = '${DIR_IMAGE}meat.png';
   static const String MEAT_IMG = '${DIR_IMAGE}meat_img.png';
   static const String BYKERY_IMG = '${DIR_IMAGE}bykery_image.png';
+  static const String CONFIRM_ORDER = '${DIR_IMAGE}orderconfirm.png';
+  static const String FAIL_ORDER = '${DIR_IMAGE}orderfail.png';
 
   static const List<String> banners = [
     BANNER_IMAGE1,

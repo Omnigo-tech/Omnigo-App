@@ -9,9 +9,7 @@ import 'package:grocery_app/widgets/cutom_button.dart';
 import '../../../../widgets/app_bar_widget.dart';
 
 class PaymentMethodScreen extends StatefulWidget {
-  final double totalCost;
-
-  const PaymentMethodScreen({super.key, required this.totalCost});
+  const PaymentMethodScreen({super.key});
 
   @override
   State<PaymentMethodScreen> createState() => _PaymentMethodScreenState();

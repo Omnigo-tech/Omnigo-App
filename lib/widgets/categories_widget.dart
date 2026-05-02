@@ -34,16 +34,25 @@ class _CategoriesWidgetState extends State<CategoriesWidget> {
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              Text(
-                StringResources.seeAll,
-                style: GoogleFonts.inter(
-                  fontSize: DimensionsResources.D_13.sp,
-                  fontWeight: FontWeight.w800,
+              InkWell(
+                onTap: (){
+                  Navigator.pushNamed(
+                      context,
+                      AppRoutes.groceryhome,
+                      arguments: StringResources.vegetables,
+                    );
+                },
+                child: Text(
+                  StringResources.seeAll,
+                  style: GoogleFonts.inter(
+                    fontSize: DimensionsResources.D_13.sp,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
               ),
             ],
           ),
-          SizedBox(height: DimensionsResources.D_10.h),
+          SizedBox(height: DimensionsResources.D_20.h),
           SizedBox(
             height: DimensionsResources.D_72.h,
             child: ListView.builder(
@@ -51,14 +60,13 @@ class _CategoriesWidgetState extends State<CategoriesWidget> {
               itemCount: widget.categories.length,
               itemBuilder: (_, i) {
                 final item = widget.categories[i];
-
                 return InkWell(
                   onTap: () {
-                    Navigator.pushReplacementNamed(
+                    Navigator.pushNamed(
                       context,
                       AppRoutes.groceryhome,
+                      arguments: item.name,
                     );
-                    //Navigator.pushNamed(context, AppRoutes.groceryhome);
                   },
                   child: Container(
                     width: DimensionsResources.D_90.w,

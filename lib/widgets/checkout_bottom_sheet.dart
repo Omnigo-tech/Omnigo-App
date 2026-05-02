@@ -4,7 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:grocery_app/core/helper/constants/colors_resources.dart';
 import 'package:grocery_app/core/helper/constants/dimensions-resource.dart';
 import 'package:grocery_app/core/helper/constants/strings-resource.dart';
-import 'package:grocery_app/presentation/screens/user_interface/my_cart/payment_method_screen.dart';
+import 'package:grocery_app/core/routes/AppRoutes.dart';
+import 'package:grocery_app/presentation/screens/user_interface/checkout_summary/checkout_summary_screen.dart';
 import 'package:grocery_app/widgets/cutom_button.dart';
 
 class CheckoutBottomSheet extends StatelessWidget {
@@ -48,13 +49,21 @@ class CheckoutBottomSheet extends StatelessWidget {
             ],
           ),
           const Divider(color: AppColors.border),
-          _buildCheckoutRow(
-            title: StringResources.delivery,
-            trailing: Text(
-              StringResources.cashOnDelivery,
-              style: GoogleFonts.dmSans(
-                fontWeight: FontWeight.bold,
-                color: AppColors.black,
+          InkWell(
+            onTap: () {
+              Navigator.pushNamed(
+                  context,
+                  AppRoutes.paymentmethodScreen
+              );
+            },
+            child: _buildCheckoutRow(
+              title: StringResources.paymentMethod,
+              trailing: Text(
+                StringResources.selectMethod,
+                style: GoogleFonts.dmSans(
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.black,
+                ),
               ),
             ),
           ),
@@ -65,24 +74,13 @@ class CheckoutBottomSheet extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => PaymentMethodScreen(totalCost: totalCost),
+                  builder: (context) => CheckoutSummaryScreen(),
                 ),
               );
             },
             child: _buildCheckoutRow(
-              title: StringResources.payment,
-              trailing: Icon(Icons.credit_card, color: Colors.blue.shade800),
-            ),
-          ),
-          const Divider(color: AppColors.border),
-          _buildCheckoutRow(
-            title: StringResources.promoCode,
-            trailing: Text(
-              StringResources.pickDiscount,
-              style: GoogleFonts.dmSans(
-                fontWeight: FontWeight.bold,
-                color: AppColors.black,
-              ),
+              title: StringResources.checkoutSummary,
+              trailing: Container(),
             ),
           ),
           const Divider(color: AppColors.border),

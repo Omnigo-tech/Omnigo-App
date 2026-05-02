@@ -9,6 +9,8 @@ import 'package:grocery_app/core/helper/constants/colors_resources.dart';
 import 'package:grocery_app/core/helper/constants/dimensions-resource.dart';
 import 'package:grocery_app/core/helper/constants/images-resources.dart';
 import 'package:grocery_app/core/helper/constants/strings-resource.dart';
+import 'package:grocery_app/core/routes/AppRoutes.dart';
+import 'package:grocery_app/core/services/app_router.dart';
 import 'package:grocery_app/data/models/grocery-item.dart';
 import 'package:grocery_app/presentation/bloc/address/address_bloc.dart';
 import 'package:grocery_app/presentation/bloc/address/address_state.dart';
@@ -22,14 +24,12 @@ import '../grocery_bloc/grocery_event.dart';
 import '../grocery_bloc/grocery_state.dart';
 
 class GroceryHomeScreen extends StatelessWidget {
-  const GroceryHomeScreen({super.key});
+  final String nameCategories;
+   GroceryHomeScreen({super.key, required this.nameCategories});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => GroceryBloc()..add(LoadGroceryEvent()),
-      child: SafeArea(child: GroceryView()),
-    );
+    return SafeArea(child: GroceryView());
   }
 }
 
@@ -39,7 +39,7 @@ class GroceryView extends StatelessWidget {
   final List<Map<String, String>> categories = const [
     {
       "name": "Vegetables",
-      "image": ImageResource.VEGETABLE_IMAGE, // Path to your asset
+      "image": ImageResource.VEGETABLE_IMAGE,
     },
     {"name": "Fruits", "image": ImageResource.FRUIT_IMAGE},
     {"name": "Meat", "image": ImageResource.MEAT_IMG},
@@ -55,41 +55,45 @@ class GroceryView extends StatelessWidget {
         child: Column(
           children: [
             _buildHeader(context),
-            //SizedBox(height: DimensionsResources.D_10),
+            SizedBox(height: DimensionsResources.D_10),
             _buildSearchBar(context),
-            //SizedBox(height: DimensionsResources.D_12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "   ${StringResources.categories}",
-                  style: TextStyle(
-                    fontSize: DimensionsResources.FONT_SIZE_MEDIUM,
-                    fontWeight: FontWeight.bold,
+            SizedBox(height: DimensionsResources.D_12),
+            Padding(
+              padding:  EdgeInsets.symmetric(horizontal: DimensionsResources.D_12.sp),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Categories",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      builder: (_) => BlocProvider.value(
-                        value: context.read<GroceryBloc>(),
-                        child: const FilterBottomSheet(flag: 1),
+                  IconButton(
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (_) => BlocProvider.value(
+                          value: context.read<GroceryBloc>(),
+                          child: const FilterBottomSheet(flag:0),
+                        ),
+                      );
+                    },
+                    icon: SvgPicture.asset(
+                      ImageResource.FILTER_ICON,
+                      width: DimensionsResources.D_30.w,
+                      height: DimensionsResources.D_30.h,
+                      colorFilter: ColorFilter.mode(
+                        AppColors.black,
+                        BlendMode.srcIn,
                       ),
-                    );
-                  },
-                  icon: SvgPicture.asset(
-                    ImageResource.FILTER_ICON,
-                    width: DimensionsResources.D_36.w,
-                    height: DimensionsResources.D_36.h,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-            //SizedBox(height: DimensionsResources.D_10),
+            SizedBox(height: DimensionsResources.D_10),
             _buildCategories(context),
-            //SizedBox(height: DimensionsResources.D_10),
+            SizedBox(height: DimensionsResources.D_10),
             _buildProducts(),
           ],
         ),
@@ -99,14 +103,29 @@ class GroceryView extends StatelessWidget {
 
   Widget _buildHeader(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: DimensionsResources.D_16.sp,
-        vertical: DimensionsResources.D_10.h,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 10),
       child: Row(
         children: [
-          const SizedBox(width: 6),
-          const Icon(Icons.location_on_outlined, color: Colors.blue),
+          IconButton(
+            onPressed: () {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                AppRoutes.home,
+                (route) => false,
+              );
+            },
+            icon:  SvgPicture.asset(
+              ImageResource.BACK_ICON,
+              width: DimensionsResources.D_30.w,
+              height: DimensionsResources.D_30.h,
+              colorFilter: ColorFilter.mode(
+                AppColors.darkSecondary,
+                BlendMode.srcIn,
+              ),
+            ),
+          ),
+          const SizedBox(width: 2),
+          const Icon(Icons.location_on, color: Colors.green),
           const SizedBox(width: 6),
           BlocBuilder<AddressBloc, AddressState>(
             builder: (context, state) {
@@ -117,11 +136,11 @@ class GroceryView extends StatelessWidget {
                   children: [
                     Text(
                       address?.locationname ?? "Select Address",
-                      style: TextStyle(fontWeight: .bold),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Text(
                       address?.address ?? "",
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: DimensionsResources.FONT_SIZE_1X_EXTRA_SMALL,
                       ),
                     ),
@@ -171,8 +190,8 @@ class GroceryView extends StatelessWidget {
             color: Colors.grey.shade100,
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Row(
-            children: const [
+          child: const Row(
+            children: [
               Icon(Icons.search, color: Colors.grey),
               SizedBox(width: 10),
               Text("Search groceries...", style: TextStyle(color: Colors.grey)),
@@ -331,7 +350,7 @@ class GroceryView extends StatelessWidget {
                             const SizedBox(height: 8),
                             Text(
                               item.name,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 12,
                                 color: AppColors.lightText,
                               ),

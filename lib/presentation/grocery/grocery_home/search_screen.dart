@@ -282,7 +282,6 @@ class _SearchScreenState extends State<SearchScreen> {
                               weight: item.weight ?? "N/A",
                             );
 
-                            // Use the existing GroceryDetailBloc by passing it to the new screen
                             Navigator.push(
                               context,
                               MaterialPageRoute(

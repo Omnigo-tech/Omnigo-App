@@ -10,6 +10,7 @@ class AppRoutes {
   static const String myCart = '/my_cart';
   static const String groceryhome = '/groceryhome';
   static const String addressdetail = '/addressdetail';
+  static const String paymentmethodScreen = '/payment-method-Screen';
 
   static get addressdetails => null;
 }

@@ -6,6 +6,7 @@ class AuthTextField extends StatefulWidget {
   final TextEditingController? controller;
   final String? Function(String?)? validator;
   final IconData? suffixIcon;
+  final TextInputType keyboardType;
 
   const AuthTextField({
     super.key,
@@ -14,6 +15,7 @@ class AuthTextField extends StatefulWidget {
     this.validator,
     this.obscure = false,
     this.suffixIcon,
+    this.keyboardType = TextInputType.text,
   });
 
   @override
@@ -33,9 +35,11 @@ class _AuthTextFieldState extends State<AuthTextField> {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: widget.controller,
+      keyboardType: widget.keyboardType,
       obscureText: _obscureText,
       validator: widget.validator,
       decoration: InputDecoration(
+        fillColor: Colors.white,
         labelText: widget.label,
         suffixIcon: widget.obscure
             ? IconButton(
@@ -49,9 +53,16 @@ class _AuthTextFieldState extends State<AuthTextField> {
                 },
               )
             : (widget.suffixIcon != null ? Icon(widget.suffixIcon) : null),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(11),
+          borderSide: BorderSide(color: Colors.grey.shade400),
+        ),
+        /*focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(11),
+          borderSide: BorderSide(width: 1),
+        ),*/
       ),
     );
   }
 }
-
-

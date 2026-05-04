@@ -14,18 +14,11 @@ import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_state.
 import 'package:grocery_app/presentation/grocery/grocery_home/grocery_home_screen.dart';
 import 'package:grocery_app/presentation/screens/user_interface/address_list/add_address_screen.dart';
 import 'package:grocery_app/presentation/screens/user_interface/address_list/address_screen.dart';
-<<<<<<< HEAD
-import 'package:grocery_app/widgets/auth_button.dart';
-import 'package:grocery_app/widgets/circle_button_widget.dart';
-import 'package:grocery_app/widgets/confirm_order.dart';
-=======
-import 'package:grocery_app/widgets/app_bar_widget.dart';
-import 'package:grocery_app/widgets/circle_button_widget.dart';
-import 'package:grocery_app/widgets/cutom_button.dart';
-import 'package:http/http.dart';
 
-import '../../../../core/helper/constants/strings-resource.dart';
->>>>>>> main
+import '../../../../widgets/app_bar_widget.dart';
+import '../../../../widgets/auth_button.dart';
+import '../../../../widgets/circle_button_widget.dart';
+import '../../../../widgets/confirm_order.dart';
 
 class CheckoutSummaryScreen extends StatelessWidget {
   const CheckoutSummaryScreen({super.key});
@@ -412,7 +405,7 @@ class CheckoutSummaryScreen extends StatelessWidget {
               GestureDetector(
                 onTap: () => Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => GroceryHomeScreen()),
+                  MaterialPageRoute(builder: (context) => GroceryHomeScreen(nameCategories: "",)),
                 ),
                 child: Text(
                   StringResources.backToHome,

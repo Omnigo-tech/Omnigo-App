@@ -3,7 +3,7 @@ import 'package:grocery_app/presentation/bloc/payment/payment_event.dart';
 import 'package:grocery_app/presentation/bloc/payment/payment_state.dart';
 
 class CreditCardBloc extends Bloc<PaymentEvent, PaymentState> {
-  PaymentBloc() : super(PaymentState()) {
+  CreditCardBloc() : super(PaymentState()) {
 
     on<UpdateHolder>((event, emit) {
       emit(state.copyWith(holder: event.value));

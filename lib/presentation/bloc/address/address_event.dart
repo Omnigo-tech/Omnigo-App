@@ -9,3 +9,10 @@ class SelectAddressEvent extends AddressEvent {
 
   SelectAddressEvent(this.address);
 }
+
+class AddAddressEvent extends AddressEvent {
+  final AddressModel address;
+  final bool save;
+
+  AddAddressEvent(this.address, this.save);
+}

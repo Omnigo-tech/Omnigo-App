@@ -16,7 +16,7 @@ class AuthButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onTap,
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primary,
+          backgroundColor: AppColors.homeBackground,
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppSizes.radius),
@@ -25,7 +25,7 @@ class AuthButton extends StatelessWidget {
         child: Text(
           text,
           style: const TextStyle(
-            color: AppColors.border,
+            color: AppColors.white,
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
@@ -34,5 +34,3 @@ class AuthButton extends StatelessWidget {
     );
   }
 }
-
-

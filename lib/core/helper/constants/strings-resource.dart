@@ -85,4 +85,16 @@ class StringResources {
   static const String addAllToCart = 'Add all to cart';
   static const String noFavoritesYet = 'No Favorites Yet';
   static const String cancel = 'Cancel';
+
+  // Confirm Order Screen
+  static const String orderConfirmation = "Your Order has been";
+  static const String confirm = "confirm";
+  static const String orderConfirmationSubstr_1 =
+      "Your items has been placcd and is on";
+  static const String orderConfirmationSubstr_2 = "it’s way to being processed";
+  static const String trackOrder = "Track Order";
+  static const String backToHome = "Back to home";
+  static const String next = "NEXT";
+  static const String orderFail = "Oops! Order Failed";
+  static const String tryAgain = "Please Try Again";
 }

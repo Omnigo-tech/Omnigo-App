@@ -6,17 +6,26 @@ import 'package:grocery_app/core/helper/constants/colors_resources.dart';
 import 'package:grocery_app/core/helper/constants/dimensions-resource.dart';
 import 'package:grocery_app/core/helper/constants/images-resources.dart';
 import 'package:grocery_app/core/routes/AppRoutes.dart';
+import 'package:grocery_app/core/helper/constants/images-resources.dart';
+import 'package:grocery_app/core/helper/constants/strings-resource.dart';
 import 'package:grocery_app/presentation/bloc/address/address_bloc.dart';
 import 'package:grocery_app/presentation/bloc/address/address_state.dart';
 import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_bloc.dart';
 import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_event.dart';
 import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_state.dart';
+import 'package:grocery_app/presentation/grocery/grocery_home/grocery_home_screen.dart';
+import 'package:grocery_app/presentation/screens/user_interface/address_list/add_address_screen.dart';
 import 'package:grocery_app/presentation/screens/user_interface/address_list/address_screen.dart';
 import 'package:grocery_app/widgets/app_bar_widget.dart';
 import 'package:grocery_app/widgets/circle_button_widget.dart';
 import 'package:grocery_app/widgets/cutom_button.dart';
 import '../../../../core/helper/constants/strings-resource.dart';
 import '../../../../core/helper/utils/dialogs/show_cart_dialog.dart';
+
+import '../../../../widgets/app_bar_widget.dart';
+import '../../../../widgets/auth_button.dart';
+import '../../../../widgets/circle_button_widget.dart';
+import '../../../../widgets/confirm_order.dart';
 
 class CheckoutSummaryScreen extends StatefulWidget {
   String? selectedMethod;
@@ -120,7 +129,17 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                         SizedBox(height: 15.h),
                         Center(
                           child: GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => BlocProvider.value(
+                                    value: context.read<AddressBloc>(),
+                                    child: const AddAddressScreen(),
+                                  ),
+                                ),
+                              );
+                            },
                             child: Column(
                               children: [
                                 CircleAvatar(
@@ -343,31 +362,15 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.homeBackground,
                       ),
-          onPressed: () {
-          context.read<GroceryDetailBloc>().add(PlaceOrderEvent());
-
-          GlobalDialogs.showStatusDialog(
-          context: context,
-          isSuccess: true,
-          imagePath: ImageResource.JaAZZ_CASH_LOGO,
-          title: "Your Order has been confirm",
-          subtitle: "Your items have been placed and is on its way to being processed",
-          primaryButtonText: "Track Order",
-
-          onPrimaryClick: () {
-          Navigator.pop(context); // closes dialog only
-          Navigator.pushNamed(context, AppRoutes.trackingOrder);
-          },
-
-          onSecondaryClick: () {
-          Navigator.pushNamedAndRemoveUntil(
-          context,
-          AppRoutes.groceryhome,
-          (route) => false,
-          );
-          },
-          );
-          },
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ConfirmOrder(),
+                          ),
+                        );
+                        //_orderFail(context);
+                      },
                       child: Text("Confirm Your Order"),
                     ),
                   ),
@@ -400,6 +403,67 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  void _orderFail(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          backgroundColor: AppColors.white,
+          title: Align(
+            alignment: AlignmentGeometry.topLeft,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Icon(Icons.cancel_rounded, color: AppColors.lightText),
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(height: DimensionsResources.D_20),
+              SizedBox(
+                height: DimensionsResources.D_150.h,
+                child: Image.asset(
+                  ImageResource.FAIL_ORDER,
+                  fit: BoxFit.contain,
+                ),
+              ),
+
+              SizedBox(height: DimensionsResources.D_40),
+              Text(
+                StringResources.orderFail,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: DimensionsResources.FONT_SIZE_LARGE,
+                ),
+              ),
+              SizedBox(height: DimensionsResources.D_50),
+              AuthButton(
+                text: StringResources.tryAgain,
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              SizedBox(height: DimensionsResources.D_20),
+              GestureDetector(
+                onTap: () => Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => GroceryHomeScreen(nameCategories: "",)),
+                ),
+                child: Text(
+                  StringResources.backToHome,
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

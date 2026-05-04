@@ -11,6 +11,7 @@ class AppRoutes {
   static const String groceryhome = '/groceryhome';
   static const String addressdetail = '/addressdetail';
   static const String paymentmethodScreen = '/payment-method-Screen';
+  static const String trackingOrder = '/tracking-order';
 
   static get addressdetails => null;
 }

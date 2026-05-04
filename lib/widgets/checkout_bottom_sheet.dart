@@ -59,7 +59,7 @@ class CheckoutBottomSheet extends StatelessWidget {
             child: _buildCheckoutRow(
               title: StringResources.paymentMethod,
               trailing: Text(
-                StringResources.selectMethod,
+                StringResources.selectedMethod,
                 style: GoogleFonts.dmSans(
                   fontWeight: FontWeight.bold,
                   color: AppColors.black,
@@ -74,7 +74,7 @@ class CheckoutBottomSheet extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => CheckoutSummaryScreen(),
+                  builder: (context) => CheckoutSummaryScreen(selectedMethod: ""),
                 ),
               );
             },

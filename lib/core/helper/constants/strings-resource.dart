@@ -46,37 +46,40 @@ class StringResources {
   static const String conditions = 'Conditions';
   static const String placeOrder = 'Place Order';
   static const String orderPlacedSuccess = 'Order Placed Successfully!';
-
-  // Payment Method
-  static const String paymentMethod = 'Payment Method';
-  static const String selectMethod = 'Select Method';
-  static const String totalAmountPayable = 'Total Amount Payable: Rs. ';
-  static const String mobileWallets = 'Mobile Wallets (Linked Accounts)';
-  static const String jazzCashWallet = 'JazzCash Wallet';
-  static const String easyPaisaWallet = 'EasyPaisa Wallet';
-  static const String cash = 'Cash';
-  static const String cod = 'Cash on Delivery (COD)';
-  static const String codSubtitle = 'Pay at your doorstep on delivery';
-  static const String confirmAndContinue = 'Confirm & Continue to Checkout';
-  static const String creditCard = 'Credit Card';
-  static const String card = 'Card';
-  static const String eWallet = 'E-Wallet';
-  static const String save = 'Save';
-  static const String accountNumber = 'Account Number';
-  static const String linkAccount = 'Link Account';
-  static const String enterAccountNumber = 'Enter your account number to link for payments.';
   
   // Checkout/Payment V2
   static const String shippingAddress = 'Shipping Address';
+  static const String paymentMethod = 'Payment Method';
+  static const String selectedMethod = 'Selected Method';
+  static const String payNow = "PAY NOW";
+  static const String cardHolder = "Card Holder Name";
+  static const String cardNumber = "Card Number";
+  static const String expiryDate = "Expiry Date";
+  static const String cvv = "CVV";
   static const String cashDelivery = 'Cash Delivery';
-  static const String mobileWalletShort = 'Mobile Wallet';
-  static const String debitCard = 'Debit Card';
-  static const String bankAccount = 'Bank Account';
-  static const String cardHolderName = 'Card Holder Name';
-  static const String cardNumber = 'Card Number';
-  static const String expiryDate = 'expiry date';
-  static const String cvv = 'cvv';
-  static const String pay = 'PAY';
+  static const String mobileNumber = "Mobile Number";
+  static const String selectBank = "Select Bank";
+  static const String selectWallet = "Select Wallet";
+  static const String easyPaisa = "Easy Paisa";
+  static const String jazzCash = " Jazz Cash";
+  static const String upaisa = "Upaisa";
+  static const String zindghi = "Zindghi";
+  static const String iban = "Account Number/IBAN";
+  static const String cnic = "CNIC";
+  static const String mezanBank = "Meezan Bank";
+  static const String hbl = "HBL";
+  static const String bankAlfalah = "Bank Alfalah";
+  static const String creditCard = "CREDIT CARD";
+  static const String cardHolderLabel = "CARD HOLDER";
+  static const String expiryHint = "MM/YY";
+  static const String mobileWallet = "Mobile Wallet";
+  static const String creditDebitCard = "Credit&Debit Card";
+  static const String bankAccount = "Bank Account";
+  static const String snackbarErrorWallet = "Please select a wallet";
+  static const String snackbarErrorBank = "Please select a bank";
+  static const String deliveryhero =   "Your delivery hero";
+  static const String store =   "Store";
+  static const String yourplace =   "Your place";
 
   // Favourite Screen
   static const String addAllToCart = 'Add all to cart';

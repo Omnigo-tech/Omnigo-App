@@ -26,6 +26,18 @@ class ImageResource {
   static const String MEAT_IMG = '${DIR_IMAGE}meat_img.png';
   static const String BYKERY_IMG = '${DIR_IMAGE}bykery_image.png';
   static const String WORD_MAP = '${DIR_IMAGE}word_map.png';
+  static const String EASY_PAISA_LOGO = '${DIR_IMAGE}easypaisa_logo.png';
+  static const String JaAZZ_CASH_LOGO = '${DIR_IMAGE}jazzcash_logo.png';
+  static const String UPAISA_LOGO = '${DIR_IMAGE}upaisa_logo.png';
+  static const String ZINDGHI_LOGO = '${DIR_IMAGE}zindghi_logo.png';
+  static const String MEZAN_BANK = '${DIR_IMAGE}mezan_bank.png';
+  static const String HBL_BANK = '${DIR_IMAGE}hbl_bank.png';
+  static const String ALFALAH_BANK = '${DIR_IMAGE}bank_alfalah.png';
+  static const String TRACKING_ORDER_IMG = '${DIR_IMAGE}tracking_order.png';
+  static const String RIDER_IMG = '${DIR_IMAGE}rider.png';
+
+
+
   static const String CONFIRM_ORDER = '${DIR_IMAGE}orderconfirm.png';
   static const String FAIL_ORDER = '${DIR_IMAGE}orderfail.png';
 
@@ -44,4 +56,11 @@ class ImageResource {
   static const String FORWARD_ICON = '${DIR_ICON}forward_icon.svg';
   static const String BACK_ICON = '${DIR_ICON}back_icon.svg';
   static const String FILTER_ICON = '${DIR_ICON}filter_icon.svg';
+  static const String BYKE_ICON = '${DIR_ICON}bike_icon.svg';
+  static const String CALL_ICON = '${DIR_ICON}call_icon.svg';
+  static const String MESSAGE_ICON = '${DIR_ICON}message_icon.svg';
+  static const String HOME_DELIVERED_ICON = '${DIR_ICON}home_delivered_icon.svg';
+  static const String CLOCK_ICON = '${DIR_ICON}clock_icon.svg';
+  static const String LOCATION_ICON = '${DIR_ICON}location_icon.svg';
+  static const String STORE_ICON = '${DIR_ICON}store_icon.svg';
 }

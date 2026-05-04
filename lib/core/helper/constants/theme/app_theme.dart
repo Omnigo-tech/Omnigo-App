@@ -37,6 +37,11 @@ class AppTheme {
           fontWeight: FontWeight.w600,
           color: AppColors.white,
         ),
+        labelSmall: GoogleFonts.poppins(
+          fontSize: DimensionsResources.D_10,
+          fontWeight: FontWeight.w600,
+          color: AppColors.black,
+        ),
       ),
 
       appBarTheme:  AppBarTheme(

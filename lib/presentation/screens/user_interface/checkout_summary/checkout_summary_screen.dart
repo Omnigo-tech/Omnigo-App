@@ -5,6 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:grocery_app/core/helper/constants/colors_resources.dart';
 import 'package:grocery_app/core/helper/constants/dimensions-resource.dart';
 import 'package:grocery_app/core/helper/constants/images-resources.dart';
+import 'package:grocery_app/core/routes/AppRoutes.dart';
+import 'package:grocery_app/core/helper/constants/images-resources.dart';
 import 'package:grocery_app/core/helper/constants/strings-resource.dart';
 import 'package:grocery_app/presentation/bloc/address/address_bloc.dart';
 import 'package:grocery_app/presentation/bloc/address/address_state.dart';
@@ -14,17 +16,31 @@ import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_state.
 import 'package:grocery_app/presentation/grocery/grocery_home/grocery_home_screen.dart';
 import 'package:grocery_app/presentation/screens/user_interface/address_list/add_address_screen.dart';
 import 'package:grocery_app/presentation/screens/user_interface/address_list/address_screen.dart';
+import 'package:grocery_app/widgets/app_bar_widget.dart';
+import 'package:grocery_app/widgets/circle_button_widget.dart';
+import 'package:grocery_app/widgets/cutom_button.dart';
+import '../../../../core/helper/constants/strings-resource.dart';
+import '../../../../core/helper/utils/dialogs/show_cart_dialog.dart';
 
 import '../../../../widgets/app_bar_widget.dart';
 import '../../../../widgets/auth_button.dart';
 import '../../../../widgets/circle_button_widget.dart';
 import '../../../../widgets/confirm_order.dart';
 
-class CheckoutSummaryScreen extends StatelessWidget {
-  const CheckoutSummaryScreen({super.key});
+class CheckoutSummaryScreen extends StatefulWidget {
+  String? selectedMethod;
+   CheckoutSummaryScreen({super.key,
+  required this.selectedMethod
+  });
 
   @override
+  State<CheckoutSummaryScreen> createState() => _CheckoutSummaryScreenState();
+}
+
+class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
+  @override
   Widget build(BuildContext context) {
+    print("Method is ${widget.selectedMethod}");
     return Scaffold(
       backgroundColor: AppColors.lightBackground,
       appBar: CustomAppBar(
@@ -250,6 +266,37 @@ class CheckoutSummaryScreen extends StatelessWidget {
                             },
                           ),
                         ),
+                        SizedBox(height: 15.h),
+                        Text(
+                          "Payment Method",
+                          style: GoogleFonts.dmSans(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 10.h),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(12.r),
+                          child: SizedBox(
+                            height: 60.h,
+                            width: 160.w,
+                            child: Container(
+                              padding: EdgeInsets.all(12.w),
+                              decoration: BoxDecoration(
+                                color: AppColors.white,
+                                borderRadius: BorderRadius.circular(12.r),
+                              ),
+                             child: Text("${widget.selectedMethod}",
+                             textAlign: TextAlign.center,
+                               maxLines: 2,
+                               overflow: TextOverflow.ellipsis,
+                               style: GoogleFonts.dmSans(
+                                   fontWeight: FontWeight.bold,
+                                 ),
+                             ),
+                            ),
+                          ),
+                        ),
                         SizedBox(height: 25.h),
                         Text(
                           "Bill Details",
@@ -305,6 +352,7 @@ class CheckoutSummaryScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+
                 Container(
                   padding: EdgeInsets.all(DimensionsResources.D_16.w),
                   child: SizedBox(

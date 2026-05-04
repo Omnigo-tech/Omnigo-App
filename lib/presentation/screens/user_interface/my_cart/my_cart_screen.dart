@@ -27,50 +27,20 @@ class MyCartScreen extends StatelessWidget {
         child: CheckoutBottomSheet(
           totalCost: totalCost,
           onPlaceOrder: () {
-            context.read<GroceryDetailBloc>().add(PlaceOrderEvent());
-            Navigator.pop(context); // Close BottomSheet
-            _showOrderSuccessDialog(context);
+            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CheckoutSummaryScreen(selectedMethod: ""),
+              ),
+            );
           },
         ),
       ),
     );
   }
 
-  void _showOrderSuccessDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.r),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.check_circle_outline, color: Colors.green, size: 80.sp),
-            SizedBox(height: 20.h),
-            Text(
-              StringResources.orderPlacedSuccess,
-              textAlign: TextAlign.center,
-              style: GoogleFonts.dmSans(
-                fontSize: 22.sp,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 20.h),
-            CustomButton(
-              onClick: () {
-                Navigator.pop(context);
-                Navigator.pop(context);
-              },
-              text: "Back to Home",
-              textColor: AppColors.white,
-              borderRadius: 12.r,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+
 
   @override
   Widget build(BuildContext context) {

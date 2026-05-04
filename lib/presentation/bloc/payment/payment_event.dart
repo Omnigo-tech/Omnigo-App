@@ -5,9 +5,14 @@ class UpdateHolder extends PaymentEvent {
   UpdateHolder(this.value);
 }
 
-class UpdateNumber extends PaymentEvent {
+class UpdatePhoneNumber extends PaymentEvent {
   final String value;
-  UpdateNumber(this.value);
+  UpdatePhoneNumber(this.value);
+}
+
+class UpdateCardNumber extends PaymentEvent {
+  final String value;
+  UpdateCardNumber(this.value);
 }
 
 class UpdateExpiry extends PaymentEvent {
@@ -25,4 +30,13 @@ class ToggleCvv extends PaymentEvent {}
 class ChangeCardIndex extends PaymentEvent {
   final int index;
   ChangeCardIndex(this.index);
+}
+class ChangeWalletIndex extends PaymentEvent {
+  final int index;
+  ChangeWalletIndex(this.index);
+}
+
+class ChangeBankIndex extends PaymentEvent {
+  final int index;
+  ChangeBankIndex(this.index);
 }

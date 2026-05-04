@@ -6,7 +6,8 @@ class TrackingModel {
   final String storeName;
   final String storeAddress;
   final String destinationAddress;
-  final double progress; // 0.0 to 1.0
+  final double progress;
+  final String phonenumber;// 0.0 to 1.0
 
   TrackingModel({
     required this.status,
@@ -17,6 +18,7 @@ class TrackingModel {
     required this.storeAddress,
     required this.destinationAddress,
     required this.progress,
+    required this.phonenumber,
   });
 
   factory TrackingModel.mock() {
@@ -29,6 +31,7 @@ class TrackingModel {
       storeAddress: "Store Location Details",
       destinationAddress: "Queen Road Karachi",
       progress: 0.4,
+      phonenumber: "03125214609"
     );
   }
 }

@@ -33,6 +33,11 @@ class ImageResource {
   static const String MEZAN_BANK = '${DIR_IMAGE}mezan_bank.png';
   static const String HBL_BANK = '${DIR_IMAGE}hbl_bank.png';
   static const String ALFALAH_BANK = '${DIR_IMAGE}bank_alfalah.png';
+  static const String TRACKING_ORDER_IMG = '${DIR_IMAGE}tracking_order.png';
+  static const String RIDER_IMG = '${DIR_IMAGE}rider.png';
+
+
+
 
   static const List<String> banners = [
     BANNER_IMAGE1,
@@ -49,4 +54,11 @@ class ImageResource {
   static const String FORWARD_ICON = '${DIR_ICON}forward_icon.svg';
   static const String BACK_ICON = '${DIR_ICON}back_icon.svg';
   static const String FILTER_ICON = '${DIR_ICON}filter_icon.svg';
+  static const String BYKE_ICON = '${DIR_ICON}bike_icon.svg';
+  static const String CALL_ICON = '${DIR_ICON}call_icon.svg';
+  static const String MESSAGE_ICON = '${DIR_ICON}message_icon.svg';
+  static const String HOME_DELIVERED_ICON = '${DIR_ICON}home_delivered_icon.svg';
+  static const String CLOCK_ICON = '${DIR_ICON}clock_icon.svg';
+  static const String LOCATION_ICON = '${DIR_ICON}location_icon.svg';
+  static const String STORE_ICON = '${DIR_ICON}store_icon.svg';
 }

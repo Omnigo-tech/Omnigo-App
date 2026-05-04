@@ -120,6 +120,7 @@ class DimensionsResources {
   static const double FONT_SIZE_2X_EXTRA_MEDIUM = 20;
   static const double FONT_SIZE_LARGE = 22;
   static const double FONT_SIZE_EXTRA_LARGE = 24;
+  static const double FONT_SIZE_EXTRA_EXTRA_LARGE = 50;
 
   static const double RADIUS_SMALL = 8.0;
   static const double RADIUS_DEFAULT = 10.0;

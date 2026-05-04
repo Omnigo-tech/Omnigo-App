@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grocery_app/core/helper/constants/colors_resources.dart';
 import 'package:grocery_app/core/helper/constants/dimensions-resource.dart';
+import 'package:grocery_app/core/helper/constants/images-resources.dart';
+import 'package:grocery_app/core/routes/AppRoutes.dart';
 import 'package:grocery_app/presentation/bloc/address/address_bloc.dart';
 import 'package:grocery_app/presentation/bloc/address/address_state.dart';
 import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_bloc.dart';
@@ -14,6 +16,7 @@ import 'package:grocery_app/widgets/app_bar_widget.dart';
 import 'package:grocery_app/widgets/circle_button_widget.dart';
 import 'package:grocery_app/widgets/cutom_button.dart';
 import '../../../../core/helper/constants/strings-resource.dart';
+import '../../../../core/helper/utils/dialogs/show_cart_dialog.dart';
 
 class CheckoutSummaryScreen extends StatefulWidget {
   String? selectedMethod;
@@ -330,6 +333,7 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                     ),
                   ),
                 ),
+
                 Container(
                   padding: EdgeInsets.all(DimensionsResources.D_16.w),
                   child: SizedBox(
@@ -339,72 +343,31 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.homeBackground,
                       ),
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (BuildContext dialogContext) {
-                            return Dialog(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                  DimensionsResources.RADIUS_EXTRA_LARGE.r,
-                                ),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.all(
-                                  DimensionsResources.D_20.w,
-                                ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(
-                                      Icons.check_circle_outline,
-                                      color: AppColors.darkGreen,
-                                      size: DimensionsResources.D_80.sp,
-                                    ),
-                                    SizedBox(
-                                      height: DimensionsResources.D_20.h,
-                                    ),
-                                    Text(
-                                      "Order Confirmed",
-                                      style: GoogleFonts.dmSans(
-                                        fontSize: DimensionsResources
-                                            .FONT_SIZE_LARGE
-                                            .sp,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: DimensionsResources.D_10.h,
-                                    ),
-                                    Text(
-                                      "Your order has been placed successfully.",
-                                      textAlign: TextAlign.center,
-                                      style: GoogleFonts.dmSans(
-                                        fontSize: DimensionsResources
-                                            .FONT_SIZE_MEDIUM
-                                            .sp,
-                                        color: AppColors.grey,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: DimensionsResources.D_24.h,
-                                    ),
-                                    CustomButton(
-                                      onClick: () {
-                                        Navigator.pop(dialogContext);
-                                      },
-                                      text: "Done",
-                                      textColor: AppColors.white,
-                                      borderRadius: DimensionsResources.D_12.r,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                      },
+          onPressed: () {
+          context.read<GroceryDetailBloc>().add(PlaceOrderEvent());
+
+          GlobalDialogs.showStatusDialog(
+          context: context,
+          isSuccess: true,
+          imagePath: ImageResource.JaAZZ_CASH_LOGO,
+          title: "Your Order has been confirm",
+          subtitle: "Your items have been placed and is on its way to being processed",
+          primaryButtonText: "Track Order",
+
+          onPrimaryClick: () {
+          Navigator.pop(context); // closes dialog only
+          Navigator.pushNamed(context, AppRoutes.trackingOrder);
+          },
+
+          onSecondaryClick: () {
+          Navigator.pushNamedAndRemoveUntil(
+          context,
+          AppRoutes.groceryhome,
+          (route) => false,
+          );
+          },
+          );
+          },
                       child: Text("Confirm Your Order"),
                     ),
                   ),

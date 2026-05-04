@@ -77,7 +77,9 @@ class StringResources {
   static const String bankAccount = "Bank Account";
   static const String snackbarErrorWallet = "Please select a wallet";
   static const String snackbarErrorBank = "Please select a bank";
-
+  static const String deliveryhero =   "Your delivery hero";
+  static const String store =   "Store";
+  static const String yourplace =   "Your place";
 
   // Favourite Screen
   static const String addAllToCart = 'Add all to cart';

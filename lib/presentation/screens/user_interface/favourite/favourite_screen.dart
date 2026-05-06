@@ -46,7 +46,6 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
         builder: (context, state) {
           final favList =
           state.items.where((item) => item.isFavorite).toList();
-
           if (favList.isEmpty) {
             return Center(
               child: Column(
@@ -67,7 +66,6 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
               ),
             );
           }
-
           return ListView.separated(
             padding:
             EdgeInsets.symmetric(vertical: DimensionsResources.D_10.h),

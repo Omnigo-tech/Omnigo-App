@@ -33,9 +33,15 @@ class GroceryHomeScreen extends StatelessWidget {
   }
 }
 
-class GroceryView extends StatelessWidget {
+class GroceryView extends StatefulWidget {
   GroceryView({super.key});
 
+  @override
+  State<GroceryView> createState() => _GroceryViewState();
+}
+
+class _GroceryViewState extends State<GroceryView> {
+  final ScrollController _scrollController = ScrollController();
   final List<Map<String, String>> categories = const [
     {
       "name": "Vegetables",
@@ -45,12 +51,25 @@ class GroceryView extends StatelessWidget {
     {"name": "Meat", "image": ImageResource.MEAT_IMG},
     {"name": "Drinks", "image": ImageResource.DRINK_IMG},
     {"name": "Dairy", "image": ImageResource.BYKERY_IMG},
+    {"name": "Eggs", "image": ImageResource.Egg},
+    {"name": "Breads", "image": ImageResource.BREAD_IMG},
+    {"name": "Spices", "image": ImageResource.SPICES_IMG},
+    {"name": "Oil&Ghee", "image": ImageResource.OIL_IMG},
+    {"name": "Rice&Dall", "image": ImageResource.DALLS_IMG},
+    {"name": "Sauces&Pastes", "image": ImageResource.SAUCE_IMG},
+    {"name": "Salts", "image": ImageResource.SALT_IMG},
+    {"name": "Baking&Desserts", "image": ImageResource.BAKING_IMG},
+
+
+
+
+
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       body: SafeArea(
         child: Column(
           children: [
@@ -108,11 +127,7 @@ class GroceryView extends StatelessWidget {
         children: [
           IconButton(
             onPressed: () {
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                AppRoutes.home,
-                (route) => false,
-              );
+              Navigator.pop(context);
             },
             icon:  SvgPicture.asset(
               ImageResource.BACK_ICON,
@@ -207,8 +222,12 @@ class GroceryView extends StatelessWidget {
       height: 40,
       child: BlocBuilder<GroceryBloc, GroceryState>(
         builder: (context, state) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            scrollToSelectedCategory(state.selectedCategory);
+          });
           return ListView.builder(
             padding: const EdgeInsets.symmetric(horizontal: 10),
+            controller: _scrollController,
             scrollDirection: Axis.horizontal,
             itemCount: categories.length,
             itemBuilder: (_, index) {
@@ -229,8 +248,8 @@ class GroceryView extends StatelessWidget {
                     vertical: 8,
                   ),
                   decoration: BoxDecoration(
-                    color: isSelected ? Colors.green[100] : Colors.grey[200],
-                    borderRadius: BorderRadius.circular(12),
+                    color: isSelected ? AppColors.primary : AppColors.lightBackground,
+                    borderRadius: BorderRadius.circular(20),
                   ),
                   alignment: Alignment.center,
                   child: Row(
@@ -238,10 +257,10 @@ class GroceryView extends StatelessWidget {
                       Text(
                         categoryName,
                         style: GoogleFonts.inter(
-                          fontWeight: FontWeight.w400,
+                          fontWeight:isSelected?FontWeight.bold: FontWeight.w500,
                           fontSize: DimensionsResources.D_14.sp,
                           color: isSelected
-                              ? AppColors.darkGreen
+                              ? AppColors.white
                               : AppColors.grey,
                         ),
                       ),
@@ -376,5 +395,18 @@ class GroceryView extends StatelessWidget {
         ),
       ),
     );
+  }
+  void scrollToSelectedCategory(String selectedCategory) {
+    final index = categories.indexWhere(
+          (cat) => cat["name"] == selectedCategory,
+    );
+
+    if (index != -1) {
+      _scrollController.animateTo(
+        index * 110,
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOut,
+      );
+    }
   }
 }

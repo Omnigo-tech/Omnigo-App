@@ -60,18 +60,27 @@ class GroceryBloc extends Bloc<GroceryEvent, GroceryState> {
   }
 
   void _applyFilters(ApplyFilterEvent event, Emitter<GroceryState> emit) {
-    if (event.selectedCategories.isEmpty) {
-      emit(state.copyWith(filteredItems: state.allItems));
-      return;
+    List<GroceryModel> filtered = List.from(state.allItems);
+
+    if (event.category != null && event.category!.isNotEmpty) {
+      filtered = filtered.where((item) {
+        return item.category == event.category;
+      }).toList();
     }
 
-    final filtered = state.allItems.where((item) {
-      return event.selectedCategories.contains(item.category);
-    }).toList();
+    if (event.item != null && event.item!.isNotEmpty) {
+      filtered = filtered.where((item) {
+        return item.name == event.item;
+      }).toList();
+    }
 
-    emit(state.copyWith(filteredItems: filtered));
+    emit(
+      state.copyWith(
+        filteredItems: filtered,
+        selectedCategory: event.category ?? "",
+      ),
+    );
   }
-
   void _applyItemFilter(
     ApplyItemFilterEvent event,
     Emitter<GroceryState> emit,

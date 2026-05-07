@@ -15,13 +15,14 @@ class SearchGroceryEvent extends GroceryEvent {
 }
 
 class ApplyFilterEvent extends GroceryEvent {
-  final List<String> selectedCategories;
+  final String? category;
+  final String? item;
 
-  ApplyFilterEvent(this.selectedCategories);
+  ApplyFilterEvent({this.category, this.item});
 }
 
 class ApplyItemFilterEvent extends GroceryEvent {
   final String selectedItem;
 
-  ApplyItemFilterEvent(this.selectedItem);
+  ApplyItemFilterEvent( this.selectedItem);
 }

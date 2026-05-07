@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:grocery_app/core/helper/constants/colors_resources.dart';
 import 'package:grocery_app/core/helper/constants/dimensions-resource.dart';
 import 'package:grocery_app/presentation/grocery/grocery_home/grocery_home_screen.dart';
+import '../../../core/routes/AppRoutes.dart';
 import '../grocery_bloc/grocery_bloc.dart';
 import '../grocery_bloc/grocery_event.dart';
 
@@ -16,8 +17,8 @@ class FilterBottomSheet extends StatefulWidget {
 }
 
 class _FilterBottomSheetState extends State<FilterBottomSheet> {
+  String? selectedCategory;
   String? selectedItem;
-
   final Map<String, List<String>> data = {
     "Vegetables": [
       "Ginger",
@@ -153,7 +154,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
         GestureDetector(
           onTap: () {
             setState(() {
-              selectedItem = null;
+              selectedCategory = null;
             });
           },
           child: Text(
@@ -223,12 +224,13 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
               spacing: 8,
               runSpacing: 8,
               children: entry.value.map((item) {
-                final isSelected = selectedItem == item;
+                final isSelected = selectedItem  == item;
 
                 return GestureDetector(
                   onTap: () {
                     setState(() {
                       selectedItem = item;
+                      selectedCategory = entry.key;
                     });
                   },
                   child: Container(
@@ -263,14 +265,13 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
       width: double.infinity.w,
       child: ElevatedButton(
         onPressed: () {
-          if (selectedItem != null) {
-            context.read<GroceryBloc>().add(
-              ApplyItemFilterEvent(selectedItem!),
-            );
-            if (widget.flag == 2) {
-              Navigator.pop(context);
-            }
-          }
+          context.read<GroceryBloc>().add(
+            ApplyFilterEvent(
+              category: selectedCategory,
+              item: selectedItem,
+            ),
+          );
+
           Navigator.pop(context);
         },
         style: ElevatedButton.styleFrom(

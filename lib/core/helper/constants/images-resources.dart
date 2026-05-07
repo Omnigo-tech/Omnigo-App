@@ -25,6 +25,17 @@ class ImageResource {
   static const String MEAT = '${DIR_IMAGE}meat.png';
   static const String MEAT_IMG = '${DIR_IMAGE}meat_img.png';
   static const String BYKERY_IMG = '${DIR_IMAGE}bykery_image.png';
+  static const String EGGS_IMG = '${DIR_IMAGE}eggs_img.png';
+  static const String Egg = '${DIR_IMAGE}egg.png';
+  static const String DALLS_IMG = '${DIR_IMAGE}dall_img.png';
+  static const String BREAD_IMG = '${DIR_IMAGE}bread_img.png';
+  static const String BAKING_IMG = '${DIR_IMAGE}baking_img.png';
+  static const String OIL_IMG = '${DIR_IMAGE}oil_img.png';
+  static const String SPICES_IMG = '${DIR_IMAGE}spices_img.png';
+  static const String SAUCE_IMG = '${DIR_IMAGE}sauces_img.png';
+  static const String SALT_IMG = '${DIR_IMAGE}salt_img.png';
+
+
   static const String WORD_MAP = '${DIR_IMAGE}word_map.png';
   static const String EASY_PAISA_LOGO = '${DIR_IMAGE}easypaisa_logo.png';
   static const String JaAZZ_CASH_LOGO = '${DIR_IMAGE}jazzcash_logo.png';

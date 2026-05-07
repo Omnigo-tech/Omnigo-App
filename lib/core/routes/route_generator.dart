@@ -63,6 +63,7 @@ class RouteGenerator {
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
             providers: [
+              BlocProvider(create: (_) => HomeBloc()..add(LoadHomeData())),
               BlocProvider(
                 create: (_) => GroceryBloc()..add(LoadGroceryEvent())
                 ..add(SelectCategoryEvent(category))

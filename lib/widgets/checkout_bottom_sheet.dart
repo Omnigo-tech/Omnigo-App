@@ -125,7 +125,7 @@ class CheckoutBottomSheet extends StatelessWidget {
           SizedBox(height: DimensionsResources.D_24.h),
           CustomButton(
             onClick: onPlaceOrder,
-            text: StringResources.placeOrder,
+            text: StringResources.goToCheckout,
             textColor: AppColors.white,
             borderRadius: DimensionsResources.D_19.r,
           ),

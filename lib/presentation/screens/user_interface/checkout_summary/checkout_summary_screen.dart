@@ -16,6 +16,7 @@ import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_state.
 import 'package:grocery_app/presentation/grocery/grocery_home/grocery_home_screen.dart';
 import 'package:grocery_app/presentation/screens/user_interface/address_list/add_address_screen.dart';
 import 'package:grocery_app/presentation/screens/user_interface/address_list/address_screen.dart';
+import 'package:grocery_app/presentation/screens/user_interface/review/review_screen.dart';
 import 'package:grocery_app/widgets/app_bar_widget.dart';
 import 'package:grocery_app/widgets/circle_button_widget.dart';
 import 'package:grocery_app/widgets/cutom_button.dart';
@@ -40,7 +41,6 @@ class CheckoutSummaryScreen extends StatefulWidget {
 class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
   @override
   Widget build(BuildContext context) {
-    print("Method is ${widget.selectedMethod}");
     return Scaffold(
       backgroundColor: AppColors.lightBackground,
       appBar: CustomAppBar(
@@ -339,7 +339,14 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                             ),
                             SizedBox(width: 10),
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ReviewScreen(),
+                                  ),
+                                );
+                              },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.homeBackground,
                               ),

@@ -18,6 +18,8 @@ class SvgUtils {
     const SvgAssetLoader(ImageResource.LOCATION_ICON),
     const SvgAssetLoader(ImageResource.HOME_DELIVERED_ICON),
     const SvgAssetLoader(ImageResource.STORE_ICON),
+    const SvgAssetLoader(ImageResource.SELECT_STAR_ICON),
+    const SvgAssetLoader(ImageResource.UNSELECT_STAR_ICON),
 
   ];
 

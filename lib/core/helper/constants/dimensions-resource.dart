@@ -2,9 +2,10 @@ class DimensionsResources {
   static const double D_0 = 0.0;
   static const double D_0_1 = 0.1;
   static const double D_0_4 = 0.4;
+  static const double D_0_2 = 0.2;
   static const double D_0_5 = 0.5;
   static const double D_0_7 = 0.7;
-  static const double D_0_58 = 0.58;
+  static const double D_0_0_5 = 0.05;
   static const double D_1 = 1.0;
   static const double D_2 = 2.0;
   static const double D_3 = 3.0;

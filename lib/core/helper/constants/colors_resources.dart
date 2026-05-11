@@ -38,4 +38,5 @@ class AppColors {
   static const Color primaryBlue = Color(0xFF007AFF);
   static const Color cardGoldGradientStart = Color(0xFFFFF6B7);
   static const Color cardGoldGradientEnd = Color(0xFF8C6B1F);
+  static const amber = Color(0xFFFFC107);
 }

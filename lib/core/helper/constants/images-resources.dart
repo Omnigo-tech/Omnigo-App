@@ -46,6 +46,10 @@ class ImageResource {
   static const String ALFALAH_BANK = '${DIR_IMAGE}bank_alfalah.png';
   static const String TRACKING_ORDER_IMG = '${DIR_IMAGE}tracking_order.png';
   static const String RIDER_IMG = '${DIR_IMAGE}rider.png';
+  static const String REVIEW_DONE = '${DIR_IMAGE}review_done_img.png';
+  static const String NO_REVIEW_IMG = '${DIR_IMAGE}no_review_img.png';
+
+
 
 
 
@@ -74,4 +78,6 @@ class ImageResource {
   static const String CLOCK_ICON = '${DIR_ICON}clock_icon.svg';
   static const String LOCATION_ICON = '${DIR_ICON}location_icon.svg';
   static const String STORE_ICON = '${DIR_ICON}store_icon.svg';
+  static const String SELECT_STAR_ICON = '${DIR_ICON}select_star_icon.svg';
+  static const String UNSELECT_STAR_ICON = '${DIR_ICON}unselect_star_icon.svg';
 }

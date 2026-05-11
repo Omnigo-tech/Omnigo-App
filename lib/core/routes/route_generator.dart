@@ -59,8 +59,7 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const MyCartScreen());
 
       case AppRoutes.groceryhome:
-        final category = settings.arguments as String? ?? '';
-        return MaterialPageRoute(
+        final category = (settings.arguments is String) ? settings.arguments as String : '';        return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
             providers: [
               BlocProvider(create: (_) => HomeBloc()..add(LoadHomeData())),

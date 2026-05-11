@@ -7,6 +7,8 @@ import '../core/helper/constants/images-resources.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
+  final Color? color;
+  final Color? iconColor;
   final bool showBackButton;
   final VoidCallback? onTap;
   final List<Widget>? actions;
@@ -17,6 +19,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.showBackButton = true,
     this.actions,
     this.onTap,
+    this.color,
+    this.iconColor
   });
 
   @override
@@ -37,7 +41,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           width: DimensionsResources.D_30.w,
           height: DimensionsResources.D_30.h,
           colorFilter: ColorFilter.mode(
-            AppColors.darkSecondary,
+            iconColor ?? AppColors.darkSecondary,
             BlendMode.srcIn,
           ),
         ),
@@ -46,7 +50,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: title != null
           ? Text(
         title!,
-        style: Theme.of(context).appBarTheme.titleTextStyle,
+        style:  Theme.of(context).appBarTheme.titleTextStyle?.copyWith(
+         color: color ?? AppColors.black
+        ),
       )
           : null,
       centerTitle: true,

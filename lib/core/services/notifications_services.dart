@@ -1,6 +1,10 @@
 import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+import '../../main.dart';
+import '../../presentation/screens/user_interface/notification/notification_screen.dart';
 
 class NotificationService {
   static final FlutterLocalNotificationsPlugin _local =
@@ -13,12 +17,46 @@ class NotificationService {
     const InitializationSettings settings =
     InitializationSettings(android: android);
 
-    await _local.initialize(settings: settings);
+    await _local.initialize(
+      settings: settings,
 
-    FirebaseMessaging.onBackgroundMessage(_backgroundHandler);
+      onDidReceiveNotificationResponse: (response) {
+        if (response.payload != null) {
+
+          final data =
+          jsonDecode(response.payload!);
+
+          navigatorKey.currentState?.push(
+            MaterialPageRoute(
+              builder: (_) => NotificationScreen(
+                data: data,
+              ),
+            ),
+          );
+        }
+      },
+    );
+
+    FirebaseMessaging.onBackgroundMessage(
+        _backgroundHandler);
 
     FirebaseMessaging.onMessage.listen((message) {
       _showNotification(message);
+    });
+
+    /// app terminated state
+    FirebaseMessaging.instance
+        .getInitialMessage()
+        .then((message) {
+      if (message != null) {
+        _handleNavigation(message.data);
+      }
+    });
+
+    /// background state
+    FirebaseMessaging.onMessageOpenedApp
+        .listen((message) {
+      _handleNavigation(message.data);
     });
   }
 
@@ -51,6 +89,19 @@ class NotificationService {
       body:message.notification?.body,
       notificationDetails: details,
       payload: jsonEncode(data),
+    );
+  }
+
+  static void _handleNavigation(
+      Map<String, dynamic> data,
+      ) {
+
+    navigatorKey.currentState?.push(
+      MaterialPageRoute(
+        builder: (_) => NotificationScreen(
+          data: data,
+        ),
+      ),
     );
   }
 

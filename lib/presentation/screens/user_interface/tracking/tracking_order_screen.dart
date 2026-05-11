@@ -10,6 +10,7 @@ import 'package:grocery_app/core/helper/constants/images-resources.dart';
 import 'package:grocery_app/core/helper/constants/strings-resource.dart';
 import 'package:grocery_app/presentation/bloc/tracking/tracking_bloc.dart';
 import 'package:grocery_app/presentation/bloc/tracking/tracking_state.dart';
+import 'package:grocery_app/widgets/tracking_info_card.dart';
 
 import '../../../../core/helper/utils/launcher_helper.dart';
 
@@ -105,100 +106,33 @@ class TrackingOrderScreen extends StatelessWidget {
                             ),
                           ),
                           SizedBox(height: DimensionsResources.D_20.h),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                tracking.status,
-                                style:Theme.of(context).textTheme.titleLarge?.copyWith(
-                                  color: AppColors.black
-                                )),
-                              Container(
-                                padding: EdgeInsets.symmetric(horizontal: DimensionsResources.D_12.w, vertical: DimensionsResources.D_6.h),
-                                decoration: BoxDecoration(
-                                  color: AppColors.whiteTranslucent,
-                                  borderRadius: BorderRadius.circular(DimensionsResources.D_20.r),
-                                  border: Border.all(
-                                    color: AppColors.border,
-                                    width: 0.5.w,
-                                  ),
-                                ),
-                                child: Row(
-                                  children: [
-                                    SvgPicture.asset(
-                                      ImageResource.CLOCK_ICON,
-                                      width: DimensionsResources.D_16.w,
-                                      height: DimensionsResources.D_16.h,
-                                      colorFilter: ColorFilter.mode(
-                                        AppColors.primary,
-                                        BlendMode.srcIn,
-                                      ),
-                                    ),
-                                    SizedBox(width: DimensionsResources.D_4.w),
-                                    Text(
-                                      tracking.estimatedTime,
-                                      style:Theme.of(context).textTheme.labelSmall?.copyWith(
-                                        color: AppColors.black
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: DimensionsResources.D_25.h),
+                          TrackingInfoCard(
+                            status: tracking.status,
+                            estimatedTime: tracking.estimatedTime,
+                            riderName: tracking.deliveryHeroName,
+                            riderTitle: StringResources.deliveryhero,
+                            riderImage: ImageResource.RIDER_IMG,
 
-                          // Progress Bar
-                          _buildProgressBar(tracking.progress),
+                            clockIcon: ImageResource.CLOCK_ICON,
+                            bikeIcon: ImageResource.BYKE_ICON,
+                            deliveredIcon: ImageResource.HOME_DELIVERED_ICON,
+                            locationIcon: ImageResource.LOCATION_ICON,
+                            messageIcon: ImageResource.MESSAGE_ICON,
+                            callIcon: ImageResource.CALL_ICON,
 
-                          SizedBox(height: DimensionsResources.D_30.h),
+                            primaryColor: AppColors.primary,
+                            iconBgColor: AppColors.fieldBg,
+                            iconColor: AppColors.primary,
 
-                          // Delivery Hero Info
-                          Row(
-                            children: [
-                              CircleAvatar(
-                                backgroundImage: Image.asset(ImageResource.RIDER_IMG).image,
-                                radius: DimensionsResources.D_25.r,
-                                backgroundColor: AppColors.itemBackground,
-                              ),
-                              SizedBox(width: DimensionsResources.D_15.w),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      StringResources.deliveryhero,
-                                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                          color: AppColors.grey
-                                      ),
-                                    ),
-                                    Text(
-                                      tracking.deliveryHeroName,
-                                      style:Theme.of(context).textTheme.labelLarge?.copyWith(
-                                          color: AppColors.black
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              _buildActionIcon(
-                                ImageResource.MESSAGE_ICON,
-                                AppColors.fieldBg,
-                                AppColors.primary,
-                                    () {
-                                  LauncherHelper.sendSMS(tracking.phonenumber);
-                                },
-                              ),
-                              SizedBox(width: DimensionsResources.D_10.w),
-                              _buildActionIcon(
-                                  ImageResource.CALL_ICON,
-                                  AppColors.fieldBg,
-                                  AppColors.primary,
-                                    () {
-                                  LauncherHelper.makePhoneCall(tracking.phonenumber);
-                                },
-                              ),
-                            ],
+                            onMessageTap: () {
+                              LauncherHelper.sendSMS(tracking.phonenumber);
+                            },
+
+                            onCallTap: () {
+                              LauncherHelper.makePhoneCall(
+                                tracking.phonenumber,
+                              );
+                            },
                           ),
 
                           SizedBox(height: DimensionsResources.D_25.h),
@@ -234,71 +168,7 @@ class TrackingOrderScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProgressBar(double progress) {
-    return Row(
-      children: [
-        Icon(Icons.check_circle, color: AppColors.primary, size: 24.sp),
-        Expanded(child: Container(height: DimensionsResources.D_4.h.h, color: AppColors.primary)),
-        SvgPicture.asset(
-          ImageResource.BYKE_ICON,
-          width: DimensionsResources.D_24.w,
-          height: DimensionsResources.D_24.h,
-          colorFilter: const ColorFilter.mode(
-            AppColors.primary,
-            BlendMode.srcIn,
-          ),
-        ),
-        Expanded(child: Container(height: DimensionsResources.D_4.h, color: AppColors.border)),
-        SvgPicture.asset(
-          ImageResource.HOME_DELIVERED_ICON,
-          width: DimensionsResources.D_24.w,
-          height: DimensionsResources.D_24.h,
-          colorFilter: const ColorFilter.mode(
-            AppColors.primary,
-            BlendMode.srcIn,
-          ),
-        ),
-        Expanded(child: Container(height: DimensionsResources.D_4.h, color: AppColors.border)),
-        SvgPicture.asset(
-          ImageResource.LOCATION_ICON,
-          width: DimensionsResources.D_24.w,
-          height: DimensionsResources.D_24.h,
-          colorFilter: const ColorFilter.mode(
-            AppColors.primary,
-            BlendMode.srcIn,
-          ),
-        ),
-      ],
-    );
-  }
 
-  Widget _buildActionIcon(
-      String svgPath,
-      Color bgColor,
-      Color iconColor,
-      VoidCallback onTap,
-      ) {
-    return Container(
-      width: DimensionsResources.D_46.w,
-      height: DimensionsResources.D_46.h,
-      decoration: BoxDecoration(
-        color: bgColor,
-        shape: BoxShape.circle,
-      ),
-      child: Center(
-        child: IconButton(
-          onPressed: onTap,
-          icon: Center(
-            child: SvgPicture.asset(
-              svgPath,
-              width: DimensionsResources.D_20.w,
-              colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
-            ),
-          ),
-        ),
-      )
-    );
-  }
 
   Widget _buildTimelineItem({
     required String iconImage,

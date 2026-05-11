@@ -97,4 +97,24 @@ class StringResources {
   static const String next = "NEXT";
   static const String orderFail = "Oops! Order Failed";
   static const String tryAgain = "Please Try Again";
+  static const String noReviewsYet = "No reviews yet";
+  static const String waitingForFirstFeedback =
+      "Still waiting for first feedback 🤨";
+
+  static const String totalReviews = "52 Reviews";
+  static const String writeReview = "Write Review";
+
+  // Bottom Sheet
+  static const String rateYourExperience = "Rate Your Experience";
+  static const String shareYourExperience = "Share your experience...";
+  static const String letters = "letters";
+  static const String submitReview = "Submit Review";
+
+  // Dialog
+  static const String thanksForFeedback =
+      "Thanks for your feedback!";
+
+  static const String feedbackSubtitle =
+      "Your feedback helps us improve your experience.";
+
 }

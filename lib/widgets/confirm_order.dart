@@ -73,7 +73,7 @@ class ConfirmOrder extends StatelessWidget {
                 onClick: () {
                   Navigator.pushNamedAndRemoveUntil(
                     context,
-                    AppRoutes.groceryhome,
+                    AppRoutes.home,
                         (route) => false,
                   );
                 },

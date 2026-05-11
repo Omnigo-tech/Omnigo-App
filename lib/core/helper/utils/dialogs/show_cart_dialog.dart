@@ -105,7 +105,8 @@ class GlobalDialogs {
     required String subtitle,
     required String primaryButtonText,
     required VoidCallback onPrimaryClick,
-    required VoidCallback onSecondaryClick,
+    VoidCallback? onSecondaryClick, // Made optional
+    String? secondaryButtonText,    // Added custom text
     bool isSuccess = true,
   }) {
     showDialog(
@@ -113,76 +114,91 @@ class GlobalDialogs {
       barrierDismissible: false,
       builder: (BuildContext dialogContext) {
         return Dialog(
+          backgroundColor: Colors.white, // Ensure white background
+          insetPadding: EdgeInsets.symmetric(horizontal: DimensionsResources.D_20.w),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(DimensionsResources.RADIUS_EXTRA_LARGE.r),
           ),
-          child: Padding(
-            padding: EdgeInsets.all(DimensionsResources.D_20.w),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Top Close Button for Failure state (image_008959.png)
-                if (!isSuccess)
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: IconButton(
-                      onPressed: () => Navigator.pop(dialogContext),
-                      icon: Icon(Icons.close, size: 24.sp),
+          child: Stack( // Using Stack for the top-left cross icon
+            children: [
+              // 1. Cross Icon at Top Left
+              Positioned(
+                top: DimensionsResources.D_10.h,
+                right: DimensionsResources.D_10.w,
+                child: IconButton(
+                  onPressed: () => Navigator.pop(dialogContext),
+                  icon: Icon(Icons.close, size: DimensionsResources.D_24.sp, color: AppColors.black),
+                ),
+              ),
+
+              Padding(
+                padding: EdgeInsets.fromLTRB(
+                    DimensionsResources.D_20.w,
+                    DimensionsResources.D_50.h, // Space for cross icon
+                    DimensionsResources.D_20.w,
+                    DimensionsResources.D_20.w
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset(
+                      imagePath,
+                      height: 100.h,
+                      fit: BoxFit.contain,
                     ),
-                  ),
 
-                // Illustration (Success/Failure)
-                Image.asset(
-                  imagePath,
-                  height: 180.h,
-                  fit: BoxFit.contain,
-                ),
+                    SizedBox(height: DimensionsResources.D_20.h),
 
-                SizedBox(height: DimensionsResources.D_20.h),
-
-                // Title - Using League Spartan as per your design preference
-                Text(
-                  title,
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.leagueSpartan(
-                    fontSize: 22.sp,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.black,
-                  ),
-                ),
-
-                SizedBox(height: DimensionsResources.D_10.h),
-
-                // Subtitle
-                Text(
-                  subtitle,
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.dmSans(
-                    fontSize: DimensionsResources.FONT_SIZE_MEDIUM.sp,
-                    color: AppColors.grey,
-                  ),
-                ),
-                SizedBox(height: DimensionsResources.D_24.h),
-                CustomButton(
-                  onClick: onPrimaryClick,
-                  text: primaryButtonText,
-                  textColor: AppColors.white,
-                  borderRadius: DimensionsResources.D_12.r,
-                ),
-                SizedBox(height: DimensionsResources.D_10.h),
-                TextButton(
-                  onPressed: onSecondaryClick,
-                  child: Text(
-                    "Back to home",
-                    style: GoogleFonts.dmSans(
-                      color: AppColors.black,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16.sp,
+                    Text(
+                      title,
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.leagueSpartan(
+                        fontSize: DimensionsResources.D_20.sp,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.black,
+                      ),
                     ),
-                  ),
+
+                    SizedBox(height: DimensionsResources.D_10.h),
+
+                    Text(
+                      subtitle,
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.dmSans(
+                        fontSize: DimensionsResources.FONT_SIZE_MEDIUM.sp,
+                        color: AppColors.grey,
+                      ),
+                    ),
+
+                    SizedBox(height: DimensionsResources.D_24.h),
+
+                    // Primary Button
+                    CustomButton(
+                      onClick: onPrimaryClick,
+                      text: primaryButtonText,
+                      textColor: AppColors.white,
+                      borderRadius: DimensionsResources.D_12.r,
+                    ),
+
+                    // 2. Secondary Button (Only shows if text and callback provided)
+                    if (secondaryButtonText != null && onSecondaryClick != null) ...[
+                      SizedBox(height: DimensionsResources.D_10.h),
+                      TextButton(
+                        onPressed: onSecondaryClick,
+                        child: Text(
+                          secondaryButtonText,
+                          style: GoogleFonts.dmSans(
+                            color: AppColors.black,
+                            fontWeight: FontWeight.w600,
+                            fontSize: DimensionsResources.D_16.sp,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         );
       },

@@ -8,8 +8,11 @@ import 'package:grocery_app/core/helper/constants/strings-resource.dart';
 import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_bloc.dart';
 import 'package:grocery_app/presentation/screens/user_interface/my_cart/my_cart_screen.dart';
 
+import '../../../../presentation/bloc/call/call_bloc.dart';
+import '../../../../presentation/bloc/call/call_event.dart';
 import '../../../../widgets/cutom_button.dart';
 import '../../../routes/AppRoutes.dart';
+import '../launcher_helper.dart';
 
 class GlobalDialogs {
   static void showAddedToCartDialog(BuildContext context,
@@ -204,4 +207,95 @@ class GlobalDialogs {
       },
     );
   }
-}
+  static void showCallDriverSheet(BuildContext context, {required String phoneNumber}) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) => Container(
+        padding: EdgeInsets.all(DimensionsResources.D_24.w),
+        decoration: BoxDecoration(
+          color: AppColors.itemBackground,
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(DimensionsResources.D_30.r),
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  StringResources.callDriver,
+                  style: GoogleFonts.changaOne(
+                    fontSize: DimensionsResources.FONT_SIZE_EXTRA_LARGE.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.black,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Icon(
+                    Icons.close,
+                    size: DimensionsResources.D_24.sp,
+                    color: AppColors.grey,
+                  ),
+                ),
+              ],
+            ),
+
+            SizedBox(height: DimensionsResources.D_8.h),
+
+            Text(
+              StringResources.callDirectlyHint,
+              style: GoogleFonts.abel(
+                fontSize: DimensionsResources.FONT_SIZE_2X_EXTRA_MEDIUM.sp,
+                fontWeight: FontWeight.w400,
+                color: AppColors.darkSecondary,
+              ),
+            ),
+
+            SizedBox(height: DimensionsResources.D_30.h),
+
+            SizedBox(
+              width: double.infinity,
+              height: DimensionsResources.D_56.h,
+              child: CustomButton(
+                onClick: () {
+                  // Launcher logic here
+                  Navigator.pop(context);
+                },
+                text: StringResources.usePhoneDialer,
+                textColor: AppColors.black,
+                color: AppColors.border,
+                borderColor: AppColors.grey,
+              ),
+            ),
+
+            SizedBox(height: DimensionsResources.D_12.h),
+
+            SizedBox(
+              width: double.infinity,
+              height: DimensionsResources.D_56.h,
+              child: CustomButton(
+                onClick: () {
+                  Navigator.pop(context);
+                  context.read<CallBloc>().add(StartCall(StringResources.chatUserDefault));
+                  Future.delayed(const Duration(milliseconds: 100), () {
+                    Navigator.pushNamed(context, AppRoutes.call);
+                  });
+                },
+                text: StringResources.appCall,
+                textColor: AppColors.white,
+                subText: StringResources.internetConnectionHint,
+              ),
+            ),
+
+            SizedBox(height: DimensionsResources.D_50.h),
+          ],
+        ),
+      ),
+    );
+  }}

@@ -48,10 +48,7 @@ class ImageResource {
   static const String RIDER_IMG = '${DIR_IMAGE}rider.png';
   static const String REVIEW_DONE = '${DIR_IMAGE}review_done_img.png';
   static const String NO_REVIEW_IMG = '${DIR_IMAGE}no_review_img.png';
-
-
-
-
+  static const String CALL_USER_IMG = '${DIR_IMAGE}call_user.png';
 
   static const String CONFIRM_ORDER = '${DIR_IMAGE}orderconfirm.png';
   static const String FAIL_ORDER = '${DIR_IMAGE}orderfail.png';

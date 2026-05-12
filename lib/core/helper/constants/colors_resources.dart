@@ -39,4 +39,6 @@ class AppColors {
   static const Color cardGoldGradientStart = Color(0xFFFFF6B7);
   static const Color cardGoldGradientEnd = Color(0xFF8C6B1F);
   static const amber = Color(0xFFFFC107);
+  static const callBackground = Color(0xFF3E3E3E);
+  static const callDeclineRed = Color(0xFFFF3B30);
 }

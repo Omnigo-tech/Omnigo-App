@@ -1,3 +1,4 @@
+//import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,10 +17,13 @@ import '../../../bloc/payment/payment_event.dart';
 import '../../../bloc/payment/payment_state.dart';
 
 class PaymentMethodScreen extends StatelessWidget {
-   PaymentMethodScreen({super.key});
+  PaymentMethodScreen({super.key});
   final methods = [
     {'icon': Icons.money, 'label': StringResources.cashDelivery},
-    {'icon': Icons.account_balance_wallet, 'label': StringResources.mobileWallet},
+    {
+      'icon': Icons.account_balance_wallet,
+      'label': StringResources.mobileWallet,
+    },
     {'icon': Icons.credit_card, 'label': StringResources.creditDebitCard},
     {'icon': Icons.account_balance, 'label': StringResources.bankAccount},
   ];
@@ -29,9 +33,7 @@ class PaymentMethodScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.white,
-      appBar: CustomAppBar(
-        title: StringResources.paymentMethod,
-      ),
+      appBar: CustomAppBar(title: StringResources.paymentMethod),
       body: BlocBuilder<PaymentBloc, PaymentState>(
         builder: (context, state) {
           return Form(
@@ -58,29 +60,35 @@ class PaymentMethodScreen extends StatelessWidget {
                   child: CustomButton(
                     text: StringResources.payNow,
                     textColor: AppColors.white,
-                      onClick: () {
-                        final stateBloc = context.read<PaymentBloc>().state;
-                        if (stateBloc.selectedIndex == 1 && stateBloc.walletIndex == -1) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(StringResources.snackbarErrorWallet)),
-                          );
-                          return;
-                        }
-
-                        if (stateBloc.selectedIndex == 3 && stateBloc.bankIndex == -1) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(StringResources.snackbarErrorBank)),
-                          );
-                          return;
-                        }
-                        if (formKey.currentState!.validate()) {
-                          Navigator.pushNamed(
-                            context,
-                            AppRoutes.addressdetail,
-                            arguments: methods[state.selectedIndex]['label'],
-                          );
-                        }
+                    onClick: () {
+                      final stateBloc = context.read<PaymentBloc>().state;
+                      if (stateBloc.selectedIndex == 1 &&
+                          stateBloc.walletIndex == -1) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(StringResources.snackbarErrorWallet),
+                          ),
+                        );
+                        return;
                       }
+
+                      if (stateBloc.selectedIndex == 3 &&
+                          stateBloc.bankIndex == -1) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(StringResources.snackbarErrorBank),
+                          ),
+                        );
+                        return;
+                      }
+                      if (formKey.currentState!.validate()) {
+                        Navigator.pushNamed(
+                          context,
+                          AppRoutes.addressdetail,
+                          arguments: methods[state.selectedIndex]['label'],
+                        );
+                      }
+                    },
                   ),
                 ),
                 SizedBox(height: 30),
@@ -147,9 +155,9 @@ class PaymentMethodScreen extends StatelessWidget {
               ),
               Text(
                 StringResources.paymentMethod,
-                style:Theme.of(context).textTheme.labelLarge?.copyWith(
-                color: AppColors.black,
-              ),
+                style: Theme.of(
+                  context,
+                ).textTheme.labelLarge?.copyWith(color: AppColors.black),
               ),
             ],
           ),
@@ -168,7 +176,9 @@ class PaymentMethodScreen extends StatelessWidget {
 
           return Padding(
             padding: EdgeInsets.only(
-              left: index == 0 ? DimensionsResources.D_10.w : DimensionsResources.D_0_4.w,
+              left: index == 0
+                  ? DimensionsResources.D_10.w
+                  : DimensionsResources.D_0_4.w,
               right: DimensionsResources.D_10.w,
             ),
             child: GestureDetector(
@@ -178,9 +188,7 @@ class PaymentMethodScreen extends StatelessWidget {
                 width: DimensionsResources.D_100.w,
                 height: DimensionsResources.D_60.h,
                 decoration: BoxDecoration(
-                  color: isSelected
-                      ? AppColors.primaryBlue
-                      : AppColors.white,
+                  color: isSelected ? AppColors.primaryBlue : AppColors.white,
                   borderRadius: BorderRadius.circular(
                     DimensionsResources.D_20.r,
                   ),
@@ -192,9 +200,7 @@ class PaymentMethodScreen extends StatelessWidget {
                     Icon(
                       methods[index]['icon'] as IconData,
                       size: DimensionsResources.D_18.sp,
-                      color: isSelected
-                          ? AppColors.white
-                          : AppColors.grey,
+                      color: isSelected ? AppColors.white : AppColors.grey,
                     ),
                     SizedBox(height: DimensionsResources.D_4.h),
                     Padding(
@@ -206,13 +212,8 @@ class PaymentMethodScreen extends StatelessWidget {
                         textAlign: TextAlign.center,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context)
-                            .textTheme
-                            .labelSmall
-                            ?.copyWith(
-                          color: isSelected
-                              ? AppColors.white
-                              : AppColors.black,
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: isSelected ? AppColors.white : AppColors.black,
                         ),
                       ),
                     ),
@@ -257,8 +258,7 @@ class PaymentMethodScreen extends StatelessWidget {
         PaymentInputField(
           hint: StringResources.cardHolder,
           validator: (v) => v?.validateHolder(),
-          onChanged: (v) =>
-              context.read<PaymentBloc>().add(UpdateHolder(v)),
+          onChanged: (v) => context.read<PaymentBloc>().add(UpdateHolder(v)),
         ),
 
         PaymentInputField(
@@ -271,7 +271,7 @@ class PaymentMethodScreen extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child:PaymentInputField(
+              child: PaymentInputField(
                 hint: StringResources.expiryDate,
                 validator: (v) => v?.validateExpiry(),
                 onChanged: (v) =>
@@ -283,8 +283,7 @@ class PaymentMethodScreen extends StatelessWidget {
                 hint: StringResources.cvv,
                 validator: (v) => v?.validateCvv(),
                 isObscure: !state.showCvv,
-                onChanged: (v) =>
-                    context.read<PaymentBloc>().add(UpdateCvv(v)),
+                onChanged: (v) => context.read<PaymentBloc>().add(UpdateCvv(v)),
               ),
             ),
           ],
@@ -296,7 +295,10 @@ class PaymentMethodScreen extends StatelessWidget {
   // ================= WALLET =================
   Widget _buildWalletForm(BuildContext context, PaymentState state) {
     final wallets = [
-      {'name': StringResources.easyPaisa, 'icon': ImageResource.EASY_PAISA_LOGO},
+      {
+        'name': StringResources.easyPaisa,
+        'icon': ImageResource.EASY_PAISA_LOGO,
+      },
       {'name': StringResources.jazzCash, 'icon': ImageResource.JaAZZ_CASH_LOGO},
       {'name': StringResources.upaisa, 'icon': ImageResource.UPAISA_LOGO},
       {'name': StringResources.zindghi, 'icon': ImageResource.ZINDGHI_LOGO},
@@ -375,17 +377,13 @@ class PaymentMethodScreen extends StatelessWidget {
         vertical: DimensionsResources.D_8.h,
       ),
       child: DropdownButtonHideUnderline(
-
         child: DropdownButton2<int>(
           isExpanded: true,
           hint: Text(
             hint,
-            style: Theme.of(context)
-                .textTheme
-                .labelSmall
-                ?.copyWith(
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
               color: AppColors.grey,
-              fontSize:DimensionsResources.D_14.w,
+              fontSize: DimensionsResources.D_14.w,
             ),
           ),
           items: items.asMap().entries.map((entry) {
@@ -406,8 +404,7 @@ class PaymentMethodScreen extends StatelessWidget {
                   Text(
                     item["name"] ?? "",
                     style: TextStyle(
-                      fontSize:
-                      DimensionsResources.FONT_SIZE_SMALL.sp,
+                      fontSize: DimensionsResources.FONT_SIZE_SMALL.sp,
                       color: AppColors.black,
                     ),
                   ),
@@ -460,39 +457,44 @@ class PaymentMethodScreen extends StatelessWidget {
       margin: EdgeInsets.all(DimensionsResources.D_20.w),
       padding: EdgeInsets.all(DimensionsResources.D_20.w),
       decoration: BoxDecoration(
-        borderRadius:
-        BorderRadius.circular(DimensionsResources.RADIUS_LARGE.r),
+        borderRadius: BorderRadius.circular(DimensionsResources.RADIUS_LARGE.r),
         gradient: LinearGradient(
           colors: [
             AppColors.cardGoldGradientStart,
-            AppColors.cardGoldGradientEnd
+            AppColors.cardGoldGradientEnd,
           ],
         ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(StringResources.creditCard,
-              style: TextStyle(
-                color: AppColors.grey,
-                fontWeight: FontWeight.bold,
-              )),
+          Text(
+            StringResources.creditCard,
+            style: TextStyle(
+              color: AppColors.grey,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           const Spacer(),
           Text(
-            state.cardNumber.isEmpty
-                ? "XXXX XXXX XXXX XXXX"
-                : state.cardNumber,
+            state.cardNumber.isEmpty ? "XXXX XXXX XXXX XXXX" : state.cardNumber,
           ),
           const Spacer(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(state.holder.isEmpty
-                  ? StringResources.cardHolderLabel
-                  : state.holder),
-              Text(state.expiry.isEmpty ? StringResources.expiryHint : state.expiry),
+              Text(
+                state.holder.isEmpty
+                    ? StringResources.cardHolderLabel
+                    : state.holder,
+              ),
+              Text(
+                state.expiry.isEmpty
+                    ? StringResources.expiryHint
+                    : state.expiry,
+              ),
             ],
-          )
+          ),
         ],
       ),
     );

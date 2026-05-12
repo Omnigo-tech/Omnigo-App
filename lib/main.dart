@@ -15,7 +15,6 @@ import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_event.
 
 import 'core/services/notifications_services.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -44,8 +43,7 @@ void main() async {
   );
 }
 
-final GlobalKey<NavigatorState> navigatorKey =
-GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

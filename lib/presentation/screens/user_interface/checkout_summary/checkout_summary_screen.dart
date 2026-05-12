@@ -14,18 +14,10 @@ import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_state.
 import 'package:grocery_app/presentation/grocery/grocery_home/grocery_home_screen.dart';
 import 'package:grocery_app/presentation/screens/user_interface/address_list/add_address_screen.dart';
 import 'package:grocery_app/presentation/screens/user_interface/address_list/address_screen.dart';
-<<<<<<< HEAD
 import 'package:grocery_app/widgets/auth_button.dart';
 import 'package:grocery_app/widgets/circle_button_widget.dart';
 import 'package:grocery_app/widgets/confirm_order.dart';
-=======
 import 'package:grocery_app/widgets/app_bar_widget.dart';
-import 'package:grocery_app/widgets/circle_button_widget.dart';
-import 'package:grocery_app/widgets/cutom_button.dart';
-import 'package:http/http.dart';
-
-import '../../../../core/helper/constants/strings-resource.dart';
->>>>>>> main
 
 class CheckoutSummaryScreen extends StatelessWidget {
   const CheckoutSummaryScreen({super.key});
@@ -34,9 +26,7 @@ class CheckoutSummaryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.lightBackground,
-      appBar: CustomAppBar(
-        title: StringResources.checkoutSummary,
-      ),
+      appBar: CustomAppBar(title: StringResources.checkoutSummary),
 
       body: BlocBuilder<GroceryDetailBloc, GroceryDetailState>(
         builder: (context, state) {
@@ -365,7 +355,7 @@ class CheckoutSummaryScreen extends StatelessWidget {
     );
   }
 
-  void _orderFail(BuildContext context) {
+  /*void _orderFail(BuildContext context) {
     showDialog(
       context: context,
       builder: (_) {
@@ -424,5 +414,5 @@ class CheckoutSummaryScreen extends StatelessWidget {
         );
       },
     );
-  }
+  }*/
 }

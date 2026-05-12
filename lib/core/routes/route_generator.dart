@@ -5,11 +5,15 @@ import 'package:grocery_app/presentation/bloc/address/address_event.dart';
 import 'package:grocery_app/presentation/grocery/grocery_bloc/grocery_bloc.dart';
 import 'package:grocery_app/presentation/grocery/grocery_bloc/grocery_event.dart';
 import 'package:grocery_app/presentation/grocery/grocery_home/grocery_home_screen.dart';
+import 'package:grocery_app/presentation/screens/user_interface/call/call_screen.dart';
+import 'package:grocery_app/presentation/screens/user_interface/chat/chat_screen.dart';
 import 'package:grocery_app/presentation/screens/user_interface/checkout_summary/checkout_summary_screen.dart';
 import 'package:grocery_app/presentation/screens/user_interface/my_cart/my_cart_screen.dart';
 import 'package:grocery_app/presentation/screens/user_interface/tracking/tracking_order_screen.dart';
 import 'package:grocery_app/widgets/bottom_navigation_bar.dart';
 
+import '../../presentation/bloc/call/call_bloc.dart';
+import '../../presentation/bloc/chat/chat_bloc.dart';
 import '../../presentation/bloc/home/home_bloc.dart';
 import '../../presentation/bloc/home/home_event.dart';
 import '../../presentation/bloc/payment/payment_bloc.dart';
@@ -83,6 +87,19 @@ class RouteGenerator {
             child:  CheckoutSummaryScreen(selectedMethod: method),
           ),
         );
+      case AppRoutes.chat:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => ChatBloc(),
+            child: ChatScreen(),
+          ),
+        );
+
+      case AppRoutes.call:
+        return MaterialPageRoute(
+          builder: (_) => const CallScreen(),
+        );
+
       case AppRoutes.paymentmethodScreen:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(

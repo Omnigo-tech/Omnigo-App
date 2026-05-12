@@ -7,6 +7,7 @@ import '../core/helper/constants/dimensions-resource.dart';
 
 class CustomButton extends StatelessWidget {
   final String? text;
+  final String? subText;
   final String? isIcon;
   final Function()? onClick;
   final double? borderRadius;
@@ -29,6 +30,7 @@ class CustomButton extends StatelessWidget {
     super.key,
     this.onclickCal,
     this.text,
+    this.subText,
     required this.onClick,
     this.isIcon,
     this.borderRadius,
@@ -87,20 +89,37 @@ class CustomButton extends StatelessWidget {
             ],
             Flexible(
               child:
-              textWidget ??
-                  Text(
-                    text ?? "",
-                    overflow: TextOverflow.ellipsis,
-                    style:
-                    fontStyle ??
-                        TextStyle(
-                          color: textColor ?? AppColors.homeBackground,
-                          fontSize:
-                          fontSize ??
-                              DimensionsResources.FONT_SIZE_MEDIUM.r,
-                          fontWeight: fontWeight ?? FontWeight.w600,
+              Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    textWidget ??
+                        Text(
+                          text ?? "",
+                          overflow: TextOverflow.ellipsis,
+                          style:
+                          fontStyle ??
+                              TextStyle(
+                                color: textColor ?? AppColors.homeBackground,
+                                fontSize:
+                                fontSize ??
+                                    DimensionsResources.FONT_SIZE_MEDIUM.r,
+                                fontWeight: fontWeight ?? FontWeight.w600,
+                              ),
                         ),
-                  ),
+                    if (subText != null)
+                      Text(
+                        subText!,
+                        style: TextStyle(
+                          color: (textColor ?? AppColors.white).withOpacity(0.7),
+                          fontSize: DimensionsResources.FONT_SIZE_1X_EXTRA_SMALL.sp,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
             ),
             if (isLoading) ...[
               SizedBox(width: DimensionsResources.D_8.w),

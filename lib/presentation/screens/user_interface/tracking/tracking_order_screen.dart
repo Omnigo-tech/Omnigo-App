@@ -12,6 +12,7 @@ import 'package:grocery_app/presentation/bloc/tracking/tracking_bloc.dart';
 import 'package:grocery_app/presentation/bloc/tracking/tracking_state.dart';
 import 'package:grocery_app/widgets/tracking_info_card.dart';
 
+import '../../../../core/helper/utils/dialogs/show_cart_dialog.dart';
 import '../../../../core/helper/utils/launcher_helper.dart';
 
 class TrackingOrderScreen extends StatelessWidget {
@@ -125,13 +126,12 @@ class TrackingOrderScreen extends StatelessWidget {
                             iconColor: AppColors.primary,
 
                             onMessageTap: () {
-                              LauncherHelper.sendSMS(tracking.phonenumber);
+                             Navigator.pushNamed(context, '/chat');
                             },
 
                             onCallTap: () {
-                              LauncherHelper.makePhoneCall(
-                                tracking.phonenumber,
-                              );
+                              GlobalDialogs.showCallDriverSheet(context,phoneNumber: tracking.phonenumber);
+
                             },
                           ),
 

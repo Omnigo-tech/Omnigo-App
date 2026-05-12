@@ -116,5 +116,17 @@ class StringResources {
 
   static const String feedbackSubtitle =
       "Your feedback helps us improve your experience.";
+  static const decline = 'Decline';
+  static const defaultUserName = 'Abdulmalik Qasim';
+  static const String typing = "is typing...";
+  static const String chatUserDefault = 'Abdulmalik Qasim';
+  static const String writeMessage = 'Write Message';
+
+
+  static const String callDriver = "CALL DRIVER";
+  static const String callDirectlyHint = "Call directly in the app at no extra charge";
+  static const String usePhoneDialer = "Use Phone Dialer";
+  static const String appCall = "App Call";
+  static const String internetConnectionHint = "Using your internet connection";
 
 }

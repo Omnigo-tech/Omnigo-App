@@ -5,8 +5,10 @@ import 'package:grocery_app/core/helper/constants/dimensions-resource.dart';
 import 'package:grocery_app/core/helper/constants/images-resources.dart';
 import 'package:grocery_app/core/helper/constants/sizes.dart';
 import 'package:grocery_app/core/helper/constants/strings-resource.dart';
-import 'package:grocery_app/presentation/grocery/grocery_home/grocery_home_screen.dart';
+import 'package:grocery_app/core/routes/AppRoutes.dart';
 import 'package:grocery_app/widgets/auth_button.dart';
+
+import 'cutom_button.dart';
 
 class ConfirmOrder extends StatelessWidget {
   const ConfirmOrder({super.key});
@@ -16,9 +18,9 @@ class ConfirmOrder extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            SizedBox(height: 250.h),
+            SizedBox(height: 150.h),
             Expanded(
               child: Center(
                 child: Image.asset(
@@ -27,7 +29,7 @@ class ConfirmOrder extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: DimensionsResources.D_20.h),
+            SizedBox(height: DimensionsResources.D_50.h),
             Text(
               StringResources.orderConfirmation,
               style: TextStyle(
@@ -42,6 +44,7 @@ class ConfirmOrder extends StatelessWidget {
                 fontSize: DimensionsResources.FONT_SIZE_LARGE,
               ),
             ),
+            SizedBox(height: DimensionsResources.D_20.h),
             Text(
               StringResources.orderConfirmationSubstr_1,
               style: TextStyle(
@@ -57,24 +60,27 @@ class ConfirmOrder extends StatelessWidget {
               ),
             ),
 
-            Spacer(),
+            SizedBox(height: DimensionsResources.D_50.h),
             Padding(
               padding: const EdgeInsets.all(AppSizes.padding),
               child: AuthButton(text: StringResources.trackOrder, onTap: () {}),
             ),
-            Padding(
-              padding: const EdgeInsets.all(AppSizes.padding),
-              child: GestureDetector(
-                onTap: () => Navigator.pushReplacement(
+
+            CustomButton(
+              onClick: () {
+                Navigator.pushReplacementNamed(
                   context,
-                  MaterialPageRoute(builder: (context) => GroceryHomeScreen()),
-                ),
-                child: Text(
-                  StringResources.backToHome,
-                  style: TextStyle(fontWeight: FontWeight.w600),
-                ),
-              ),
+                  AppRoutes.groceryhome,
+                  arguments: StringResources.vegetables,
+                );
+              },
+              text: StringResources.backToHome,
+              textColor: AppColors.black,
+              borderRadius: DimensionsResources.RADIUS_DEFAULT.r,
+              borderColor: AppColors.white,
+              color: AppColors.white,
             ),
+            SizedBox(height: 100.h),
           ],
         ),
       ),

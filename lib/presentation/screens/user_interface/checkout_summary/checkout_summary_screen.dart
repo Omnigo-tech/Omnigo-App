@@ -14,16 +14,24 @@ import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_state.
 import 'package:grocery_app/presentation/grocery/grocery_home/grocery_home_screen.dart';
 import 'package:grocery_app/presentation/screens/user_interface/address_list/add_address_screen.dart';
 import 'package:grocery_app/presentation/screens/user_interface/address_list/address_screen.dart';
-import 'package:grocery_app/widgets/auth_button.dart';
-import 'package:grocery_app/widgets/circle_button_widget.dart';
-import 'package:grocery_app/widgets/confirm_order.dart';
 import 'package:grocery_app/widgets/app_bar_widget.dart';
+import 'package:grocery_app/widgets/circle_button_widget.dart';
 
-class CheckoutSummaryScreen extends StatelessWidget {
-  const CheckoutSummaryScreen({super.key});
+import '../../../../widgets/auth_button.dart';
+import '../../../../widgets/confirm_order.dart';
+
+class CheckoutSummaryScreen extends StatefulWidget {
+  final String? selectedMethod;
+  const CheckoutSummaryScreen({super.key, required this.selectedMethod});
 
   @override
+  State<CheckoutSummaryScreen> createState() => _CheckoutSummaryScreenState();
+}
+
+class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
+  @override
   Widget build(BuildContext context) {
+    print("Method is ${widget.selectedMethod}");
     return Scaffold(
       backgroundColor: AppColors.lightBackground,
       appBar: CustomAppBar(title: StringResources.checkoutSummary),
@@ -247,6 +255,38 @@ class CheckoutSummaryScreen extends StatelessWidget {
                             },
                           ),
                         ),
+                        SizedBox(height: 15.h),
+                        Text(
+                          "Payment Method",
+                          style: GoogleFonts.dmSans(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 10.h),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(12.r),
+                          child: SizedBox(
+                            height: 60.h,
+                            width: 160.w,
+                            child: Container(
+                              padding: EdgeInsets.all(12.w),
+                              decoration: BoxDecoration(
+                                color: AppColors.white,
+                                borderRadius: BorderRadius.circular(12.r),
+                              ),
+                              child: Text(
+                                "${widget.selectedMethod}",
+                                textAlign: TextAlign.center,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.dmSans(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                         SizedBox(height: 25.h),
                         Text(
                           "Bill Details",
@@ -297,11 +337,12 @@ class CheckoutSummaryScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SizedBox(height: 30),
+                        SizedBox(height: 30.h),
                       ],
                     ),
                   ),
                 ),
+
                 Container(
                   padding: EdgeInsets.all(DimensionsResources.D_16.w),
                   child: SizedBox(
@@ -312,12 +353,23 @@ class CheckoutSummaryScreen extends StatelessWidget {
                         backgroundColor: AppColors.homeBackground,
                       ),
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ConfirmOrder(),
+                        final address = context
+                            .read<AddressBloc>()
+                            .state
+                            .selectedAddress;
+
+                        context.read<GroceryDetailBloc>().add(
+                          PlaceOrderEvent(
+                            address!,
+                            widget.selectedMethod ?? "Cash on delivery",
                           ),
                         );
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => ConfirmOrder()),
+                        );
+
                         //_orderFail(context);
                       },
                       child: Text("Confirm Your Order"),
@@ -355,7 +407,7 @@ class CheckoutSummaryScreen extends StatelessWidget {
     );
   }
 
-  /*void _orderFail(BuildContext context) {
+  void _orderFail(BuildContext context) {
     showDialog(
       context: context,
       builder: (_) {
@@ -402,7 +454,9 @@ class CheckoutSummaryScreen extends StatelessWidget {
               GestureDetector(
                 onTap: () => Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => GroceryHomeScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => GroceryHomeScreen(nameCategories: ""),
+                  ),
                 ),
                 child: Text(
                   StringResources.backToHome,
@@ -414,5 +468,5 @@ class CheckoutSummaryScreen extends StatelessWidget {
         );
       },
     );
-  }*/
+  }
 }

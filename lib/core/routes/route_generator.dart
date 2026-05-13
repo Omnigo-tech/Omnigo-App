@@ -60,8 +60,9 @@ class RouteGenerator {
           builder: (_) => MultiBlocProvider(
             providers: [
               BlocProvider(
-                create: (_) => GroceryBloc()..add(LoadGroceryEvent())
-                ..add(SelectCategoryEvent(category))
+                create: (_) => GroceryBloc()
+                  ..add(LoadGroceryEvent())
+                  ..add(SelectCategoryEvent(category)),
               ),
             ],
             child: AppBottomBar(
@@ -75,7 +76,7 @@ class RouteGenerator {
             providers: [
               BlocProvider(create: (_) => AddressBloc()..add(LoadAddresses())),
             ],
-            child: const CheckoutSummaryScreen(),
+            child: const CheckoutSummaryScreen(selectedMethod: 'cash'),
           ),
         );
       case AppRoutes.paymentmethodScreen:

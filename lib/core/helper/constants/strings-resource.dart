@@ -64,8 +64,9 @@ class StringResources {
   static const String save = 'Save';
   static const String accountNumber = 'Account Number';
   static const String linkAccount = 'Link Account';
-  static const String enterAccountNumber = 'Enter your account number to link for payments.';
-  
+  static const String enterAccountNumber =
+      'Enter your account number to link for payments.';
+
   // Checkout/Payment V2
   static const String shippingAddress = 'Shipping Address';
   static const String cashDelivery = 'Cash Delivery';
@@ -94,4 +95,18 @@ class StringResources {
   static const String next = "NEXT";
   static const String orderFail = "Oops! Order Failed";
   static const String tryAgain = "Please Try Again";
+  static const String ratingInfo =
+      "Consectetur non occaecat eu ut enim ipsum reprehenderit eu. Enim eiusmod consequat cillum velit. Proident esse irure est anim irure mollit velit.";
+
+  // Order Screen
+  static const String ongoing = "Ongoing";
+  static const String history = "History";
+  static const String noOrders = "No Orders";
+  static const String noOngoingOrders = "No Ongoing Orders";
+  static const String itemsOrdered = "Items Ordered";
+  static const String subTotal = "Subtotal";
+  static const String deliveryFee = "Delivery Fee";
+  static const String total = "Total";
+  static const String cancelOrder = "cancel order";
+  static const String trackLive = "Track Live";
 }

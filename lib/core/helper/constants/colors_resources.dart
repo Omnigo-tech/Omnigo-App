@@ -18,9 +18,13 @@ class AppColors {
     255,
     255,
   ); // existing
+  static const amber = Color.fromRGBO(255, 193, 7, 1);
+
   // 🔘 Greys
   static const lightText = Color(0xFF7C7C7C); // existing
   static const grey = Color(0xFF9DA49E); // rgba(157,164,158,1)
+  static const greyshade100 = Color.fromRGBO(245, 245, 245, 1);
+  static const greyshade300 = Color.fromRGBO(224, 224, 224, 1);
   static const border = Color(0xFFE2E2E2); // existing
   static const lightBackground = Color(0xFFEDF2F7); // rgba(237,242,247,1)
   static const lightGreen = Color(0xFFD6EEDD);

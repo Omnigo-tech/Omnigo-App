@@ -1,3 +1,5 @@
+import 'package:grocery_app/data/models/address.dart';
+
 import '../../../data/models/grocery-item.dart';
 
 abstract class GroceryDetailEvent {}
@@ -29,4 +31,15 @@ class RemoveFromCartEvent extends GroceryDetailEvent {
   RemoveFromCartEvent(this.id);
 }
 
-class PlaceOrderEvent extends GroceryDetailEvent {}
+class PlaceOrderEvent extends GroceryDetailEvent {
+  final AddressModel address;
+  final String paymentMethod;
+
+  PlaceOrderEvent(this.address, this.paymentMethod);
+}
+
+class CancelOrderEvent extends GroceryDetailEvent {
+  final String orderId;
+
+  CancelOrderEvent(this.orderId);
+}

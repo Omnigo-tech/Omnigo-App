@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:grocery_app/presentation/screens/user_interface/orders_screens/orders_screen.dart';
 import '../core/helper/constants/colors_resources.dart';
 import '../core/helper/constants/dimensions-resource.dart';
 import '../core/helper/constants/images-resources.dart';
@@ -12,11 +13,7 @@ class AppBottomBar extends StatefulWidget {
   final Widget? body;
   final int initialIndex;
 
-  const AppBottomBar({
-    super.key,
-    this.body,
-    this.initialIndex = 0,
-  });
+  const AppBottomBar({super.key, this.body, this.initialIndex = 0});
 
   @override
   State<AppBottomBar> createState() => _AppBottomBarState();
@@ -34,7 +31,7 @@ class _AppBottomBarState extends State<AppBottomBar> {
 
   final List<Widget> _screens = [
     const HomeScreen(),
-    const HomeScreen(),
+    const OrdersScreen(),
     const FavouriteScreen(),
     const HomeScreen(),
   ];
@@ -42,15 +39,14 @@ class _AppBottomBarState extends State<AppBottomBar> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      _isFirstLoad =false;
+      _isFirstLoad = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      body:  getCurrentScreen(),
+      body: getCurrentScreen(),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: AppColors.white,
         currentIndex: _selectedIndex,
@@ -59,13 +55,13 @@ class _AppBottomBarState extends State<AppBottomBar> {
         selectedItemColor: AppColors.primary,
         unselectedItemColor: AppColors.black,
         selectedLabelStyle: Theme.of(context).textTheme.labelLarge?.copyWith(
-              fontSize: 12.sp,
-              color: AppColors.primary,
-            ),
+          fontSize: 12.sp,
+          color: AppColors.primary,
+        ),
         unselectedLabelStyle: Theme.of(context).textTheme.labelLarge?.copyWith(
-              fontSize: 12.sp,
-              color: AppColors.black,
-            ),
+          fontSize: 12.sp,
+          color: AppColors.black,
+        ),
         items: [
           _buildNavItem(ImageResource.ICON_HOME, StringResources.home, 0),
           _buildNavItem(ImageResource.ICON_ORDER, StringResources.myOrder, 1),
@@ -98,8 +94,11 @@ class _AppBottomBarState extends State<AppBottomBar> {
       label: label,
     );
   }
+
   Widget getCurrentScreen() {
-    if (_isFirstLoad && widget.body != null && _selectedIndex == widget.initialIndex) {
+    if (_isFirstLoad &&
+        widget.body != null &&
+        _selectedIndex == widget.initialIndex) {
       return widget.body!;
     }
 

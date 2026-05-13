@@ -5,7 +5,7 @@ import 'package:grocery_app/core/helper/constants/dimensions-resource.dart';
 import 'package:grocery_app/core/helper/constants/images-resources.dart';
 import 'package:grocery_app/core/helper/constants/sizes.dart';
 import 'package:grocery_app/core/helper/constants/strings-resource.dart';
-import 'package:grocery_app/presentation/grocery/grocery_home/grocery_home_screen.dart';
+import 'package:grocery_app/core/routes/AppRoutes.dart';
 import 'package:grocery_app/widgets/auth_button.dart';
 
 import '../core/routes/AppRoutes.dart';
@@ -64,25 +64,28 @@ class ConfirmOrder extends StatelessWidget {
             SizedBox(height: DimensionsResources.D_50.h),
             Padding(
               padding: const EdgeInsets.all(AppSizes.padding),
-              child: AuthButton(text: StringResources.trackOrder, onTap: () {
-                Navigator.pushNamed(context, AppRoutes.trackingOrder);
-              }),
+              child: AuthButton(
+                text: StringResources.trackOrder,
+                onTap: () {
+                  Navigator.pushNamed(context, AppRoutes.trackingOrder);
+                },
+              ),
             ),
 
-               CustomButton(
-                onClick: () {
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    AppRoutes.home,
-                        (route) => false,
-                  );
-                },
-                text: StringResources.backToHome,
-                textColor: AppColors.black,
-                borderRadius: DimensionsResources.RADIUS_DEFAULT.r,
-                borderColor: AppColors.white,
-                color: AppColors.white,
-              ),
+            CustomButton(
+              onClick: () {
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  AppRoutes.home,
+                  (route) => false,
+                );
+              },
+              text: StringResources.backToHome,
+              textColor: AppColors.black,
+              borderRadius: DimensionsResources.RADIUS_DEFAULT.r,
+              borderColor: AppColors.white,
+              color: AppColors.white,
+            ),
             SizedBox(height: 100.h),
           ],
         ),

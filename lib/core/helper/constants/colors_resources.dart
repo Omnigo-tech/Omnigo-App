@@ -18,9 +18,13 @@ class AppColors {
     255,
     255,
   ); // existing
+  static const amber = Color.fromRGBO(255, 193, 7, 1);
+
   // 🔘 Greys
   static const lightText = Color(0xFF7C7C7C); // existing
   static const grey = Color(0xFF9DA49E); // rgba(157,164,158,1)
+  static const greyshade100 = Color.fromRGBO(245, 245, 245, 1);
+  static const greyshade300 = Color.fromRGBO(224, 224, 224, 1);
   static const border = Color(0xFFE2E2E2); // existing
   static const lightBackground = Color(0xFFEDF2F7); // rgba(237,242,247,1)
   static const lightGreen = Color(0xFFD6EEDD);
@@ -38,7 +42,6 @@ class AppColors {
   static const Color primaryBlue = Color(0xFF007AFF);
   static const Color cardGoldGradientStart = Color(0xFFFFF6B7);
   static const Color cardGoldGradientEnd = Color(0xFF8C6B1F);
-  static const amber = Color(0xFFFFC107);
   static const callBackground = Color(0xFF3E3E3E);
   static const callDeclineRed = Color(0xFFFF3B30);
 }

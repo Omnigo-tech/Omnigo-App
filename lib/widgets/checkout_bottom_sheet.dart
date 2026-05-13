@@ -51,10 +51,7 @@ class CheckoutBottomSheet extends StatelessWidget {
           const Divider(color: AppColors.border),
           InkWell(
             onTap: () {
-              Navigator.pushNamed(
-                  context,
-                  AppRoutes.paymentmethodScreen
-              );
+              Navigator.pushNamed(context, AppRoutes.paymentmethodScreen);
             },
             child: _buildCheckoutRow(
               title: StringResources.paymentMethod,
@@ -74,7 +71,8 @@ class CheckoutBottomSheet extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => CheckoutSummaryScreen(selectedMethod: ""),
+                  builder: (context) =>
+                      CheckoutSummaryScreen(selectedMethod: ""),
                 ),
               );
             },
@@ -153,7 +151,11 @@ class CheckoutBottomSheet extends StatelessWidget {
             children: [
               trailing,
               SizedBox(width: DimensionsResources.D_10.w),
-              const Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.black),
+              const Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+                color: AppColors.black,
+              ),
             ],
           ),
         ],

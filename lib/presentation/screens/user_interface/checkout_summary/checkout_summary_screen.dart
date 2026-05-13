@@ -30,22 +30,24 @@ import '../../../../widgets/confirm_order.dart';
 
 class CheckoutSummaryScreen extends StatefulWidget {
   String? selectedMethod;
-   CheckoutSummaryScreen({super.key,
-  required this.selectedMethod
-  });
+  CheckoutSummaryScreen({super.key, required this.selectedMethod});
 
   @override
   State<CheckoutSummaryScreen> createState() => _CheckoutSummaryScreenState();
 }
 
+/*class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
+  @override
+  State<CheckoutSummaryScreen> createState() => _CheckoutSummaryScreenState();
+}*/
+
 class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
   @override
   Widget build(BuildContext context) {
+    print("Method is ${widget.selectedMethod}");
     return Scaffold(
       backgroundColor: AppColors.lightBackground,
-      appBar: CustomAppBar(
-        title: StringResources.checkoutSummary,
-      ),
+      appBar: CustomAppBar(title: StringResources.checkoutSummary),
 
       body: BlocBuilder<GroceryDetailBloc, GroceryDetailState>(
         builder: (context, state) {
@@ -286,14 +288,15 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                                 color: AppColors.white,
                                 borderRadius: BorderRadius.circular(12.r),
                               ),
-                             child: Text("${widget.selectedMethod}",
-                             textAlign: TextAlign.center,
-                               maxLines: 2,
-                               overflow: TextOverflow.ellipsis,
-                               style: GoogleFonts.dmSans(
-                                   fontWeight: FontWeight.bold,
-                                 ),
-                             ),
+                              child: Text(
+                                "${widget.selectedMethod}",
+                                textAlign: TextAlign.center,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.dmSans(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -354,7 +357,7 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 30),
+                        SizedBox(height: 30.h),
                       ],
                     ),
                   ),
@@ -370,12 +373,23 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                         backgroundColor: AppColors.homeBackground,
                       ),
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ConfirmOrder(),
+                        final address = context
+                            .read<AddressBloc>()
+                            .state
+                            .selectedAddress;
+
+                        context.read<GroceryDetailBloc>().add(
+                          PlaceOrderEvent(
+                            address!,
+                            widget.selectedMethod ?? "Cash on delivery",
                           ),
                         );
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => ConfirmOrder()),
+                        );
+
                         //_orderFail(context);
                       },
                       child: Text("Confirm Your Order"),
@@ -460,7 +474,9 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
               GestureDetector(
                 onTap: () => Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => GroceryHomeScreen(nameCategories: "",)),
+                  MaterialPageRoute(
+                    builder: (context) => GroceryHomeScreen(nameCategories: ""),
+                  ),
                 ),
                 child: Text(
                   StringResources.backToHome,

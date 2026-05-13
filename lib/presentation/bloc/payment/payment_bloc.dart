@@ -4,7 +4,6 @@ import 'package:grocery_app/presentation/bloc/payment/payment_state.dart';
 
 class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
   PaymentBloc() : super(PaymentState()) {
-
     on<UpdateHolder>((event, emit) {
       emit(state.copyWith(holder: event.value));
     });

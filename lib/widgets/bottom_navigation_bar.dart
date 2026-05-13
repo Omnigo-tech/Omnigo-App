@@ -21,6 +21,7 @@ class AppBottomBar extends StatefulWidget {
 
 class _AppBottomBarState extends State<AppBottomBar> {
   late int _selectedIndex;
+  bool _isFirstLoad = true;
 
   @override
   void initState() {
@@ -38,20 +39,14 @@ class _AppBottomBarState extends State<AppBottomBar> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      _isFirstLoad = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // If a custom body is provided (like GroceryHomeScreen), use it.
-    // Otherwise, use the screen based on the selected index.
-    Widget currentBody =
-        widget.body != null && _selectedIndex == widget.initialIndex
-        ? widget.body!
-        : _screens[_selectedIndex];
-
     return Scaffold(
-      body: currentBody,
+      body: getCurrentScreen(),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: AppColors.white,
         currentIndex: _selectedIndex,
@@ -98,5 +93,15 @@ class _AppBottomBarState extends State<AppBottomBar> {
       ),
       label: label,
     );
+  }
+
+  Widget getCurrentScreen() {
+    if (_isFirstLoad &&
+        widget.body != null &&
+        _selectedIndex == widget.initialIndex) {
+      return widget.body!;
+    }
+
+    return _screens[_selectedIndex];
   }
 }

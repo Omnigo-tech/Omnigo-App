@@ -69,15 +69,35 @@ class StringResources {
 
   // Checkout/Payment V2
   static const String shippingAddress = 'Shipping Address';
+  static const String selectedMethod = 'Selected Method';
+  static const String payNow = "PAY NOW";
+  static const String cardHolder = "Card Holder Name";
+  static const String cardNumber = "Card Number";
+  static const String expiryDate = "Expiry Date";
+  static const String cvv = "CVV";
   static const String cashDelivery = 'Cash Delivery';
-  static const String mobileWalletShort = 'Mobile Wallet';
-  static const String debitCard = 'Debit Card';
-  static const String bankAccount = 'Bank Account';
-  static const String cardHolderName = 'Card Holder Name';
-  static const String cardNumber = 'Card Number';
-  static const String expiryDate = 'expiry date';
-  static const String cvv = 'cvv';
-  static const String pay = 'PAY';
+  static const String mobileNumber = "Mobile Number";
+  static const String selectBank = "Select Bank";
+  static const String selectWallet = "Select Wallet";
+  static const String easyPaisa = "Easy Paisa";
+  static const String jazzCash = " Jazz Cash";
+  static const String upaisa = "Upaisa";
+  static const String zindghi = "Zindghi";
+  static const String iban = "Account Number/IBAN";
+  static const String cnic = "CNIC";
+  static const String mezanBank = "Meezan Bank";
+  static const String hbl = "HBL";
+  static const String bankAlfalah = "Bank Alfalah";
+  static const String cardHolderLabel = "CARD HOLDER";
+  static const String expiryHint = "MM/YY";
+  static const String mobileWallet = "Mobile Wallet";
+  static const String creditDebitCard = "Credit&Debit Card";
+  static const String bankAccount = "Bank Account";
+  static const String snackbarErrorWallet = "Please select a wallet";
+  static const String snackbarErrorBank = "Please select a bank";
+  static const String deliveryhero = "Your delivery hero";
+  static const String store = "Store";
+  static const String yourplace = "Your place";
 
   // Favourite Screen
   static const String addAllToCart = 'Add all to cart';
@@ -109,4 +129,34 @@ class StringResources {
   static const String total = "Total";
   static const String cancelOrder = "cancel order";
   static const String trackLive = "Track Live";
+  static const String noReviewsYet = "No reviews yet";
+  static const String waitingForFirstFeedback =
+      "Still waiting for first feedback 🤨";
+
+  static const String totalReviews = "52 Reviews";
+  static const String writeReview = "Write Review";
+
+  // Bottom Sheet
+  static const String rateYourExperience = "Rate Your Experience";
+  static const String shareYourExperience = "Share your experience...";
+  static const String letters = "letters";
+  static const String submitReview = "Submit Review";
+
+  // Dialog
+  static const String thanksForFeedback = "Thanks for your feedback!";
+
+  static const String feedbackSubtitle =
+      "Your feedback helps us improve your experience.";
+  static const decline = 'Decline';
+  static const defaultUserName = 'Abdulmalik Qasim';
+  static const String typing = "is typing...";
+  static const String chatUserDefault = 'Abdulmalik Qasim';
+  static const String writeMessage = 'Write Message';
+
+  static const String callDriver = "CALL DRIVER";
+  static const String callDirectlyHint =
+      "Call directly in the app at no extra charge";
+  static const String usePhoneDialer = "Use Phone Dialer";
+  static const String appCall = "App Call";
+  static const String internetConnectionHint = "Using your internet connection";
 }

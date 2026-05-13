@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "469971596118",
+    "project_id": "omnigo-app-df7e2",
+    "storage_bucket": "omnigo-app-df7e2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:469971596118:android:dd7f07ca80d3f325039cf7",
+        "android_client_info": {
+          "package_name": "com.example.grocery_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYmbyCrwk7PyPuHFEDsUMBAf4rZtmrNrg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

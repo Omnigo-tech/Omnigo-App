@@ -56,7 +56,7 @@ class CheckoutBottomSheet extends StatelessWidget {
             child: _buildCheckoutRow(
               title: StringResources.paymentMethod,
               trailing: Text(
-                StringResources.selectMethod,
+                StringResources.selectedMethod,
                 style: GoogleFonts.dmSans(
                   fontWeight: FontWeight.bold,
                   color: AppColors.black,
@@ -72,7 +72,7 @@ class CheckoutBottomSheet extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) =>
-                      CheckoutSummaryScreen(selectedMethod: ''),
+                      CheckoutSummaryScreen(selectedMethod: ""),
                 ),
               );
             },
@@ -123,7 +123,7 @@ class CheckoutBottomSheet extends StatelessWidget {
           SizedBox(height: DimensionsResources.D_24.h),
           CustomButton(
             onClick: onPlaceOrder,
-            text: StringResources.placeOrder,
+            text: StringResources.goToCheckout,
             textColor: AppColors.white,
             borderRadius: DimensionsResources.D_19.r,
           ),

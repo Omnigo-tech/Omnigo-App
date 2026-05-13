@@ -2,15 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery_app/presentation/bloc/address/address_bloc.dart';
 import 'package:grocery_app/presentation/bloc/address/address_event.dart';
+import 'package:grocery_app/presentation/bloc/payment/payment_bloc.dart';
 import 'package:grocery_app/presentation/grocery/grocery_bloc/grocery_bloc.dart';
 import 'package:grocery_app/presentation/grocery/grocery_bloc/grocery_event.dart';
 import 'package:grocery_app/presentation/grocery/grocery_home/grocery_home_screen.dart';
+import 'package:grocery_app/presentation/screens/user_interface/call/call_screen.dart';
+import 'package:grocery_app/presentation/screens/user_interface/chat/chat_screen.dart';
 import 'package:grocery_app/presentation/screens/user_interface/checkout_summary/checkout_summary_screen.dart';
 import 'package:grocery_app/presentation/screens/user_interface/my_cart/my_cart_screen.dart';
+import 'package:grocery_app/presentation/screens/user_interface/tracking/tracking_order_screen.dart';
 import 'package:grocery_app/widgets/bottom_navigation_bar.dart';
 
+import '../../presentation/bloc/chat/chat_bloc.dart';
 import '../../presentation/bloc/home/home_bloc.dart';
 import '../../presentation/bloc/home/home_event.dart';
+import '../../presentation/bloc/tracking/tracking_bloc.dart';
+import '../../presentation/bloc/tracking/tracking_event.dart';
 import '../../presentation/screens/authentication/location_screen.dart';
 import '../../presentation/screens/authentication/login_screen.dart';
 import '../../presentation/screens/authentication/otp_screen.dart';
@@ -55,10 +62,13 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const MyCartScreen());
 
       case AppRoutes.groceryhome:
-        final category = settings.arguments as String? ?? '';
+        final category = (settings.arguments is String)
+            ? settings.arguments as String
+            : '';
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
             providers: [
+              BlocProvider(create: (_) => HomeBloc()..add(LoadHomeData())),
               BlocProvider(
                 create: (_) => GroceryBloc()
                   ..add(LoadGroceryEvent())
@@ -71,16 +81,42 @@ class RouteGenerator {
           ),
         );
       case AppRoutes.addressdetail:
+        final method = settings.arguments as String;
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
             providers: [
               BlocProvider(create: (_) => AddressBloc()..add(LoadAddresses())),
             ],
-            child: const CheckoutSummaryScreen(selectedMethod: 'cash'),
+            child: CheckoutSummaryScreen(selectedMethod: method),
           ),
         );
+      case AppRoutes.chat:
+        return MaterialPageRoute(
+          builder: (_) =>
+              BlocProvider(create: (_) => ChatBloc(), child: ChatScreen()),
+        );
+
+      case AppRoutes.call:
+        return MaterialPageRoute(builder: (_) => const CallScreen());
+
       case AppRoutes.paymentmethodScreen:
-        return MaterialPageRoute(builder: (_) => const PaymentMethodScreen());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => PaymentBloc(),
+            child: PaymentMethodScreen(),
+          ),
+        );
+      case AppRoutes.trackingOrder:
+        return MaterialPageRoute(
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (_) => TrackingBloc()..add(FetchTrackingDetails()),
+              ),
+            ],
+            child: TrackingOrderScreen(),
+          ),
+        );
 
       default:
         return MaterialPageRoute(

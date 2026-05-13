@@ -25,7 +25,31 @@ class ImageResource {
   static const String MEAT = '${DIR_IMAGE}meat.png';
   static const String MEAT_IMG = '${DIR_IMAGE}meat_img.png';
   static const String BYKERY_IMG = '${DIR_IMAGE}bykery_image.png';
+  static const String EGGS_IMG = '${DIR_IMAGE}eggs_img.png';
+  static const String Egg = '${DIR_IMAGE}egg.png';
+  static const String DALLS_IMG = '${DIR_IMAGE}dall_img.png';
+  static const String BREAD_IMG = '${DIR_IMAGE}bread_img.png';
+  static const String BAKING_IMG = '${DIR_IMAGE}baking_img.png';
+  static const String OIL_IMG = '${DIR_IMAGE}oil_img.png';
+  static const String SPICES_IMG = '${DIR_IMAGE}spices_img.png';
+  static const String SAUCE_IMG = '${DIR_IMAGE}sauces_img.png';
+  static const String SALT_IMG = '${DIR_IMAGE}salt_img.png';
+
+
   static const String WORD_MAP = '${DIR_IMAGE}word_map.png';
+  static const String EASY_PAISA_LOGO = '${DIR_IMAGE}easypaisa_logo.png';
+  static const String JaAZZ_CASH_LOGO = '${DIR_IMAGE}jazzcash_logo.png';
+  static const String UPAISA_LOGO = '${DIR_IMAGE}upaisa_logo.png';
+  static const String ZINDGHI_LOGO = '${DIR_IMAGE}zindghi_logo.png';
+  static const String MEZAN_BANK = '${DIR_IMAGE}mezan_bank.png';
+  static const String HBL_BANK = '${DIR_IMAGE}hbl_bank.png';
+  static const String ALFALAH_BANK = '${DIR_IMAGE}bank_alfalah.png';
+  static const String TRACKING_ORDER_IMG = '${DIR_IMAGE}tracking_order.png';
+  static const String RIDER_IMG = '${DIR_IMAGE}rider.png';
+  static const String REVIEW_DONE = '${DIR_IMAGE}review_done_img.png';
+  static const String NO_REVIEW_IMG = '${DIR_IMAGE}no_review_img.png';
+  static const String CALL_USER_IMG = '${DIR_IMAGE}call_user.png';
+
   static const String CONFIRM_ORDER = '${DIR_IMAGE}orderconfirm.png';
   static const String FAIL_ORDER = '${DIR_IMAGE}orderfail.png';
 
@@ -44,4 +68,13 @@ class ImageResource {
   static const String FORWARD_ICON = '${DIR_ICON}forward_icon.svg';
   static const String BACK_ICON = '${DIR_ICON}back_icon.svg';
   static const String FILTER_ICON = '${DIR_ICON}filter_icon.svg';
+  static const String BYKE_ICON = '${DIR_ICON}bike_icon.svg';
+  static const String CALL_ICON = '${DIR_ICON}call_icon.svg';
+  static const String MESSAGE_ICON = '${DIR_ICON}message_icon.svg';
+  static const String HOME_DELIVERED_ICON = '${DIR_ICON}home_delivered_icon.svg';
+  static const String CLOCK_ICON = '${DIR_ICON}clock_icon.svg';
+  static const String LOCATION_ICON = '${DIR_ICON}location_icon.svg';
+  static const String STORE_ICON = '${DIR_ICON}store_icon.svg';
+  static const String SELECT_STAR_ICON = '${DIR_ICON}select_star_icon.svg';
+  static const String UNSELECT_STAR_ICON = '${DIR_ICON}unselect_star_icon.svg';
 }

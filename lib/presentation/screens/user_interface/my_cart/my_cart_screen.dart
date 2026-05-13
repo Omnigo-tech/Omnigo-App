@@ -36,48 +36,11 @@ class MyCartScreen extends StatelessWidget {
                 builder: (context) => CheckoutSummaryScreen(selectedMethod: ""),
               ),
             );
-            //_showOrderSuccessDialog(context);
           },
         ),
       ),
     );
   }
-
-  /*void _showOrderSuccessDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.r),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.check_circle_outline, color: Colors.green, size: 80.sp),
-            SizedBox(height: 20.h),
-            Text(
-              StringResources.orderPlacedSuccess,
-              textAlign: TextAlign.center,
-              style: GoogleFonts.dmSans(
-                fontSize: 22.sp,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 20.h),
-            CustomButton(
-              onClick: () {
-                Navigator.pop(context);
-                Navigator.pop(context);
-              },
-              text: "Back to Home",
-              textColor: AppColors.white,
-              borderRadius: 12.r,
-            ),
-          ],
-        ),
-      ),
-    );
-  }*/
 
   @override
   Widget build(BuildContext context) {

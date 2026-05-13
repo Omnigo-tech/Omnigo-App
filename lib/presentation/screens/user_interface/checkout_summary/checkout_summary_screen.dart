@@ -5,6 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:grocery_app/core/helper/constants/colors_resources.dart';
 import 'package:grocery_app/core/helper/constants/dimensions-resource.dart';
 import 'package:grocery_app/core/helper/constants/images-resources.dart';
+import 'package:grocery_app/core/routes/AppRoutes.dart';
+import 'package:grocery_app/core/helper/constants/images-resources.dart';
 import 'package:grocery_app/core/helper/constants/strings-resource.dart';
 import 'package:grocery_app/presentation/bloc/address/address_bloc.dart';
 import 'package:grocery_app/presentation/bloc/address/address_state.dart';
@@ -14,19 +16,30 @@ import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_state.
 import 'package:grocery_app/presentation/grocery/grocery_home/grocery_home_screen.dart';
 import 'package:grocery_app/presentation/screens/user_interface/address_list/add_address_screen.dart';
 import 'package:grocery_app/presentation/screens/user_interface/address_list/address_screen.dart';
+import 'package:grocery_app/presentation/screens/user_interface/review/review_screen.dart';
 import 'package:grocery_app/widgets/app_bar_widget.dart';
 import 'package:grocery_app/widgets/circle_button_widget.dart';
+import 'package:grocery_app/widgets/cutom_button.dart';
+import '../../../../core/helper/constants/strings-resource.dart';
+import '../../../../core/helper/utils/dialogs/show_cart_dialog.dart';
 
+import '../../../../widgets/app_bar_widget.dart';
 import '../../../../widgets/auth_button.dart';
+import '../../../../widgets/circle_button_widget.dart';
 import '../../../../widgets/confirm_order.dart';
 
 class CheckoutSummaryScreen extends StatefulWidget {
-  final String? selectedMethod;
-  const CheckoutSummaryScreen({super.key, required this.selectedMethod});
+  String? selectedMethod;
+  CheckoutSummaryScreen({super.key, required this.selectedMethod});
 
   @override
   State<CheckoutSummaryScreen> createState() => _CheckoutSummaryScreenState();
 }
+
+/*class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
+  @override
+  State<CheckoutSummaryScreen> createState() => _CheckoutSummaryScreenState();
+}*/
 
 class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
   @override
@@ -329,7 +342,14 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                             ),
                             SizedBox(width: 10),
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ReviewScreen(),
+                                  ),
+                                );
+                              },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.homeBackground,
                               ),

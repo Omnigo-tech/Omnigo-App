@@ -2,9 +2,10 @@ class DimensionsResources {
   static const double D_0 = 0.0;
   static const double D_0_1 = 0.1;
   static const double D_0_4 = 0.4;
+  static const double D_0_2 = 0.2;
   static const double D_0_5 = 0.5;
   static const double D_0_7 = 0.7;
-  static const double D_0_58 = 0.58;
+  static const double D_0_0_5 = 0.05;
   static const double D_1 = 1.0;
   static const double D_2 = 2.0;
   static const double D_3 = 3.0;
@@ -29,6 +30,7 @@ class DimensionsResources {
   static const double D_24 = 24.0;
   static const double D_25 = 25.0;
   static const double D_26 = 26.0;
+  static const double D_28 = 28.0;
   static const double D_30 = 30.0;
   static const double D_32 = 32.0;
   static const double D_36 = 36.0;
@@ -119,6 +121,7 @@ class DimensionsResources {
   static const double FONT_SIZE_2X_EXTRA_MEDIUM = 20;
   static const double FONT_SIZE_LARGE = 22;
   static const double FONT_SIZE_EXTRA_LARGE = 24;
+  static const double FONT_SIZE_EXTRA_EXTRA_LARGE = 50;
 
   static const double RADIUS_SMALL = 8.0;
   static const double RADIUS_DEFAULT = 10.0;

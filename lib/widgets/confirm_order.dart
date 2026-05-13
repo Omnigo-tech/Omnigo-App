@@ -8,6 +8,7 @@ import 'package:grocery_app/core/helper/constants/strings-resource.dart';
 import 'package:grocery_app/core/routes/AppRoutes.dart';
 import 'package:grocery_app/widgets/auth_button.dart';
 
+import '../core/routes/AppRoutes.dart';
 import 'cutom_button.dart';
 
 class ConfirmOrder extends StatelessWidget {
@@ -63,15 +64,20 @@ class ConfirmOrder extends StatelessWidget {
             SizedBox(height: DimensionsResources.D_50.h),
             Padding(
               padding: const EdgeInsets.all(AppSizes.padding),
-              child: AuthButton(text: StringResources.trackOrder, onTap: () {}),
+              child: AuthButton(
+                text: StringResources.trackOrder,
+                onTap: () {
+                  Navigator.pushNamed(context, AppRoutes.trackingOrder);
+                },
+              ),
             ),
 
             CustomButton(
               onClick: () {
-                Navigator.pushReplacementNamed(
+                Navigator.pushNamedAndRemoveUntil(
                   context,
-                  AppRoutes.groceryhome,
-                  arguments: StringResources.vegetables,
+                  AppRoutes.home,
+                  (route) => false,
                 );
               },
               text: StringResources.backToHome,

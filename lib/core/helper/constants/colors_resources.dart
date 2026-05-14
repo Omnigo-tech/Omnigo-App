@@ -44,4 +44,7 @@ class AppColors {
   static const Color cardGoldGradientEnd = Color(0xFF8C6B1F);
   static const callBackground = Color(0xFF3E3E3E);
   static const callDeclineRed = Color(0xFFFF3B30);
+  static const pending = Colors.orange;
+  static const delivered = Colors.green;
+  static const lightBlueOpacity = Color(0x33007AFF); // Blue with 0.2 opacity
 }

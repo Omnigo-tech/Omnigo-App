@@ -65,14 +65,17 @@ class HomeScreen extends StatelessWidget {
                               CarouselSlider.builder(
                                 itemCount: ImageResource.banners.length,
                                 itemBuilder: (context, index, realIndex) {
-                                  return ClipRRect(
-                                    borderRadius: BorderRadius.circular(
-                                      DimensionsResources.D_10.r,
-                                    ),
-                                    child: Image.asset(
-                                      ImageResource.banners[index],
-                                      fit: BoxFit.cover,
-                                      width: double.infinity,
+                                  return Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(
+                                        DimensionsResources.D_10.r,
+                                      ),
+                                      child: Image.asset(
+                                        ImageResource.banners[index],
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                      ),
                                     ),
                                   );
                                 },

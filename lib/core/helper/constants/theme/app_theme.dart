@@ -26,6 +26,7 @@ class AppTheme {
         ),
         bodyLarge: GoogleFonts.poppins(
           fontSize: DimensionsResources.D_16,
+          fontWeight: FontWeight.w500,
           color: AppColors.black,
         ),
         bodyMedium: GoogleFonts.poppins(
@@ -40,6 +41,11 @@ class AppTheme {
         labelSmall: GoogleFonts.poppins(
           fontSize: DimensionsResources.D_10,
           fontWeight: FontWeight.w600,
+          color: AppColors.black,
+        ),
+        headlineLarge: GoogleFonts.poppins(
+          fontSize: DimensionsResources.D_32,
+          fontWeight: FontWeight.w400,
           color: AppColors.black,
         ),
       ),

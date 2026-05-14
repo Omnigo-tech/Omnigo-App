@@ -5,18 +5,19 @@ class PaymentState {
   final String expiry;
   final String cvv;
   final bool showCvv;
+
   final int selectedIndex;
   final int walletIndex;
   final int bankIndex;
 
-  PaymentState({
+  const PaymentState({
     this.holder = "ZAYN MALIK",
-    this.cardNumber = "**** **** **** 5000",
     this.phoneNumber = "03331234567",
+    this.cardNumber = "**** **** **** 5000",
     this.expiry = "01/29",
     this.cvv = "***",
     this.showCvv = false,
-    this.selectedIndex = 0,
+    this.selectedIndex = 0, // default Cash Delivery
     this.walletIndex = -1,
     this.bankIndex = -1,
   });
@@ -29,8 +30,8 @@ class PaymentState {
     String? cvv,
     bool? showCvv,
     int? selectedIndex,
-    int? bankIndex,
     int? walletIndex,
+    int? bankIndex,
   }) {
     return PaymentState(
       holder: holder ?? this.holder,

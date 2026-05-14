@@ -47,5 +47,28 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
         ),
       );
     });
+    on<DeleteAddressEvent>((event, emit) {
+      final updatedList = List<AddressModel>.from(state.addresses);
+
+      updatedList.removeAt(event.index);
+
+      emit(state.copyWith(
+        addresses: updatedList,
+        selectedAddress: state.selectedAddress,
+      ));
+    });
+
+    on<UpdateAddressEvent>((event, emit) {
+      final updatedList = List<AddressModel>.from(state.addresses);
+
+      updatedList[event.index] = event.address;
+
+      emit(state.copyWith(
+        addresses: updatedList,
+        selectedAddress: event.address,
+      ));
+    });
+
+
   }
 }

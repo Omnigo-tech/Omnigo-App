@@ -43,3 +43,8 @@ class CancelOrderEvent extends GroceryDetailEvent {
 
   CancelOrderEvent(this.orderId);
 }
+
+class ReorderItemsEvent extends GroceryDetailEvent {
+  final List<GroceryItemModel> items;
+  ReorderItemsEvent(this.items);
+}

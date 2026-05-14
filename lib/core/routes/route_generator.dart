@@ -16,6 +16,8 @@ import 'package:grocery_app/widgets/bottom_navigation_bar.dart';
 import '../../presentation/bloc/chat/chat_bloc.dart';
 import '../../presentation/bloc/home/home_bloc.dart';
 import '../../presentation/bloc/home/home_event.dart';
+import '../../presentation/bloc/review/review_bloc.dart';
+import '../../presentation/bloc/review/review_event.dart';
 import '../../presentation/bloc/tracking/tracking_bloc.dart';
 import '../../presentation/bloc/tracking/tracking_event.dart';
 import '../../presentation/screens/authentication/location_screen.dart';
@@ -25,6 +27,7 @@ import '../../presentation/screens/authentication/phone_input_screen.dart';
 import '../../presentation/screens/authentication/signup_screen.dart';
 import '../../presentation/screens/splash_screen.dart';
 import '../../presentation/screens/user_interface/payment/payment_method_screen.dart';
+import '../../presentation/screens/user_interface/review/review_screen.dart';
 import 'AppRoutes.dart';
 
 class RouteGenerator {
@@ -93,19 +96,18 @@ class RouteGenerator {
       case AppRoutes.chat:
         return MaterialPageRoute(
           builder: (_) =>
-              BlocProvider(create: (_) => ChatBloc(), child: ChatScreen()),
+              BlocProvider(create: (_) => ChatBloc(),
+                  child: ChatScreen()),
         );
 
       case AppRoutes.call:
         return MaterialPageRoute(builder: (_) => const CallScreen());
 
       case AppRoutes.paymentmethodScreen:
-        return MaterialPageRoute(
-          builder: (_) => BlocProvider(
-            create: (_) => PaymentBloc(),
-            child: PaymentMethodScreen(),
-          ),
-        );
+       return MaterialPageRoute(
+       builder: (_) =>  PaymentMethodScreen(),
+      );
+
       case AppRoutes.trackingOrder:
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
@@ -116,6 +118,10 @@ class RouteGenerator {
             ],
             child: TrackingOrderScreen(),
           ),
+        );
+      case AppRoutes.review:
+        return MaterialPageRoute(
+          builder: (_) => const ReviewScreen(),
         );
 
       default:

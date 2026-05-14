@@ -53,6 +53,8 @@ class ImageResource {
   static const String CONFIRM_ORDER = '${DIR_IMAGE}orderconfirm.png';
   static const String FAIL_ORDER = '${DIR_IMAGE}orderfail.png';
 
+
+
   static const List<String> banners = [
     BANNER_IMAGE1,
     BANNER_IMAGE2,

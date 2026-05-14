@@ -12,6 +12,7 @@ class AppRoutes {
   static const String addressdetail = '/addressdetail';
   static const String paymentmethodScreen = '/payment-method-Screen';
   static const String trackingOrder = '/tracking-order';
+  static const String review = '/review';
   static const String chat = '/chat';
   static const String call = '/call';
 

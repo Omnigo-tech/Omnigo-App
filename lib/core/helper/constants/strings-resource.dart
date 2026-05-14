@@ -46,6 +46,8 @@ class StringResources {
   static const String conditions = 'Conditions';
   static const String placeOrder = 'Place Order';
   static const String orderPlacedSuccess = 'Order Placed Successfully!';
+  static const String addressDetail = 'Address Detail';
+
 
   // Payment Method
   static const String paymentMethod = 'Payment Method';
@@ -159,4 +161,15 @@ class StringResources {
   static const String usePhoneDialer = "Use Phone Dialer";
   static const String appCall = "App Call";
   static const String internetConnectionHint = "Using your internet connection";
+
+  static const orderDetail = 'Order #';
+  static const order= 'Order';
+  static const deliveryCompleted = 'Delivery Completed';
+  static const showDeliveryDetails = 'Show Delivery Details';
+  static const deliveryMan = 'Delivery Man';
+  static const deliveryLocation = 'Delivery Location';
+  static const promoCodeLabel = 'Promo code';
+  static const ratingReview = 'Rating & Review';
+  static const viewAll = 'view all';
+  static const reorderItem = 'Reorder Item';
 }

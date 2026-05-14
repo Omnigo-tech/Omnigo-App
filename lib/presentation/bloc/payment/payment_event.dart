@@ -31,6 +31,7 @@ class ChangeCardIndex extends PaymentEvent {
   final int index;
   ChangeCardIndex(this.index);
 }
+
 class ChangeWalletIndex extends PaymentEvent {
   final int index;
   ChangeWalletIndex(this.index);

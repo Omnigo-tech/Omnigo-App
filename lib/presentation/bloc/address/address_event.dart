@@ -16,3 +16,15 @@ class AddAddressEvent extends AddressEvent {
 
   AddAddressEvent(this.address, this.save);
 }
+
+class DeleteAddressEvent extends AddressEvent {
+  final int index;
+  DeleteAddressEvent(this.index);
+}
+
+class UpdateAddressEvent extends AddressEvent {
+  final int index;
+  final AddressModel address;
+
+  UpdateAddressEvent(this.index, this.address);
+}

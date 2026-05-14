@@ -1,9 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:grocery_app/presentation/bloc/payment/payment_event.dart';
-import 'package:grocery_app/presentation/bloc/payment/payment_state.dart';
+import 'payment_event.dart';
+import 'payment_state.dart';
 
 class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
-  PaymentBloc() : super(PaymentState()) {
+  PaymentBloc() : super(const PaymentState()) {
+
     on<UpdateHolder>((event, emit) {
       emit(state.copyWith(holder: event.value));
     });
@@ -31,6 +32,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     on<ChangeCardIndex>((event, emit) {
       emit(state.copyWith(selectedIndex: event.index));
     });
+
     on<ChangeWalletIndex>((event, emit) {
       emit(state.copyWith(walletIndex: event.index));
     });

@@ -21,7 +21,7 @@ class _CategoriesWidgetState extends State<CategoriesWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(DimensionsResources.D_15.w),
+      padding: EdgeInsets.all(DimensionsResources.D_8.w),
       child: Column(
         children: [
           Row(

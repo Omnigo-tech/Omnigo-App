@@ -4,51 +4,46 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grocery_app/core/helper/constants/colors_resources.dart';
 import 'package:grocery_app/core/helper/constants/dimensions-resource.dart';
-import 'package:grocery_app/core/helper/constants/images-resources.dart';
-import 'package:grocery_app/core/routes/AppRoutes.dart';
-import 'package:grocery_app/core/helper/constants/images-resources.dart';
 import 'package:grocery_app/core/helper/constants/strings-resource.dart';
 import 'package:grocery_app/presentation/bloc/address/address_bloc.dart';
 import 'package:grocery_app/presentation/bloc/address/address_state.dart';
 import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_bloc.dart';
 import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_event.dart';
 import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_state.dart';
-import 'package:grocery_app/presentation/grocery/grocery_home/grocery_home_screen.dart';
 import 'package:grocery_app/presentation/screens/user_interface/address_list/add_address_screen.dart';
 import 'package:grocery_app/presentation/screens/user_interface/address_list/address_screen.dart';
 import 'package:grocery_app/presentation/screens/user_interface/review/review_screen.dart';
 import 'package:grocery_app/widgets/app_bar_widget.dart';
 import 'package:grocery_app/widgets/circle_button_widget.dart';
-import 'package:grocery_app/widgets/cutom_button.dart';
-import '../../../../core/helper/constants/strings-resource.dart';
-import '../../../../core/helper/utils/dialogs/show_cart_dialog.dart';
-
-import '../../../../widgets/app_bar_widget.dart';
+import '../../../../core/routes/AppRoutes.dart';
 import '../../../../widgets/auth_button.dart';
-import '../../../../widgets/circle_button_widget.dart';
 import '../../../../widgets/confirm_order.dart';
 
 class CheckoutSummaryScreen extends StatefulWidget {
-  String? selectedMethod;
-  CheckoutSummaryScreen({super.key, required this.selectedMethod});
+  final String? selectedMethod;
+  const CheckoutSummaryScreen({super.key, required this.selectedMethod});
 
   @override
   State<CheckoutSummaryScreen> createState() => _CheckoutSummaryScreenState();
 }
 
-/*class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
-  @override
-  State<CheckoutSummaryScreen> createState() => _CheckoutSummaryScreenState();
-}*/
-
 class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
+  late String currentMethod;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize currentMethod with passed selectedMethod or fallback
+    currentMethod = (widget.selectedMethod == null || widget.selectedMethod!.isEmpty) 
+        ? "Cash on delivery" 
+        : widget.selectedMethod!;
+  }
+
   @override
   Widget build(BuildContext context) {
-    print("Method is ${widget.selectedMethod}");
     return Scaffold(
       backgroundColor: AppColors.lightBackground,
-      appBar: CustomAppBar(title: StringResources.checkoutSummary),
-
+      appBar: const CustomAppBar(title: StringResources.checkoutSummary),
       body: BlocBuilder<GroceryDetailBloc, GroceryDetailState>(
         builder: (context, state) {
           final cartList = state.cart;
@@ -58,8 +53,8 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
             subtotal += item.price * item.quantity;
           }
 
-          final deliveryFee = 6.0;
-          final tax = 2.5;
+          const deliveryFee = 6.0;
+          const tax = 2.5;
           final total = subtotal + deliveryFee + tax;
 
           return SafeArea(
@@ -83,47 +78,48 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                           builder: (context, state) {
                             final address = state.selectedAddress;
 
-                            return Container(
-                              padding: EdgeInsets.all(14.w),
-                              decoration: BoxDecoration(
-                                color: AppColors.white,
-                                borderRadius: BorderRadius.circular(12.r),
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(Icons.location_on, color: Colors.grey),
-                                  SizedBox(width: 10.w),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          address?.locationname ??
-                                              "Select Address",
-                                          style: TextStyle(fontWeight: .bold),
-                                        ),
-                                        Text(address?.address ?? ""),
-                                      ],
+                            return InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => BlocProvider.value(
+                                      value: context.read<AddressBloc>(),
+                                      child: const AddressListScreen(),
                                     ),
                                   ),
-
-                                  IconButton(
-                                    onPressed: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) => BlocProvider.value(
-                                          value: context.read<AddressBloc>(),
-                                          child: const AddressListScreen(),
-                                        ),
+                                );
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(14.w),
+                                decoration: BoxDecoration(
+                                  color: AppColors.white,
+                                  borderRadius: BorderRadius.circular(12.r),
+                                ),
+                                child: Row(
+                                  children: [
+                                    const Icon(Icons.location_on, color: Colors.grey),
+                                    SizedBox(width: 10.w),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            address?.locationname ??
+                                                "Select Address",
+                                            style: const TextStyle(fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(address?.address ?? ""),
+                                        ],
                                       ),
                                     ),
-                                    icon: Icon(
+                                    const Icon(
                                       Icons.arrow_forward_ios,
                                       size: 16,
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             );
                           },
@@ -147,13 +143,13 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                                 CircleAvatar(
                                   radius: 18.r,
                                   backgroundColor: AppColors.border,
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.add,
                                     color: AppColors.white,
                                   ),
                                 ),
                                 SizedBox(height: 5.h),
-                                Text(
+                                const Text(
                                   "Add new address",
                                   style: TextStyle(color: Colors.grey),
                                 ),
@@ -177,10 +173,10 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                           ),
                           child: ListView.separated(
                             shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
+                            physics: const NeverScrollableScrollPhysics(),
                             itemCount: cartList.length,
                             separatorBuilder: (_, _) =>
-                                Divider(color: AppColors.border),
+                                const Divider(color: AppColors.border),
                             itemBuilder: (context, index) {
                               final item = cartList[index];
 
@@ -198,9 +194,7 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                                         ),
                                       ),
                                     ),
-
                                     SizedBox(width: 10.w),
-
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
@@ -214,7 +208,7 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                                           ),
                                           Text(
                                             item.weight ?? '',
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontSize: 12,
                                               color: Colors.grey,
                                             ),
@@ -277,27 +271,63 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                           ),
                         ),
                         SizedBox(height: 10.h),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(12.r),
-                          child: SizedBox(
-                            height: 60.h,
-                            width: 160.w,
-                            child: Container(
-                              padding: EdgeInsets.all(12.w),
-                              decoration: BoxDecoration(
-                                color: AppColors.white,
-                                borderRadius: BorderRadius.circular(12.r),
+                        Container(
+                          padding: EdgeInsets.all(12.w),
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(8.w),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade200,
+                                  borderRadius: BorderRadius.circular(8.r),
+                                ),
+                                child: Icon(Icons.money, color: Colors.green.shade400),
                               ),
-                              child: Text(
-                                "${widget.selectedMethod}",
-                                textAlign: TextAlign.center,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.dmSans(
-                                  fontWeight: FontWeight.bold,
+                              SizedBox(width: 12.w),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Pay via",
+                                      style: TextStyle(color: Colors.grey, fontSize: 12.sp),
+                                    ),
+                                    Text(
+                                      currentMethod,
+                                      style: GoogleFonts.dmSans(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14.sp,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ),
+                              TextButton(
+                                onPressed: () async {
+                                  // Navigating to payment method screen to change selection
+                                  final result = await Navigator.pushNamed(
+                                    context, 
+                                    AppRoutes.paymentmethodScreen,
+                                    arguments: {'isChange': true},
+                                  );
+                                  
+                                  // Update UI with new selection if returned
+                                  if (result != null && result is String) {
+                                    setState(() {
+                                      currentMethod = result;
+                                    });
+                                  }
+                                },
+                                child: Text(
+                                  "change",
+                                  style: TextStyle(color: AppColors.primary, fontSize: 14.sp),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         SizedBox(height: 25.h),
@@ -320,7 +350,7 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                               _billRow("Subtotal", subtotal),
                               _billRow("Delivery Fee", deliveryFee),
                               _billRow("Tax & Other Fees", tax),
-                              Divider(),
+                              const Divider(),
                               _billRow("Total", total, isBold: true),
                             ],
                           ),
@@ -330,30 +360,30 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                           children: [
                             Expanded(
                               child: Container(
-                                padding: EdgeInsets.symmetric(horizontal: 12),
+                                padding: const EdgeInsets.symmetric(horizontal: 12),
                                 height: 45,
                                 decoration: BoxDecoration(
                                   color: AppColors.white,
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 alignment: Alignment.centerLeft,
-                                child: Text("Add Promo"),
+                                child: const Text("Add Promo"),
                               ),
                             ),
-                            SizedBox(width: 10),
+                            const SizedBox(width: 10),
                             ElevatedButton(
                               onPressed: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => ReviewScreen(),
+                                    builder: (context) => const ReviewScreen(),
                                   ),
                                 );
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.homeBackground,
                               ),
-                              child: Text("Apply"),
+                              child: const Text("Apply"),
                             ),
                           ],
                         ),
@@ -362,7 +392,6 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                     ),
                   ),
                 ),
-
                 Container(
                   padding: EdgeInsets.all(DimensionsResources.D_16.w),
                   child: SizedBox(
@@ -378,21 +407,26 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                             .state
                             .selectedAddress;
 
+                        if (address == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Please select a delivery address")),
+                          );
+                          return;
+                        }
+
                         context.read<GroceryDetailBloc>().add(
                           PlaceOrderEvent(
-                            address!,
-                            widget.selectedMethod ?? "Cash on delivery",
+                            address,
+                            currentMethod,
                           ),
                         );
 
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (_) => ConfirmOrder()),
+                          MaterialPageRoute(builder: (_) => const ConfirmOrder()),
                         );
-
-                        //_orderFail(context);
                       },
-                      child: Text("Confirm Your Order"),
+                      child: const Text("Confirm Your Order"),
                     ),
                   ),
                 ),
@@ -424,69 +458,6 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  void _orderFail(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (_) {
-        return AlertDialog(
-          backgroundColor: AppColors.white,
-          title: Align(
-            alignment: AlignmentGeometry.topLeft,
-            child: GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Icon(Icons.cancel_rounded, color: AppColors.lightText),
-            ),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(height: DimensionsResources.D_20),
-              SizedBox(
-                height: DimensionsResources.D_150.h,
-                child: Image.asset(
-                  ImageResource.FAIL_ORDER,
-                  fit: BoxFit.contain,
-                ),
-              ),
-
-              SizedBox(height: DimensionsResources.D_40),
-              Text(
-                StringResources.orderFail,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: DimensionsResources.FONT_SIZE_LARGE,
-                ),
-              ),
-              SizedBox(height: DimensionsResources.D_50),
-              AuthButton(
-                text: StringResources.tryAgain,
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              SizedBox(height: DimensionsResources.D_20),
-              GestureDetector(
-                onTap: () => Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => GroceryHomeScreen(nameCategories: ""),
-                  ),
-                ),
-                child: Text(
-                  StringResources.backToHome,
-                  style: TextStyle(fontWeight: FontWeight.w600),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:grocery_app/core/helper/constants/colors_resources.dart';
 import 'package:grocery_app/core/helper/constants/dimensions-resource.dart';
 import 'package:grocery_app/core/helper/constants/strings-resource.dart';
+import 'package:grocery_app/core/routes/AppRoutes.dart';
 import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_event.dart';
 import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_bloc.dart';
 import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_state.dart';
@@ -46,7 +47,6 @@ class _OrdersScreenState extends State<OrdersScreen>
       backgroundColor: AppColors.white,
       appBar: AppBar(
         title: const Text("Orders"),
-        leading: const BackButton(),
         elevation: 0,
         bottom: TabBar(
           controller: _tabController,
@@ -359,7 +359,9 @@ class _OrdersScreenState extends State<OrdersScreen>
                             ),
                           ),
 
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.pushNamed(context, AppRoutes.trackingOrder);
+                          },
 
                           icon: const Icon(
                             Icons.location_on,

@@ -7,6 +7,8 @@ import 'package:grocery_app/core/helper/constants/theme/app_theme.dart';
 import 'package:grocery_app/presentation/bloc/address/address_bloc.dart';
 import 'package:grocery_app/presentation/bloc/address/address_event.dart';
 import 'package:grocery_app/presentation/bloc/call/call_bloc.dart';
+import 'package:grocery_app/presentation/bloc/payment/payment_bloc.dart';
+import 'package:grocery_app/presentation/bloc/review/review_bloc.dart';
 import 'core/helper/constants/dimensions-resource.dart';
 import 'core/helper/utils/svg-utils.dart';
 import 'core/routes/AppRoutes.dart';
@@ -32,6 +34,8 @@ void main() async {
         BlocProvider(create: (_) => GroceryDetailBloc()..add(LoadItemsEvent())),
         BlocProvider(create: (_) => AddressBloc()..add(LoadAddresses())),
         BlocProvider(create: (context) => CallBloc()),
+        BlocProvider(create: (_) => ReviewBloc(),),
+        BlocProvider(create: (_) => PaymentBloc()),
       ],
       child: const MyApp(),
     ),

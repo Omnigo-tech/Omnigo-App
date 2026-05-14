@@ -106,7 +106,7 @@ class GroceryDetailBloc extends Bloc<GroceryDetailEvent, GroceryDetailState> {
       }
 
       final newOrder = OrderModel(
-        id: Uuid().v4().substring(0, 6), // short UUID
+        id: Uuid().v4().substring(0, 6),
         items: List.from(cartItems),
         total: total,
         status: "pending",
@@ -138,6 +138,10 @@ class GroceryDetailBloc extends Bloc<GroceryDetailEvent, GroceryDetailState> {
       }).toList();
 
       emit(state.copyWith(orders: updatedOrders));
+    });
+
+    on<ReorderItemsEvent>((event, emit) {
+      emit(state.copyWith(cart: List.from(event.items)));
     });
   }
 }

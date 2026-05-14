@@ -1,4 +1,3 @@
-import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,13 +15,14 @@ import 'package:grocery_app/presentation/screens/user_interface/details/grocery_
 import 'package:grocery_app/presentation/grocery/grocery_home/filter_bottom_sheet.dart';
 import 'package:grocery_app/presentation/grocery/grocery_home/search_screen.dart';
 import 'package:grocery_app/presentation/screens/user_interface/my_cart/my_cart_screen.dart';
+import '../../screens/user_interface/address_list/address_screen.dart';
 import '../grocery_bloc/grocery_bloc.dart';
 import '../grocery_bloc/grocery_event.dart';
 import '../grocery_bloc/grocery_state.dart';
 
 class GroceryHomeScreen extends StatelessWidget {
   final String nameCategories;
-   GroceryHomeScreen({super.key, required this.nameCategories});
+  const GroceryHomeScreen({super.key, required this.nameCategories});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class GroceryHomeScreen extends StatelessWidget {
 }
 
 class GroceryView extends StatefulWidget {
-  GroceryView({super.key});
+  const GroceryView({super.key});
 
   @override
   State<GroceryView> createState() => _GroceryViewState();
@@ -39,11 +39,10 @@ class GroceryView extends StatefulWidget {
 
 class _GroceryViewState extends State<GroceryView> {
   final ScrollController _scrollController = ScrollController();
+  final PageController _pageController = PageController();
+
   final List<Map<String, String>> categories = const [
-    {
-      "name": "Vegetables",
-      "image": ImageResource.VEGETABLE_IMAGE,
-    },
+    {"name": "Vegetables", "image": ImageResource.VEGETABLE_IMAGE},
     {"name": "Fruits", "image": ImageResource.FRUIT_IMAGE},
     {"name": "Meat", "image": ImageResource.MEAT_IMG},
     {"name": "Drinks", "image": ImageResource.DRINK_IMG},
@@ -56,12 +55,14 @@ class _GroceryViewState extends State<GroceryView> {
     {"name": "Sauces&Pastes", "image": ImageResource.SAUCE_IMG},
     {"name": "Salts", "image": ImageResource.SALT_IMG},
     {"name": "Baking&Desserts", "image": ImageResource.BAKING_IMG},
-
-
-
-
-
   ];
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,39 +75,7 @@ class _GroceryViewState extends State<GroceryView> {
             SizedBox(height: DimensionsResources.D_10),
             _buildSearchBar(context),
             SizedBox(height: DimensionsResources.D_12),
-            Padding(
-              padding:  EdgeInsets.symmetric(horizontal: DimensionsResources.D_12.sp),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Categories",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        builder: (_) => BlocProvider.value(
-                          value: context.read<GroceryBloc>(),
-                          child: const FilterBottomSheet(flag:0),
-                        ),
-                      );
-                    },
-                    icon: SvgPicture.asset(
-                      ImageResource.FILTER_ICON,
-                      width: DimensionsResources.D_30.w,
-                      height: DimensionsResources.D_30.h,
-                      colorFilter: ColorFilter.mode(
-                        AppColors.black,
-                        BlendMode.srcIn,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            _buildCategoryHeader(context),
             SizedBox(height: DimensionsResources.D_10),
             _buildCategories(context),
             SizedBox(height: DimensionsResources.D_10),
@@ -117,23 +86,51 @@ class _GroceryViewState extends State<GroceryView> {
     );
   }
 
+  Widget _buildCategoryHeader(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: DimensionsResources.D_12.sp),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text(
+            "Categories",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          IconButton(
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                builder: (_) => BlocProvider.value(
+                  value: context.read<GroceryBloc>(),
+                  child: const FilterBottomSheet(flag: 0),
+                ),
+              );
+            },
+            icon: SvgPicture.asset(
+              ImageResource.FILTER_ICON,
+              width: DimensionsResources.D_30.w,
+              height: DimensionsResources.D_30.h,
+              colorFilter: const ColorFilter.mode(AppColors.black, BlendMode.srcIn),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildHeader(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 10),
       child: Row(
         children: [
           IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon:  SvgPicture.asset(
+            onPressed: () => Navigator.pop(context),
+            icon: SvgPicture.asset(
               ImageResource.BACK_ICON,
               width: DimensionsResources.D_30.w,
               height: DimensionsResources.D_30.h,
-              colorFilter: ColorFilter.mode(
-                AppColors.darkSecondary,
-                BlendMode.srcIn,
-              ),
+              colorFilter: const ColorFilter.mode(AppColors.darkSecondary, BlendMode.srcIn),
             ),
           ),
           const SizedBox(width: 2),
@@ -143,20 +140,33 @@ class _GroceryViewState extends State<GroceryView> {
             builder: (context, state) {
               final address = state.selectedAddress;
               return Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      address?.locationname ?? "Select Address",
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      address?.address ?? "",
-                      style: const TextStyle(
-                        fontSize: DimensionsResources.FONT_SIZE_1X_EXTRA_SMALL,
+                child: InkWell(
+                  onTap: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => BlocProvider.value(
+                          value: context.read<AddressBloc>(),
+                          child: const AddressListScreen(),
+                        ),
                       ),
+                    );
+                  },
+                  child: Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          address?.locationname ?? "Select Address",
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          address?.address ?? "",
+                          style: const TextStyle(fontSize: DimensionsResources.FONT_SIZE_1X_EXTRA_SMALL),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               );
             },
@@ -230,20 +240,19 @@ class _GroceryViewState extends State<GroceryView> {
             itemBuilder: (_, index) {
               final category = categories[index];
               final String categoryName = category["name"]!;
-              final String categoryImge = category["image"]!;
               final isSelected = state.selectedCategory == categoryName;
               return GestureDetector(
                 onTap: () {
-                  context.read<GroceryBloc>().add(
-                    SelectCategoryEvent(categoryName),
+                  context.read<GroceryBloc>().add(SelectCategoryEvent(categoryName));
+                  _pageController.animateToPage(
+                    index,
+                    duration: const Duration(milliseconds: 100),
+                    curve: Curves.easeInOut,
                   );
                 },
                 child: Container(
                   margin: const EdgeInsets.only(right: 10),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
                     color: isSelected ? AppColors.primary : AppColors.lightBackground,
                     borderRadius: BorderRadius.circular(20),
@@ -254,16 +263,14 @@ class _GroceryViewState extends State<GroceryView> {
                       Text(
                         categoryName,
                         style: GoogleFonts.inter(
-                          fontWeight:isSelected?FontWeight.bold: FontWeight.w500,
+                          fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                           fontSize: DimensionsResources.D_14.sp,
-                          color: isSelected
-                              ? AppColors.white
-                              : AppColors.grey,
+                          color: isSelected ? AppColors.white : AppColors.grey,
                         ),
                       ),
                       SizedBox(width: DimensionsResources.D_4.w),
                       Image.asset(
-                        categoryImge,
+                        category["image"]!,
                         width: DimensionsResources.D_32.w,
                         height: DimensionsResources.D_32.h,
                         fit: BoxFit.contain,
@@ -281,124 +288,128 @@ class _GroceryViewState extends State<GroceryView> {
 
   Widget _buildProducts() {
     return Expanded(
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(height: 15),
-            CarouselSlider.builder(
-              itemCount: ImageResource.banners.length,
-              itemBuilder: (context, index, realIndex) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.asset(
-                      ImageResource.banners[index],
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                    ),
-                  ),
-                );
-              },
-              options: CarouselOptions(
-                height: 150,
-                autoPlay: true,
-                viewportFraction: 1,
-              ),
-            ),
-            SizedBox(height: DimensionsResources.D_10.h),
-            BlocBuilder<GroceryBloc, GroceryState>(
-              builder: (context, state) {
-                return GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    childAspectRatio: 0.72,
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                  ),
-                  itemCount: state.filteredItems.length,
-                  itemBuilder: (_, index) {
-                    final item = state.filteredItems[index];
-
-                    return GestureDetector(
-                      onTap: () {
-                        final detailItem = GroceryItemModel(
-                          id: item.id,
-                          name: item.name,
-                          image: item.image,
-                          price: item.price,
-                          description:
-                              item.description ?? "No description available.",
-                          weight: item.weight ?? "N/A",
-                        );
-
-                        // Use the existing GroceryDetailBloc by passing it to the new screen
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => BlocProvider.value(
-                              value: context.read<GroceryDetailBloc>(),
-                              child: DetailScreen(item: detailItem),
-                            ),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: Center(
-                                child: Image.asset(
-                                  item.image,
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              item.name,
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: AppColors.lightText,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            Text(
-                              "Rs ${item.price}",
-                              style: const TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-          ],
-        ),
+      child: BlocBuilder<GroceryBloc, GroceryState>(
+        builder: (context, state) {
+          return PageView.builder(
+            controller: _pageController,
+            itemCount: categories.length,
+            onPageChanged: (index) {
+              final categoryName = categories[index]["name"]!;
+              context.read<GroceryBloc>().add(SelectCategoryEvent(categoryName));
+            },
+            itemBuilder: (context, pageIndex) {
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 15),
+                    _buildBanner(),
+                    SizedBox(height: DimensionsResources.D_10.h),
+                    _buildProductGrid(state.filteredItems),
+                  ],
+                ),
+              );
+            },
+          );
+        },
       ),
     );
   }
-  void scrollToSelectedCategory(String selectedCategory) {
-    final index = categories.indexWhere(
-          (cat) => cat["name"] == selectedCategory,
-    );
 
-    if (index != -1) {
+  Widget _buildBanner() {
+    return CarouselSlider.builder(
+      itemCount: ImageResource.banners.length,
+      itemBuilder: (context, index, realIndex) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Image.asset(
+              ImageResource.banners[index],
+              fit: BoxFit.cover,
+              width: double.infinity,
+            ),
+          ),
+        );
+      },
+      options: CarouselOptions(
+        height: 150,
+        autoPlay: true,
+        viewportFraction: 1,
+      ),
+    );
+  }
+
+  Widget _buildProductGrid(List<dynamic> items) {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        childAspectRatio: 0.72,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
+      ),
+      itemCount: items.length,
+      itemBuilder: (_, index) {
+        final item = items[index];
+        return GestureDetector(
+          onTap: () {
+            final detailItem = GroceryItemModel(
+              id: item.id,
+              name: item.name,
+              image: item.image,
+              price: item.price,
+              description: item.description ?? "No description available.",
+              weight: item.weight ?? "N/A",
+            );
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => BlocProvider.value(
+                  value: context.read<GroceryDetailBloc>(),
+                  child: DetailScreen(item: detailItem),
+                ),
+              ),
+            );
+          },
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade100,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Center(
+                    child: Image.asset(item.image, fit: BoxFit.contain),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  item.name,
+                  style: const TextStyle(fontSize: 12, color: AppColors.lightText),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  "Rs ${item.price}",
+                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void scrollToSelectedCategory(String selectedCategory) {
+    final index = categories.indexWhere((cat) => cat["name"] == selectedCategory);
+    if (index != -1 && _scrollController.hasClients) {
       _scrollController.animateTo(
         index * 110,
         duration: const Duration(milliseconds: 400),

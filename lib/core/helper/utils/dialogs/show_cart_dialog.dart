@@ -264,7 +264,7 @@ class GlobalDialogs {
               height: DimensionsResources.D_56.h,
               child: CustomButton(
                 onClick: () {
-                  // Launcher logic here
+                  LauncherHelper.makePhoneCall(phoneNumber);
                   Navigator.pop(context);
                 },
                 text: StringResources.usePhoneDialer,

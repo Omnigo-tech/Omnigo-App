@@ -1,10 +1,15 @@
 extension PaymentValidation on String {
   String? validateMobile() {
-    if (isEmpty) return "Phone number is required";
-    final regex = RegExp(r'^03\d{9}$');
-    return regex.hasMatch(this)
+    if (isEmpty) {
+      return "Phone number is required";
+    }
+
+    final phone = trim();
+    final regex = RegExp(r'^(03\d{9}|3\d{9})$');
+
+    return regex.hasMatch(phone)
         ? null
-        : "Enter valid 11-digit number (03xx...)";
+        : "Enter valid mobile number";
   }
 
   String? validateCNIC() {

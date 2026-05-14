@@ -7,6 +7,9 @@ import 'package:grocery_app/presentation/bloc/address/address_bloc.dart';
 import 'package:grocery_app/presentation/bloc/address/address_event.dart';
 import 'package:grocery_app/presentation/bloc/address/address_state.dart';
 import 'package:grocery_app/presentation/screens/user_interface/address_list/add_address_screen.dart';
+import 'package:grocery_app/widgets/app_bar_widget.dart';
+
+import '../../../../core/helper/constants/strings-resource.dart';
 
 class AddressListScreen extends StatelessWidget {
   const AddressListScreen({super.key});
@@ -14,14 +17,9 @@ class AddressListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Address Detail"),
-        toolbarHeight: DimensionsResources.D_100,
-        centerTitle: false,
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: Icon(Icons.arrow_back_ios_new),
-        ),
+      appBar: CustomAppBar(
+        title: StringResources.addressDetail,
+        showBackButton: true,
       ),
 
       body: BlocBuilder<AddressBloc, AddressState>(
@@ -32,43 +30,61 @@ class AddressListScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 if (index != state.addresses.length) {
                   final item = state.addresses[index];
+                  print("item is ${item}");
                   return GestureDetector(
                     onTap: () {
                       context.read<AddressBloc>().add(SelectAddressEvent(item));
                       Navigator.pop(context);
                     },
                     child: ListTile(
-                      title: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(item.locationname,
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
+
+                      Row(
                         children: [
-                          Text(
-                            item.locationname,
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
                           IconButton(
-                            onPressed: () {},
-                            icon: Icon(Icons.edit),
-                            color: AppColors.lightText,
-                          ),
-                        ],
-                      ), //Text(item.name),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Divider(thickness: 1),
-                          SizedBox(height: DimensionsResources.D_10),
-                          Text(
-                            item.username,
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            icon: const Icon(Icons.edit),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => BlocProvider.value(
+                                    value: context.read<AddressBloc>(),
+                                    child: AddAddressScreen(
+                                      index: index,
+                                      existingAddress: item,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
                           ),
 
-                          SizedBox(height: DimensionsResources.D_10),
-                          Text(item.phone),
-                          SizedBox(height: DimensionsResources.D_10),
-                          Text(item.address),
+                          IconButton(
+                            icon: const Icon(Icons.delete, color: Colors.red),
+                            onPressed: () {
+                              context.read<AddressBloc>().add(
+                                DeleteAddressEvent(index),
+                              );
+                            },
+                          ),
                         ],
-                      ),
-                    ),
+                      )
+                    ],
+                  ),
+                subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                const Divider(),
+                Text(item.username),
+                Text(item.phone),
+                Text(item.address),
+                ],
+                ),
+                ),
                   );
                 } else {
                   return Center(

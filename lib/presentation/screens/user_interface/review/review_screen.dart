@@ -18,53 +18,61 @@ import '../../../bloc/review/review_event.dart';
 import '../../../bloc/review/review_state.dart';
 
 // --- Screen ---
-class ReviewScreen extends StatelessWidget {
+class ReviewScreen extends StatefulWidget {
   const ReviewScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ReviewBloc()..add(FetchReviewsEvent()),
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: CustomAppBar(
-          title: StringResources.omnigo,
-          showBackButton: true,
-          onTap: () => Navigator.pop(context),
-        ),
-        body: BlocBuilder<ReviewBloc, ReviewState>(
-          builder: (context, state) {
-            if (state is ReviewLoading) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (state is ReviewLoaded) {
-              if (state.reviews.isEmpty) {
-                return _buildEmptyState(context);
-              }
+  State<ReviewScreen> createState() => _ReviewScreenState();
+}
 
-              return Stack(
-                children: [
-                  SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    padding: EdgeInsets.symmetric(
-                        horizontal: DimensionsResources.D_20.w),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: DimensionsResources.D_10.h),
-                        _buildHeaderSummary(context),
-                        SizedBox(height: DimensionsResources.D_20.h),
-                        _buildReviewList(state.reviews),
-                        SizedBox(height: DimensionsResources.D_10.h),
-                      ],
-                    ),
-                  ),
-                  _buildStickyButton(context),
-                ],
-              );
+class _ReviewScreenState extends State<ReviewScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    context.read<ReviewBloc>().add(FetchReviewsEvent());
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: CustomAppBar(
+        title: StringResources.omnigo,
+        showBackButton: true,
+        onTap: () => Navigator.pop(context),
+      ),
+      body: BlocBuilder<ReviewBloc, ReviewState>(
+        builder: (context, state) {
+          if (state is ReviewLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is ReviewLoaded) {
+            if (state.reviews.isEmpty) {
+              return _buildEmptyState(context);
             }
-            return const SizedBox();
-          },
-        ),
+
+            return Stack(
+              children: [
+                SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: DimensionsResources.D_20.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: DimensionsResources.D_10.h),
+                      _buildHeaderSummary(context),
+                      SizedBox(height: DimensionsResources.D_20.h),
+                      _buildReviewList(state.reviews),
+                      SizedBox(height: DimensionsResources.D_10.h),
+                    ],
+                  ),
+                ),
+                _buildStickyButton(context),
+              ],
+            );
+          }
+          return const SizedBox();
+        },
       ),
     );
   }

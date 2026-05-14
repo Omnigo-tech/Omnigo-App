@@ -16,7 +16,6 @@ import 'package:grocery_app/presentation/screens/user_interface/review/review_sc
 import 'package:grocery_app/widgets/app_bar_widget.dart';
 import 'package:grocery_app/widgets/circle_button_widget.dart';
 import '../../../../core/routes/AppRoutes.dart';
-import '../../../../widgets/auth_button.dart';
 import '../../../../widgets/confirm_order.dart';
 
 class CheckoutSummaryScreen extends StatefulWidget {
@@ -372,14 +371,7 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                             ),
                             const SizedBox(width: 10),
                             ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const ReviewScreen(),
-                                  ),
-                                );
-                              },
+                              onPressed: () {},
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.homeBackground,
                               ),

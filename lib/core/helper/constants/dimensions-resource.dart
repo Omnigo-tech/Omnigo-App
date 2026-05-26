@@ -116,11 +116,14 @@ class DimensionsResources {
   static const double FONT_SIZE_2X_EXTRA_SMALL = 11;
   static const double FONT_SIZE_1X_EXTRA_SMALL = 12;
   static const double FONT_SIZE_SMALL = 14;
+  static const double FONT_SIZE_24 = 24.0;
+  static const double FONT_SIZE_15 = 15.0;
   static const double FONT_SIZE_MEDIUM = 16;
   static const double FONT_SIZE_1X_EXTRA_MEDIUM = 18;
   static const double FONT_SIZE_2X_EXTRA_MEDIUM = 20;
   static const double FONT_SIZE_LARGE = 22;
   static const double FONT_SIZE_EXTRA_LARGE = 24;
+  static const double FONT_SIZE_TITLE_LARGE = 26.0;
   static const double FONT_SIZE_EXTRA_EXTRA_LARGE = 50;
 
   static const double RADIUS_SMALL = 8.0;

@@ -1,143 +1,223 @@
+// lib/presentation/pages/location/location_screen.dart
 import 'package:flutter/material.dart';
-import 'package:grocery_app/widgets/auth_button.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../core/di/service_locator.dart';
 import '../../../core/helper/constants/colors_resources.dart';
-import '../../../core/helper/constants/sizes.dart';
+import '../../../core/helper/constants/dimensions-resource.dart';
+import '../../../core/helper/constants/images-resources.dart';
+import '../../../core/helper/constants/strings-resource.dart';
+import '../../../core/helper/utils/dialogs/show_cart_dialog.dart';
+import '../../../widgets/auth_button.dart';
+import '../../bloc/location/location_bloc.dart';
+import '../../bloc/location/location_event.dart';
+import '../../bloc/location/location_state.dart';
 
-
-class LocationScreen extends StatelessWidget {
+class LocationScreen extends StatefulWidget {
   const LocationScreen({super.key});
 
   @override
+  State<LocationScreen> createState() => _LocationScreenState();
+}
+
+class _LocationScreenState extends State<LocationScreen> {
+  final _bloc = sl<LocationBloc>();
+
+  @override
+  void initState() {
+    super.initState();
+    _bloc.add(LoadInitialDataEvent());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showLocationDialog(context);
+    });
+  }
+
+  void showLocationDialog(BuildContext screenContext) {
+    GlobalDialogs.showStatusDialog(
+      context: screenContext,
+      isSuccess: true,
+      imagePath: ImageResource.LOCATION_IMG,
+      title: StringResources.useCurrentLocation,
+      subtitle: StringResources.locationDialogSubtitle,
+      primaryButtonText: StringResources.allowAccess,
+      onPrimaryClick: () {
+        Navigator.pop(screenContext);
+        _bloc.add(FetchGpsLocationEvent());
+      },
+      secondaryButtonText: StringResources.enterManually,
+      onSecondaryClick: () {
+        Navigator.pop(screenContext);
+      },
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(AppSizes.padding),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 20),
-                  Icon(Icons.arrow_back_ios_new),
-                  SizedBox(height: 20),
+    final textTheme = Theme.of(context).textTheme;
 
-                  /// Illustration
-                  Image.asset("images/Omnigo.png"),
-                  SizedBox(height: 20),
+    return BlocProvider.value(
+      value: _bloc,
+      child: Scaffold(
+        body: BlocConsumer<LocationBloc, LocationState>(
+          listener: (context, state) {
+            if (state.errorMessage != null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.errorMessage!)),
+              );
+            }
+            if (state.isGpsSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text(StringResources.locationSelectSuccess)),
+              );
+            }
+          },
+          builder: (context, state) {
+            return Stack(
+              children: [
+                SafeArea(
+                  child: SingleChildScrollView(
+                    child: SizedBox(
+                      height: 1.sh - MediaQuery.of(context).padding.top,
+                      child: Padding(
+                        padding: EdgeInsets.all(DimensionsResources.D_16.r),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: DimensionsResources.D_10.h),
 
-                  Center(
-                    child: Text(
-                      "Select Your Location",
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.black,
+                            /// BACK NAVIGATION
+                            GestureDetector(
+                              onTap: () => Navigator.pop(context),
+                              child: Icon(
+                                Icons.arrow_back_ios_new,
+                                size: DimensionsResources.D_24.r,
+                              ),
+                            ),
+
+                            SizedBox(height: DimensionsResources.D_20.h),
+
+                            /// OMNIGO LOGO / IMAGE
+                            Center(
+                              child: Image.asset(
+                                ImageResource.OMINGO_LOCATION_LOGO_IMG,
+                                height: 200.h,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+
+                            SizedBox(height: DimensionsResources.D_20.h),
+
+                            /// HEADER TITLE
+                            Center(
+                              child: Text(
+                                StringResources.selectYourLocation,
+                                style: textTheme.displayMedium?.copyWith(
+                                  fontSize: DimensionsResources.FONT_SIZE_EXTRA_LARGE.sp,
+                                  fontWeight: FontWeight.w800,
+                                  color: AppColors.black,
+                                ),
+                              ),
+                            ),
+
+                            SizedBox(height: DimensionsResources.D_10.h),
+
+                            Text(
+                              StringResources.locationScreenSubtitle,
+                              textAlign: TextAlign.center,
+                              style: textTheme.bodyMedium?.copyWith(
+                                fontSize: DimensionsResources.FONT_SIZE_SMALL.sp,
+                                color: AppColors.lightText,
+                              ),
+                            ),
+
+                            SizedBox(height: DimensionsResources.D_30.h),
+
+                            /// ZONE DROPDOWN
+                            DropdownButtonFormField<String>(
+                              value: state.selectedZone,
+                              key: ValueKey('zone_${state.selectedZone}'),
+                              style: textTheme.bodyLarge?.copyWith(fontSize: DimensionsResources.FONT_SIZE_2X_EXTRA_MEDIUM.sp),
+                              decoration: const InputDecoration(
+                                labelText: StringResources.yourZone,
+                                border: OutlineInputBorder(),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: AppColors.primary),
+                                ),
+                              ),
+                              items: state.availableZones.toSet().map((e) {
+                                return DropdownMenuItem(
+                                  value: e,
+                                  child: Text(e),
+                                );
+                              }).toList(),
+                              onChanged: (v) {
+                                if (v != null) _bloc.add(ChangeZoneEvent(v));
+                              },
+                            ),
+
+                            SizedBox(height: DimensionsResources.D_20.h),
+
+                            /// AREA DROPDOWN
+                            DropdownButtonFormField<String>(
+                              value: state.selectedArea,
+                              key: ValueKey('area_${state.selectedArea}'),
+                              style: textTheme.bodyLarge?.copyWith(fontSize: DimensionsResources.FONT_SIZE_1X_EXTRA_MEDIUM.sp),
+                              decoration: const InputDecoration(
+                                labelText: StringResources.yourArea,
+                                border: OutlineInputBorder(),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: AppColors.primary),
+                                ),
+                              ),
+                              items: state.availableAreas.toSet().map((e) {
+                                return DropdownMenuItem(
+                                  value: e,
+                                  child: Text(e),
+                                );
+                              }).toList(),
+                              onChanged: (v) {
+                                if (v != null) _bloc.add(ChangeAreaEvent(v));
+                              },
+                            ),
+
+                            const Spacer(),
+
+                            /// SUBMIT ACTION BUTTON
+                            AuthButton(
+                              text: StringResources.submit,
+                              onTap: () {
+                                if (state.selectedZone != null && state.selectedArea != null) {
+                                  print("Submitted Data: ${state.selectedZone}, ${state.selectedArea}");
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text(StringResources.locationRequiredError)),
+                                  );
+                                }
+                              },
+                            ),
+                            SizedBox(height: DimensionsResources.D_20.h),
+                          ],
+                        ),
                       ),
                     ),
                   ),
+                ),
 
-                  const Text(
-                    "Switch on your location to stay in tune with what's happening in your area",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 14, color: AppColors.lightText),
+                /// BLURRED FULL SCREEN INTERCEPTOR LOADER
+                if (state.isLoading)
+                  Container(
+                    color: Colors.black.withOpacity(0.4),
+                    child: const Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
-
-                  const SizedBox(height: 20),
-
-                  DropdownButtonFormField(
-                    decoration: const InputDecoration(labelText: "Your Zone"),
-                    items: ["Rawalpindi", "Islamabad"]
-                        .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                        .toList(),
-                    onChanged: (v) {},
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  DropdownButtonFormField(
-                    decoration: const InputDecoration(labelText: "Your Area"),
-                    items: ["Saddar", "6th Road"]
-                        .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                        .toList(),
-                    onChanged: (v) {},
-                  ),
-
-                  SizedBox(height: 50),
-
-                  AuthButton(text: "Submit", onTap: () {}),
-                ],
-              ),
-            ),
-          ),
+              ],
+            );
+          },
         ),
       ),
     );
   }
 }
-
-/*import 'package:flutter/material.dart';
-import 'package:grocery_app/widgets/auth_button.dart';
-
-class LocationScreen extends StatelessWidget {
-  const LocationScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.all(20),
-        child: Column(
-          children: [
-            SizedBox(height: 60),
-
-            /// Illustration
-            Image.asset("assets/images/location.png", height: 180),
-
-            SizedBox(height: 20),
-
-            Text(
-              "Select Your Location",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-
-            SizedBox(height: 10),
-
-            Text(
-              "Switch on your location to stay in tune with what's happening in your area",
-              textAlign: TextAlign.center,
-            ),
-
-            SizedBox(height: 30),
-
-            DropdownButtonFormField(
-              items: [
-                "Zone 1",
-                "Zone 2",
-              ].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-              onChanged: (value) {},
-              decoration: InputDecoration(labelText: "Your Zone"),
-            ),
-
-            SizedBox(height: 20),
-
-            DropdownButtonFormField(
-              items: [
-                "Area 1",
-                "Area 2",
-              ].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-              onChanged: (value) {},
-              decoration: InputDecoration(labelText: "Your Area"),
-            ),
-
-            Spacer(),
-
-            AuthButton(text: "Submit", onTap: () {}),
-          ],
-        ),
-      ),
-    );
-  }
-}*/

@@ -172,4 +172,48 @@ class StringResources {
   static const ratingReview = 'Rating & Review';
   static const viewAll = 'view all';
   static const reorderItem = 'Reorder Item';
+
+  static const String signUp = 'Sign Up';
+  static const String username = 'Username';
+  static const String email = 'Email';
+  static const String password = 'Password';
+  static const String enterCredentials = 'Enter your credentials to continue';
+  static const String alreadyHaveAccount = 'Already have an account?';
+  static const String nameRequired = 'Name is required';
+  static const String emailRequired = 'Email is required';
+  static const String validEmailRequired = 'Enter a valid email';
+  static const String passwordRequired = 'Password is required';
+  static const String minPasswordLength = 'Minimum 6 characters required';
+  static const String termsOfService = 'Terms of Service';
+  static const String privacyPolicy = 'Privacy Policy';
+  static const String enterEmailPassword = 'Enter your email and password';
+  static const String forgotPassword = 'Forgot Password?';
+  static const String dontHaveAccount = "Don't have an account?";
+
+  static const String enterMobileNumber = 'Enter your mobile number';
+  static const String verificationDescription = "We will send a verification code to your mobile number to ensure your account security.";
+  static const String phoneRequired = 'Phone number is required';
+  static const String digitsOnly = 'Only digits allowed';
+  static const String tenDigitsRequired = 'Must be 10 digits';
+  static const String startWithThree = 'Must start with 3';
+  static const String otpSentSuccess = 'OTP Sent Successfully';
+  static const String countryCodePk = '+92';
+  static const String phoneHint = '3XXXXXXXXX';
+
+  static const String enterOtpCode = 'Enter your 6-digit code';
+  static const String completeOtpRequired = 'Enter complete 6-digit OTP';
+  static const String otpResent = 'OTP Resent';
+  static const String resendCode = 'Resend Code';
+
+  static const String useCurrentLocation = "Use Current Location?";
+  static const String locationDialogSubtitle = "Allowing location helps us find restaurants and grocery stores near you swiftly.";
+  static const String allowAccess = "Allow Access";
+  static const String enterManually = "Enter Manually";
+  static const String selectYourLocation = "Select Your Location";
+  static const String locationScreenSubtitle = "Enable location to stay connected with your area";
+  static const String yourZone = "Your Zone";
+  static const String yourArea = "Your Area";
+  static const String submit = "Submit";
+  static const String locationSelectSuccess = "Location auto-selected successfully!";
+  static const String locationRequiredError = "Please select both Zone and Area";
 }

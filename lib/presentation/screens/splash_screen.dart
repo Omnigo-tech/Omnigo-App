@@ -16,7 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(Duration(seconds: 3), () {
-      Navigator.pushReplacementNamed(context, AppRoutes.home);
+      Navigator.pushReplacementNamed(context, AppRoutes.signup);
     });
   }
 
@@ -56,7 +56,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
                   const SizedBox(height: 8),
 
-                  /// Tagline
                   const Text(
                     "Fresh groceries delivered fast",
                     style: TextStyle(fontSize: 14, color: Colors.white70),

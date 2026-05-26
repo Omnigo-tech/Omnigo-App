@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:grocery_app/data/models/user_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:grocery_app/core/helper/extension/validation_extension.dart';
+import 'package:grocery_app/presentation/bloc/auth/auth_event.dart';
+import 'package:grocery_app/presentation/screens/authentication/forget_password.dart';
 import 'package:grocery_app/presentation/screens/authentication/phone_input_screen.dart';
 import 'package:grocery_app/presentation/screens/authentication/signup_screen.dart';
-
 import 'package:grocery_app/widgets/auth_button.dart';
 import 'package:grocery_app/widgets/auth_textfield.dart';
-import 'package:grocery_app/core/services/auth_service.dart';
 
 import '../../../core/helper/constants/colors_resources.dart';
-import '../../../core/helper/constants/sizes.dart';
+import '../../../core/helper/constants/images-resources.dart';
+import '../../../core/helper/constants/strings-resource.dart';
+import '../../../widgets/custom_snackbar.dart';
+import '../../bloc/auth/auth_bloc.dart';
+import '../../bloc/auth/auth_state.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -19,174 +26,148 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final AuthService _authService = AuthService();
-
-  bool isLoading = false;
 
   Future<void> loginUser() async {
     if (!_formKey.currentState!.validate()) return;
+    context.read<AuthBloc>().add(
+      LoginEvent(
+        emailController.text.trim(),
+        passwordController.text.trim(),
+      ),
+    );
+  }
 
-    setState(() => isLoading = true);
-
-    try {
-      final response = await _authService.login(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
-
-      if (!mounted) return;
-      final user = UserModel.fromJson(response['user']);
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(response["msg"] ?? "Login successful")),
-      );
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => PhoneInputScreen(id: user.id)),
-      );
-    } catch (e) {
-      if (!mounted) return;
-
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(e.toString())));
-    } finally {
-      if (mounted) {
-        setState(() => isLoading = false);
-      }
-    }
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(AppSizes.padding),
+      backgroundColor: AppColors.white,
+      body: BlocConsumer<AuthBloc, AuthState>(
+        listener: (context, state) {
+          if (state is AuthSuccess) {
+            CustomSnackBar.show(context, state.message, isError: false);
+            // Fix: Changed pushReplacement to push so user can go back to login from PhoneInput
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => PhoneInputScreen(id: state.data.user.id)),
+            );
+          }
+          if (state is AuthFailure) {
+            CustomSnackBar.show(context, state.error, isError: true);
+          }
+        },
+        builder: (context, state) {
+          return SafeArea(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: 24.w),
               child: Form(
                 key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 160),
-
-                    const Text(
-                      "Login",
-                      style: TextStyle(
-                        fontSize: 26,
+                    SizedBox(height: 50.h),
+                    Center(
+                      child: Image.asset(
+                        ImageResource.OMINGO_LOCATION_LOGO_IMG,
+                        height: 120.h,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                    SizedBox(height: 40.h),
+                    Text(
+                      StringResources.login,
+                      style: GoogleFonts.dmSans(
+                        fontSize: 28.sp,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.primary,
+                        color: AppColors.darkPrimaryText,
                       ),
                     ),
-
-                    const SizedBox(height: 10),
-
-                    const Text(
-                      "Enter your email and password",
-                      style: TextStyle(
+                    SizedBox(height: 8.h),
+                    Text(
+                      StringResources.enterEmailPassword,
+                      style: GoogleFonts.dmSans(
                         color: AppColors.lightText,
-                        fontSize: 14,
+                        fontSize: 14.sp,
                       ),
                     ),
-
-                    const SizedBox(height: 30),
-
+                    SizedBox(height: 32.h),
+                    
                     AuthTextField(
-                      label: "Email",
+                      label: StringResources.email,
+                      hint: "example@gmail.com",
                       controller: emailController,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Email is required";
-                        }
-                        if (!value.contains("@")) {
-                          return "Enter valid email";
-                        }
-                        return null;
-                      },
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (v) => v.validateEmail(),
                     ),
-
-                    const SizedBox(height: 20),
-
+                    SizedBox(height: 20.h),
+                    
                     AuthTextField(
-                      label: "Password",
+                      label: StringResources.password,
+                      hint: "Enter your secure password",
                       controller: passwordController,
                       obscure: true,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Password is required";
-                        }
-                        if (value.length < 6) {
-                          return "Minimum 6 characters required";
-                        }
-                        return null;
-                      },
+                      validator: (v) => v.validatePassword(),
                     ),
-                    SizedBox(height: 5),
-                    const Align(
+                    
+                    SizedBox(height: 12.h),
+                    Align(
                       alignment: Alignment.centerRight,
-                      child: Text(
-                        "Forgot Password?",
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: AppColors.lightText,
+                      child: GestureDetector(
+                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ForgetPassword())),
+                        child: Text(
+                          StringResources.forgotPassword,
+                          style: GoogleFonts.dmSans(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.primary,
+                          ),
                         ),
                       ),
                     ),
-
-                    const SizedBox(height: 30),
-
-                    isLoading
-                        ? const Center(child: CircularProgressIndicator())
-                        : AuthButton(text: "Sign Up", onTap: loginUser),
-
-                    /* AuthButton(
-                      text: isLoading ? "Loading..." : "Log In",
-                      onTap: isLoading ? null : loginUser,
-                    ),*/
-                    const SizedBox(height: 10),
-
-                    SizedBox(height: 20),
+                    SizedBox(height: 40.h),
+                    
+                    AuthButton(
+                      text: StringResources.login,
+                      isLoading: state is AuthLoading,
+                      onTap: loginUser,
+                    ),
+                    
+                    SizedBox(height: 24.h),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Don't have an account?",
-                          style: TextStyle(color: AppColors.lightText),
+                          StringResources.dontHaveAccount,
+                          style: GoogleFonts.dmSans(color: AppColors.lightText, fontSize: 14.sp),
                         ),
                         GestureDetector(
+                          onTap: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const SignupScreen())),
                           child: Text(
-                            "Sign Up",
-                            style: TextStyle(
+                            "  ${StringResources.signUp}",
+                            style: GoogleFonts.dmSans(
                               color: AppColors.primary,
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14.sp,
                             ),
                           ),
-                          onTap: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return SignupScreen();
-                                },
-                              ),
-                            );
-                          },
                         ),
                       ],
                     ),
+                    SizedBox(height: 20.h),
                   ],
                 ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

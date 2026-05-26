@@ -3,12 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
 import 'package:grocery_app/core/helper/constants/theme/app_theme.dart';
 import 'package:grocery_app/presentation/bloc/address/address_bloc.dart';
 import 'package:grocery_app/presentation/bloc/address/address_event.dart';
+import 'package:grocery_app/presentation/bloc/auth/auth_bloc.dart';
 import 'package:grocery_app/presentation/bloc/call/call_bloc.dart';
+import 'package:grocery_app/presentation/bloc/location/location_bloc.dart';
 import 'package:grocery_app/presentation/bloc/payment/payment_bloc.dart';
 import 'package:grocery_app/presentation/bloc/review/review_bloc.dart';
+import 'package:grocery_app/presentation/screens/welcome_screen.dart';
+import 'core/di/service_locator.dart';
 import 'core/helper/constants/dimensions-resource.dart';
 import 'core/helper/utils/svg-utils.dart';
 import 'core/routes/AppRoutes.dart';
@@ -17,9 +22,10 @@ import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_bloc.d
 import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_event.dart';
 
 import 'core/services/notifications_services.dart';
-
+final sl = GetIt.instance;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  setup();
   await Firebase.initializeApp();
   await NotificationService.init();
   await NotificationService.getToken();
@@ -36,6 +42,12 @@ void main() async {
         BlocProvider(create: (context) => CallBloc()),
         BlocProvider(create: (_) => ReviewBloc(),),
         BlocProvider(create: (_) => PaymentBloc()),
+        BlocProvider<AuthBloc>(
+          create: (_) => sl<AuthBloc>(),
+        ),
+        BlocProvider<LocationBloc>(
+          create: (_) => sl<LocationBloc>(),
+        ),
       ],
       child: const MyApp(),
     ),
@@ -69,7 +81,7 @@ class MyApp extends StatelessWidget {
             navigatorKey: navigatorKey,
             debugShowCheckedModeBanner: false,
             theme: AppTheme.lightTheme,
-            initialRoute: AppRoutes.home,
+            initialRoute: AppRoutes.splash,
             onGenerateRoute: AppRouter.onGenerateRoute,
             builder: (context, widget) {
               return MediaQuery(

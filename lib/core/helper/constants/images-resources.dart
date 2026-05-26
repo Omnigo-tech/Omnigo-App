@@ -34,6 +34,10 @@ class ImageResource {
   static const String SPICES_IMG = '${DIR_IMAGE}spices_img.png';
   static const String SAUCE_IMG = '${DIR_IMAGE}sauces_img.png';
   static const String SALT_IMG = '${DIR_IMAGE}salt_img.png';
+  static const String GROCERY_IMG = '${DIR_IMAGE}grocery.png';
+  static const String LOCATION_IMG = '${DIR_IMAGE}location_img_popup.png';
+  static const String OMINGO_LOCATION_LOGO_IMG = '${DIR_IMAGE}omingo_location.png';
+
 
 
   static const String WORD_MAP = '${DIR_IMAGE}word_map.png';

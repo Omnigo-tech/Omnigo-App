@@ -1,85 +1,112 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:grocery_app/core/helper/constants/images-resources.dart';
 import 'package:grocery_app/widgets/social_button.dart';
-
 import '../../../core/helper/constants/colors_resources.dart';
-import 'authentication/signup_screen.dart';
+import '../../core/routes/AppRoutes.dart';
+import '../bloc/auth/auth_bloc.dart';
+import '../bloc/auth/auth_event.dart';
+import '../bloc/auth/auth_state.dart';
+
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: //SingleChildScrollView(
-            //child: SizedBox(
-            //height: MediaQuery.of(context).size.height,
-            //child:
-            Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Image.asset("images/grocery.png"),
-
-                  Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Get your groceries\nwith nectar",
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.w500,
+    return Scaffold(
+      body: BlocConsumer<AuthBloc, AuthState>(
+        listener: (context, state) {
+          if (state is AuthSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message), backgroundColor: Colors.green),
+            );
+            // Login success hone par dashboard ya home screen par le jayen
+            Navigator.pushNamedAndRemoveUntil(context, AppRoutes.home, (route) => false);
+          }
+          if (state is AuthFailure) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.error), backgroundColor: Colors.red),
+            );
+          }
+        },
+        builder: (context, state) {
+          return Stack(
+            children: [
+              Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Image.asset(ImageResource.GROCERY_IMG),
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Get your groceries\nwith nectar",
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
-                        ),
-
-                        SizedBox(height: 20),
-                        SocialButton(
-                          text: "Create new account",
-                          icon: Icons.g_mobiledata,
-                          check: false,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SignupScreen(),
-                              ),
-                            );
-                          },
-                        ),
-                        SizedBox(height: 15),
-
-                        Center(
-                          child: Text(
-                            "Or connect with social media",
-                            style: TextStyle(color: AppColors.lightText),
+                          const SizedBox(height: 20),
+                          SocialButton(
+                            text: "Create new account",
+                            icon: Icons.g_mobiledata,
+                            check: false,
+                            onTap: () {
+                              Navigator.pushNamed(context, AppRoutes.signup);
+                            },
                           ),
-                        ),
+                          const SizedBox(height: 15),
+                          Center(
+                            child: Text(
+                              "Or connect with social media",
+                              style: TextStyle(color: AppColors.lightText),
+                            ),
+                          ),
+                          const SizedBox(height: 15),
 
-                        SizedBox(height: 15),
+                          // GOOGLE LOGIN BUTTON
+                          SocialButton(
+                            text: "Continue with Google",
+                            icon: Icons.g_mobiledata,
+                            check: true,
+                            onTap: () {
+                              context.read<AuthBloc>().add(GoogleLoginEvent());
+                            },
+                          ),
 
-                        SocialButton(
-                          text: "Continue with Google",
-                          icon: Icons.g_mobiledata,
-                          check: true,
-                          onTap: () {},
-                        ),
+                          // FACEBOOK LOGIN BUTTON
+                          SocialButton(
+                            text: "Continue with Facebook",
+                            icon: Icons.facebook,
+                            check: true,
+                            onTap: () {
+                              context.read<AuthBloc>().add(FacebookLoginEvent());
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
 
-                        SocialButton(
-                          text: "Continue with Facebook",
-                          icon: Icons.facebook,
-                          check: true,
-                          onTap: () {},
-                        ),
-                      ],
+              // Loading Indicator jab API hit ho rhi ho
+              if (state is AuthLoading)
+                Positioned.fill(
+                  child: Container(
+                    color: Colors.black26,
+                    child: const Center(
+                      child: CircularProgressIndicator(color: Colors.green),
                     ),
                   ),
-                ],
-              ),
-            ),
+                ),
+            ],
+          );
+        },
       ),
-      //),
-      //),
     );
   }
 }

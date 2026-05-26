@@ -12,7 +12,6 @@ import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_event.
 import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_state.dart';
 import 'package:grocery_app/presentation/screens/user_interface/address_list/add_address_screen.dart';
 import 'package:grocery_app/presentation/screens/user_interface/address_list/address_screen.dart';
-import 'package:grocery_app/presentation/screens/user_interface/review/review_screen.dart';
 import 'package:grocery_app/widgets/app_bar_widget.dart';
 import 'package:grocery_app/widgets/circle_button_widget.dart';
 import '../../../../core/routes/AppRoutes.dart';
@@ -32,8 +31,7 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
   @override
   void initState() {
     super.initState();
-    // Initialize currentMethod with passed selectedMethod or fallback
-    currentMethod = (widget.selectedMethod == null || widget.selectedMethod!.isEmpty) 
+    currentMethod = (widget.selectedMethod == null || widget.selectedMethod!.isEmpty)
         ? "Cash on delivery" 
         : widget.selectedMethod!;
   }

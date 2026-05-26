@@ -1,10 +1,21 @@
+// lib/presentation/pages/auth/signup_screen.dart
+
 import 'package:flutter/material.dart';
-import 'package:grocery_app/core/services/auth_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:grocery_app/core/helper/extension/validation_extension.dart';
+import 'package:grocery_app/presentation/bloc/auth/auth_bloc.dart';
+import 'package:grocery_app/presentation/bloc/auth/auth_event.dart';
+import 'package:grocery_app/presentation/bloc/auth/auth_state.dart';
 import 'package:grocery_app/widgets/auth_button.dart';
 import 'package:grocery_app/widgets/auth_textfield.dart';
 
 import '../../../core/helper/constants/colors_resources.dart';
-import '../../../core/helper/constants/sizes.dart';
+import '../../../core/helper/constants/dimensions-resource.dart';
+import '../../../core/helper/constants/images-resources.dart';
+import '../../../core/helper/constants/strings-resource.dart';
+import '../../../widgets/custom_snackbar.dart';
 import 'login_screen.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -20,204 +31,201 @@ class _SignupScreenState extends State<SignupScreen> {
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  final AuthService _authService = AuthService();
-  bool isLoading = false;
 
-  /// SIGNUP API CALL
-
-  Future<void> signup() async {
+  void signup() {
     if (!_formKey.currentState!.validate()) return;
 
-    setState(() => isLoading = true);
-
-    try {
-      final response = await _authService.signup(
-        name: nameController.text.trim(),
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
-      if (!mounted) return;
-
-      setState(() => isLoading = false);
-
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(response["msg"])));
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const LoginScreen()),
-      );
-    } catch (e) {
-      setState(() => isLoading = false);
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString().replaceAll("Exception: ", ""))),
-      );
-    }
+    context.read<AuthBloc>().add(
+      SignupEvent(
+        nameController.text.trim(),
+        emailController.text.trim(),
+        passwordController.text.trim(),
+      ),
+    );
   }
 
-  /// VALIDATIONS (MATCH BACKEND)
-
-  String? validateName(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return "Name is required";
-    }
-    return null;
-  }
-
-  String? validateEmail(String? value) {
-    if (value == null || value.isEmpty) {
-      return "Email is required";
-    }
-    if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
-      return "Enter a valid email";
-    }
-    return null;
-  }
-
-  String? validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return "Password is required";
-    }
-    if (value.length < 6) {
-      return "Minimum 6 characters required";
-    }
-    /*if (!RegExp(r'[0-9]').hasMatch(value)) {
-      return "Must contain a number";
-    }*/
-    return null;
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(AppSizes.padding),
+      backgroundColor: AppColors.white,
+      resizeToAvoidBottomInset: true,
+      body: BlocConsumer<AuthBloc, AuthState>(
+        listener: (context, state) {
+          if (state is AuthSuccess) {
+            CustomSnackBar.show(
+              context,
+              state.message,
+              isError: false,
+            );
+
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const LoginScreen()),
+            );
+          }
+
+          if (state is AuthFailure) {
+            CustomSnackBar.show(
+              context,
+              state.error,
+              isError: true,
+            );
+          }
+        },
+
+        builder: (context, state) {
+          return SafeArea(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: 24.w),
               child: Form(
                 key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 100),
-
-                    const Text(
-                      "Sign Up",
-                      style: TextStyle(
-                        fontSize: 26,
+                    SizedBox(height: 20.h),
+                    Center(
+                      child: Image.asset(
+                        ImageResource.OMINGO_LOCATION_LOGO_IMG,
+                        height: 120.h,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                    SizedBox(height: 20.h),
+                    Text(
+                      StringResources.signUp,
+                      style: GoogleFonts.dmSans(
+                        fontSize: 28.sp,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.primary,
+                        color: AppColors.darkPrimaryText,
                       ),
                     ),
 
-                    const SizedBox(height: 10),
+                    SizedBox(height: 8.h),
 
-                    const Text(
-                      "Enter your credentials to continue",
-                      style: TextStyle(
+                    Text(
+                      StringResources.enterCredentials,
+                      style: GoogleFonts.dmSans(
                         color: AppColors.lightText,
-                        fontSize: 14,
+                        fontSize: 14.sp,
                       ),
                     ),
 
-                    const SizedBox(height: 30),
+                    SizedBox(height: 32.h),
 
-                    /// NAME
                     AuthTextField(
-                      label: "Username",
+                      label: StringResources.username,
+                      hint: "Enter your full name",
                       controller: nameController,
-                      validator: validateName,
+                      validator: (v) => v.validateName(),
                     ),
 
-                    const SizedBox(height: 20),
+                    SizedBox(height: 20.h),
 
-                    /// EMAIL
                     AuthTextField(
-                      label: "Email",
+                      label: StringResources.email,
+                      hint: "example@gmail.com",
                       controller: emailController,
-                      validator: validateEmail,
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (v) => v.validateEmail(),
                     ),
 
-                    const SizedBox(height: 20),
+                    SizedBox(height: 20.h),
 
-                    /// PASSWORD
                     AuthTextField(
-                      label: "Password",
+                      label: StringResources.password,
+                      hint: "••••••••",
                       controller: passwordController,
-                      validator: validatePassword,
+                      validator: (v) => v.validatePassword(),
                       obscure: true,
                     ),
 
-                    const SizedBox(height: 20),
+                    SizedBox(height: 20.h),
 
+                    /// TERMS
                     RichText(
-                      text: const TextSpan(
-                        text: "By continuing you agree to our ",
-                        style: TextStyle(
-                          fontSize: 13,
+                      text: TextSpan(
+                        text: StringResources.termsAndConditionsText,
+                        style: GoogleFonts.dmSans(
+                          fontSize: 13.sp,
                           color: AppColors.lightText,
                         ),
                         children: [
                           TextSpan(
-                            text: "Terms of Service",
-                            style: TextStyle(color: AppColors.primary),
+                            text: StringResources.termsOfService,
+                            style: const TextStyle(
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
-                          TextSpan(text: " and "),
+                          TextSpan(text: StringResources.and),
                           TextSpan(
-                            text: "Privacy Policy",
-                            style: TextStyle(color: AppColors.primary),
+                            text: StringResources.privacyPolicy,
+                            style: const TextStyle(
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ],
                       ),
                     ),
 
-                    const SizedBox(height: 30),
+                    SizedBox(height: 40.h),
 
-                    /// BUTTON
-                    isLoading
-                        ? const Center(child: CircularProgressIndicator())
-                        : AuthButton(text: "Sign Up", onTap: signup),
+                    AuthButton(
+                      text: StringResources.signUp,
+                      isLoading: state is AuthLoading,
+                      onTap: signup,
+                    ),
 
-                    const SizedBox(height: 20),
+                    SizedBox(height: 24.h),
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Already have an account?",
-                          style: TextStyle(color: AppColors.lightText),
-                        ),
-                        GestureDetector(
-                          child: Text(
-                            "Sign in",
-                            style: TextStyle(
-                              color: AppColors.primary,
-                              fontWeight: FontWeight.w600,
-                            ),
+                          StringResources.alreadyHaveAccount,
+                          style: GoogleFonts.dmSans(
+                            color: AppColors.lightText,
+                            fontSize: 14.sp,
                           ),
+                        ),
+
+                        GestureDetector(
                           onTap: () {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (context) {
-                                  return LoginScreen();
-                                },
+                                builder: (_) => const LoginScreen(),
                               ),
                             );
                           },
+                          child: Text(
+                            "  ${StringResources.login}",
+                            style: GoogleFonts.dmSans(
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14.sp,
+                            ),
+                          ),
                         ),
                       ],
                     ),
+
+                    SizedBox(height: 30.h),
                   ],
                 ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

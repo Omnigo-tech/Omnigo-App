@@ -7,7 +7,6 @@ import 'package:grocery_app/core/helper/constants/dimensions-resource.dart';
 import 'package:grocery_app/core/helper/constants/images-resources.dart';
 import 'package:grocery_app/core/helper/constants/strings-resource.dart';
 import 'package:grocery_app/data/models/grocery-item.dart';
-import 'package:grocery_app/presentation/screens/user_interface/my_cart/my_cart_screen.dart';
 import 'package:grocery_app/widgets/cutom_button.dart';
 
 import '../../../../core/helper/constants/colors_resources.dart';

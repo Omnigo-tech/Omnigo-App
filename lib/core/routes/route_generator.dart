@@ -28,6 +28,7 @@ import '../../presentation/screens/authentication/signup_screen.dart';
 import '../../presentation/screens/splash_screen.dart';
 import '../../presentation/screens/user_interface/payment/payment_method_screen.dart';
 import '../../presentation/screens/user_interface/review/review_screen.dart';
+import '../../presentation/screens/welcome_screen.dart';
 import 'AppRoutes.dart';
 
 class RouteGenerator {
@@ -35,6 +36,9 @@ class RouteGenerator {
     switch (settings.name) {
       case AppRoutes.splash:
         return MaterialPageRoute(builder: (_) => const SplashScreen());
+
+      case AppRoutes.welcome:
+        return MaterialPageRoute(builder: (_) => const WelcomeScreen());
 
       case AppRoutes.login:
         return MaterialPageRoute(builder: (_) => const LoginScreen());

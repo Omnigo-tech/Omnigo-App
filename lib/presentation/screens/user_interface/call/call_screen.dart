@@ -14,7 +14,6 @@ class CallScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Access the theme text styles
     final textTheme = Theme.of(context).textTheme;
 
     return BlocListener<CallBloc, CallState>(

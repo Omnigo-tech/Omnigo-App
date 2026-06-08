@@ -17,7 +17,7 @@ class GroceryDetailBloc extends Bloc<GroceryDetailEvent, GroceryDetailState> {
             (item) => GroceryItemModel(
               id: item.id,
               name: item.name,
-              image: item.image,
+              image: item.image!,
               price: item.price,
               description: item.description ?? "",
               weight: item.weight ?? "",

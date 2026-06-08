@@ -241,9 +241,9 @@ class _SearchScreenState extends State<SearchScreen> {
                     Expanded(
                       child: Center(
                         // ✅ Fix #2 & #3: Handle empty image + fix localhost URL
-                        child: item.image.isNotEmpty
+                        child: item.image != null && item.image!.isNotEmpty
                             ? Image.network(
-                                fixImageUrl(item.image),
+                                fixImageUrl(item.image!),
                                 fit: BoxFit.contain,
                                 errorBuilder: (context, error, stackTrace) =>
                                     const Icon(
@@ -286,7 +286,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             final detailItem = GroceryItemModel(
                               id: item.id,
                               name: item.name,
-                              image: item.image,
+                              image: item.image!,
                               price: item.price,
                               description:
                                   item.description ??

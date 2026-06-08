@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:grocery_app/data/datasource/repositories/glocery_data.dart';
 import 'package:grocery_app/data/datasource/repositories/wishlist_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -11,6 +12,7 @@ import '../../presentation/bloc/auth/auth_bloc.dart';
 import '../../presentation/bloc/grocery_details/item_detail_bloc.dart';
 import '../../presentation/bloc/location/location_bloc.dart';
 import '../../presentation/bloc/onboarding/onboarding_bloc.dart';
+import '../../presentation/grocery/grocery_bloc/grocery_bloc.dart';
 import '../network/api_service.dart';
 import '../network/dio_client.dart';
 
@@ -57,7 +59,7 @@ Future<void> setup() async {
     ),
   );
   sl.registerLazySingleton<OnboardingRepository>(() => OnboardingRepository(sl()));
-
+  sl.registerLazySingleton<GroceryRepository>(() => GroceryRepository(sl()));
   sl.registerLazySingleton<WishlistRepository>(() => WishlistRepository(sl()));
 
   // ================= BLOCS =================
@@ -68,13 +70,15 @@ Future<void> setup() async {
   sl.registerFactory<LocationBloc>(
         () => LocationBloc(sl()),
   );
-
+  sl.registerFactory(() => GroceryBloc(sl()));
   sl.registerFactory<OnboardingBloc>(() => OnboardingBloc(sl()));
 
   sl.registerFactory<GroceryDetailBloc>(
         () => GroceryDetailBloc(
       sl<WishlistRepository>(),
     ),
+
+
   );
 
 

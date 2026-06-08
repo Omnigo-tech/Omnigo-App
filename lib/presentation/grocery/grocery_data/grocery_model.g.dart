@@ -7,7 +7,7 @@ part of 'grocery_model.dart';
 // **************************************************************************
 
 GroceryModel _$GroceryModelFromJson(Map<String, dynamic> json) => GroceryModel(
-  id: json['id'] as String,
+  id: json['_id'] as String,
   name: json['name'] as String,
   category: json['category'] as String,
   image: json['image'] as String,
@@ -18,7 +18,7 @@ GroceryModel _$GroceryModelFromJson(Map<String, dynamic> json) => GroceryModel(
 
 Map<String, dynamic> _$GroceryModelToJson(GroceryModel instance) =>
     <String, dynamic>{
-      'id': instance.id,
+      '_id': instance.id,
       'name': instance.name,
       'category': instance.category,
       'image': instance.image,

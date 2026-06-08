@@ -1,5 +1,7 @@
 import 'package:get_it/get_it.dart';
+import 'package:grocery_app/data/datasource/repositories/glocery_data.dart';
 import 'package:grocery_app/presentation/bloc/auth/auth_bloc.dart';
+import 'package:grocery_app/presentation/grocery/grocery_bloc/grocery_bloc.dart';
 
 import '../../data/datasource/repositories/auth_repository.dart';
 import '../../data/datasource/repositories/location_repository.dart';
@@ -17,9 +19,7 @@ void setup() {
 
   // ================= AUTH FEATURE =================
   sl.registerLazySingleton(() => AuthRepository(sl()));
-  sl.registerFactory<AuthBloc>(
-        () => AuthBloc(sl()),
-  );
+  sl.registerFactory<AuthBloc>(() => AuthBloc(sl()));
 
   // ================= LOCATION FEATURE =================
   // 1. Location Service (GPS hardware ke liye)
@@ -29,7 +29,11 @@ void setup() {
   sl.registerLazySingleton(() => LocationRepository(sl()));
 
   // 3. Location Bloc (Factory taake har dafa naya state mile)
-  sl.registerFactory<LocationBloc>(
-        () => LocationBloc(sl()),
-  );
+  sl.registerFactory<LocationBloc>(() => LocationBloc(sl()));
+
+  // ================= GROCERY FEATURE =================
+
+  sl.registerLazySingleton(() => GroceryRepository(sl()));
+
+  sl.registerFactory<GroceryBloc>(() => GroceryBloc(sl()));
 }

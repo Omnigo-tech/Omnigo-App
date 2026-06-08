@@ -13,23 +13,18 @@ class AuthRepository {
 
   AuthRepository(this.apiService);
 
-
-
   Future<UserModel> loginWithGoogle() async {
     try {
-
       // Initialize Google Sign In
       await _googleSignIn.initialize(
         serverClientId: "407408718192.apps.googleusercontent.com",
       );
 
       // Trigger sign in
-      final GoogleSignInAccount googleUser =
-      await _googleSignIn.authenticate();
+      final GoogleSignInAccount googleUser = await _googleSignIn.authenticate();
 
       // Get auth details
-      final GoogleSignInAuthentication googleAuth =
-          googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth = googleUser.authentication;
 
       final String? idToken = googleAuth.idToken;
 
@@ -38,12 +33,9 @@ class AuthRepository {
       }
 
       // Send to backend
-      final body = {
-        "idToken": idToken,
-      };
+      final body = {"idToken": idToken};
 
       return await apiService.googleLogin(body);
-
     } on DioException catch (e) {
       throw ErrorHandler.handle(e);
     } catch (e) {
@@ -70,7 +62,6 @@ class AuthRepository {
       } else {
         throw Exception(result.message ?? "Facebook Sign-In failed");
       }
-
     } on DioException catch (e) {
       throw ErrorHandler.handle(e);
     } catch (e) {
@@ -84,65 +75,52 @@ class AuthRepository {
     required String password,
   }) async {
     try {
-      final body = {
-        "name": name,
-        "email": email,
-        "password": password,
-      };
+      final body = {"name": name, "email": email, "password": password};
 
       return await apiService.signup(body);
-
     } on DioException catch (e) {
-
       throw ErrorHandler.handle(e);
     }
   }
 
-  Future<UserModel> login({required String email, required String password}) async {
+  Future<UserModel> login({
+    required String email,
+    required String password,
+  }) async {
     try {
-      final data = {
-        "email": email,
-        "password": password,
-      };
+      final data = {"email": email, "password": password};
       return await apiService.login(data);
-    }
-
-    on DioException catch (e) {
+    } on DioException catch (e) {
       throw ErrorHandler.handle(e);
     }
   }
-
 
   Future<dynamic> sendOtp({
     required String userId,
     required String phone,
   }) async {
-    try{
+    try {
       String formattedPhone = phone.trim();
       if (!formattedPhone.startsWith('0')) {
         formattedPhone = '0$formattedPhone';
       }
-    final data = {
-      "userId": userId,
-      "phone": formattedPhone,
-    };
-    return await apiService.sendOtp(data);
-  } on DioException catch (e) {
+      final data = {"userId": userId, "phone": formattedPhone};
+      return await apiService.sendOtp(data);
+    } on DioException catch (e) {
       throw ErrorHandler.handle(e);
     }
-    }
+  }
 
-  Future<dynamic> verifyOtp({required String phone, required String otp}) async {
-    try{
-      final data = {
-        "phone": PhoneFormatter.format(phone),
-        "otp": otp,
-      };
+  Future<dynamic> verifyOtp({
+    required String phone,
+    required String otp,
+  }) async {
+    try {
+      final data = {"phone": PhoneFormatter.format(phone), "otp": otp};
       return await apiService.verifyOtp(data);
     } on DioException catch (e) {
       throw ErrorHandler.handle(e);
     }
-
   }
 
   Future<dynamic> forgotPassword(String emailOrPhone) async {
@@ -150,7 +128,11 @@ class AuthRepository {
     return await apiService.forgotPassword(data);
   }
 
-  Future<dynamic> resetPassword(String emailOrPhone, String otp, String newPassword) async {
+  Future<dynamic> resetPassword(
+    String emailOrPhone,
+    String otp,
+    String newPassword,
+  ) async {
     final data = {
       "emailOrPhone": emailOrPhone,
       "otp": otp,

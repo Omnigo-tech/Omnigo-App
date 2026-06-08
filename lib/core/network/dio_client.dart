@@ -26,7 +26,9 @@ class DioClient {
               !options.path.contains("forgot-password") &&
               !options.path.contains("reset-password") &&
               !options.path.contains("google-login") &&
-              !options.path.contains("facebook-login")) {
+              !options.path.contains("facebook-login")&&
+              !options.path.contains("products")
+          ) {
             final token = _localDataSource.getToken();
 
             if (token != null) {

@@ -13,4 +13,16 @@ class ChangeAreaEvent extends LocationEvent {
   ChangeAreaEvent(this.selectedArea);
 }
 
+class SubmitManualLocationEvent extends LocationEvent {
+  final String zone;
+  final String area;
+  final String address;
+
+  SubmitManualLocationEvent({
+    required this.zone,
+    required this.area,
+    required this.address,
+  });
+}
+
 class FetchGpsLocationEvent extends LocationEvent {}

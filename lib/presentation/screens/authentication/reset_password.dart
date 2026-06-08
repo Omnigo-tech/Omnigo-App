@@ -14,8 +14,8 @@ import '../../../core/helper/constants/dimensions-resource.dart';
 import '../../../core/helper/constants/strings-resource.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
-  final String emailOrPhone;
-  const ResetPasswordScreen({super.key, required this.emailOrPhone});
+  final String userId;
+  const ResetPasswordScreen({super.key, required this.userId});
 
   @override
   State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
@@ -39,8 +39,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
     context.read<AuthBloc>().add(
           ResetPasswordEvent(
-            widget.emailOrPhone,
-            otpController.text.trim(),
+            widget.userId,
             passwordController.text.trim(),
           ),
         );
@@ -111,12 +110,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     ),
                   ),
                   SizedBox(height: DimensionsResources.D_30.h),
-                  AuthTextField(
-                    label: "OTP Code",
-                    controller: otpController,
-                    validator: (v) => v.validateDigit(), // Reusing your digit validation
-                  ),
-                  SizedBox(height: DimensionsResources.D_20.h),
                   AuthTextField(
                     label: StringResources.password,
                     controller: passwordController,

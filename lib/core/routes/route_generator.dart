@@ -7,6 +7,8 @@ import 'package:grocery_app/presentation/bloc/payment/payment_bloc.dart';
 import 'package:grocery_app/presentation/grocery/grocery_bloc/grocery_bloc.dart';
 import 'package:grocery_app/presentation/grocery/grocery_bloc/grocery_event.dart';
 import 'package:grocery_app/presentation/grocery/grocery_home/grocery_home_screen.dart';
+import 'package:grocery_app/presentation/screens/get_started_screen.dart';
+import 'package:grocery_app/presentation/screens/onboarding/onboarding_screen.dart';
 import 'package:grocery_app/presentation/screens/user_interface/call/call_screen.dart';
 import 'package:grocery_app/presentation/screens/user_interface/chat/chat_screen.dart';
 import 'package:grocery_app/presentation/screens/user_interface/checkout_summary/checkout_summary_screen.dart';
@@ -30,6 +32,7 @@ import '../../presentation/screens/splash_screen.dart';
 import '../../presentation/screens/user_interface/payment/payment_method_screen.dart';
 import '../../presentation/screens/user_interface/review/review_screen.dart';
 import '../../presentation/screens/welcome_screen.dart';
+import '../enums/otp_purpose.dart';
 import 'AppRoutes.dart';
 
 class RouteGenerator {
@@ -37,6 +40,12 @@ class RouteGenerator {
     switch (settings.name) {
       case AppRoutes.splash:
         return MaterialPageRoute(builder: (_) => const SplashScreen());
+
+      case AppRoutes.getStarted:
+        return MaterialPageRoute(builder: (_) => const GetStartedScreen());
+
+      case AppRoutes.onboarding:
+        return MaterialPageRoute(builder: (_) => const OnboardingScreen());
 
       case AppRoutes.welcome:
         return MaterialPageRoute(builder: (_) => const WelcomeScreen());
@@ -49,13 +58,18 @@ class RouteGenerator {
 
       case AppRoutes.otp:
         return MaterialPageRoute(
-          builder: (_) => const OtpScreen(phone: "", userId: ""),
+          builder: (_) => const OtpScreen(  value: "",
+            userId: "",
+            purpose: OtpPurpose.phoneVerification,
+            type: OtpType.phone,
+
+          ),
         );
       case AppRoutes.location:
         return MaterialPageRoute(builder: (_) => const LocationScreen());
       case AppRoutes.phoneInput:
         return MaterialPageRoute(
-          builder: (_) => const PhoneInputScreen(id: ""),
+          builder: (_) => const PhoneInputScreen(),
         );
       case AppRoutes.home:
         return MaterialPageRoute(

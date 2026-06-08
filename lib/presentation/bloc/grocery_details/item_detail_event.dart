@@ -48,3 +48,5 @@ class ReorderItemsEvent extends GroceryDetailEvent {
   final List<GroceryItemModel> items;
   ReorderItemsEvent(this.items);
 }
+
+class LoadFavoritesEvent extends GroceryDetailEvent {}

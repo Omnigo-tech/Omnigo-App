@@ -20,9 +20,32 @@ class WelcomeScreen extends StatelessWidget {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.message), backgroundColor: Colors.green),
             );
-            // Login success hone par dashboard ya home screen par le jayen
-            Navigator.pushNamedAndRemoveUntil(context, AppRoutes.home, (route) => false);
+            final userData = state.data;
+            final user = userData.user;
+
+
+            if (user.isPhoneVerified == false) {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                AppRoutes.phoneInput, // 👈 Apni phone verification screen ka route name check kar lein
+                    (route) => false,
+              );
+            } else if (user.hasLocation == false) {
+
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                AppRoutes.location,
+                    (route) => false,
+              );
+            } else {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                AppRoutes.home,
+                    (route) => false,
+              );
+            }
           }
+
           if (state is AuthFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.error), backgroundColor: Colors.red),

@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/enums/otp_purpose.dart';
 import '../../../core/error/exceptions.dart';
 import '../../../data/datasource/repositories/auth_repository.dart';
 import 'auth_event.dart';
@@ -46,7 +49,29 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           email: event.email,
           password: event.password,
         );
+        await repository.localDataSource.saveToken(
+          res.token,
+        );
 
+        await repository.localDataSource.saveUserId(
+          res.user.id,
+        );
+        if (res.user.hasLocation == true && res.user.location != null) {
+          await repository.localDataSource.saveUserLocation(res.user.location!.toJson());
+        }
+        print("====== 🔐 AUTH LOCAL STORAGE DEBUG ======");
+        print("Stored Token: ${repository.localDataSource.getToken()}");
+        print("Stored User ID: ${repository.localDataSource.getUserId()}");
+        print("Has Location Flag Saved: ${repository.localDataSource.hasLocationSaved()}");
+        final savedLocationMap = repository.localDataSource.getUserLocation();
+        if (savedLocationMap != null) {
+          // jsonEncode se print bilkul proper structured JSON format mein dikhega terminal par
+          print("Stored Location Data: ${jsonEncode(savedLocationMap)}");
+        } else {
+          print("Stored Location Data: NULL (No location configured for this user yet)");
+        }
+        print("=========================================");
+        // ================== ✨ DEBUG PRINTS END ====================
         emit(AuthSuccess(res.message,res));
 
       } on ServerException catch (e) {
@@ -68,12 +93,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthLoading());
 
       try {
+
         final res = await repository.sendOtp(
           userId: event.userId,
-          phone: event.phone,
+          value: event.value,
+          type: event.type,
+          purpose: event.purpose,
         );
 
-        emit(OtpSentState(res["message"]));
+        emit(
+          OtpSentState(
+            res["message"],
+            res["userId"],
+          ),
+        );
+
       } on NetworkException catch (e) {
 
         emit(AuthFailure(e.message));
@@ -89,18 +123,34 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthLoading());
 
       try {
-        final res = await repository.verifyOtp(
-          phone: event.phone,
-          otp: event.otp,
-        );
 
-        emit(OtpVerifiedState("Phone Verified", res));
-      } on NetworkException catch (e) {
+        dynamic res;
 
-        emit(AuthFailure(e.message));
+        if (event.purpose == OtpPurpose.forgotPassword) {
+
+          res = await repository.verifyForgotPasswordOtp(
+            userId: event.userId,
+            value: event.value,
+            otp: event.otp,
+            type: event.type,
+            purpose: event.purpose,
+          );
+
+        } else {
+
+           res = await repository.verifyOtp(
+            userId: event.userId,
+            value: event.value,
+            otp: event.otp,
+            type: event.type,
+            purpose: event.purpose,
+          );
+        }
+
+        emit(OtpVerifiedState("OTP Verified", res));
 
       } catch (e) {
-        emit(AuthFailure("Unexpected error"));
+        emit(AuthFailure(e.toString()));
       }
     });
 
@@ -109,7 +159,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthLoading());
       try {
         final res = await repository.forgotPassword(event.emailOrPhone);
-        emit(OtpSentState(res["message"] ?? "OTP sent successfully"));
+        emit(
+          OtpSentState(
+            res["message"],
+            res["userId"],
+          ),
+        );
       } catch (e) {
         emit(AuthFailure(e.toString()));
       }
@@ -120,8 +175,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthLoading());
       try {
         final res = await repository.resetPassword(
-          event.emailOrPhone,
-          event.otp,
+          event.userId,
           event.newPassword,
         );
         emit(AuthSuccess(res["message"] ?? "Password updated successfully", res));
@@ -134,6 +188,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthLoading());
       try {
         final res = await repository.loginWithGoogle();
+        await repository.localDataSource.saveToken(res.token);
+        await repository.localDataSource.saveUserId(res.user.id);
+
+        if (res.user.hasLocation == true && res.user.location != null) {
+          await repository.localDataSource.saveUserLocation(res.user.location!.toJson());
+        }
         emit(AuthSuccess(res.message, res));
       } on ServerException catch (e) {
         emit(AuthFailure(e.message));
@@ -149,6 +209,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthLoading());
       try {
         final res = await repository.loginWithFacebook();
+        await repository.localDataSource.saveToken(res.token);
+        await repository.localDataSource.saveUserId(res.user.id);
+
+        if (res.user.hasLocation == true && res.user.location != null) {
+          await repository.localDataSource.saveUserLocation(res.user.location!.toJson());
+        }
         emit(AuthSuccess(res.message , res));
       } on ServerException catch (e) {
         emit(AuthFailure(e.message));

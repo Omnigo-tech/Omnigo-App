@@ -10,8 +10,10 @@ class LocationState {
   final List<String> availableAreas;
   final String? selectedZone;
   final String? selectedArea;
+  final String? detectedAddress;
   final bool isLoading;
   final String? errorMessage;
+  final String? successMessage;
   final bool isGpsSuccess;
 
   LocationState({
@@ -19,8 +21,10 @@ class LocationState {
     this.availableAreas = const [],
     this.selectedZone,
     this.selectedArea,
+    this.detectedAddress,
     this.isLoading = false,
     this.errorMessage,
+    this.successMessage,
     this.isGpsSuccess = false,
   });
 
@@ -29,8 +33,10 @@ class LocationState {
     List<String>? availableAreas,
     ValueWrapper<String?>? selectedZone, // Safe nullable dynamic wrappers
     ValueWrapper<String?>? selectedArea,
+    ValueWrapper<String?>? detectedAddress,
     bool? isLoading,
-    String? errorMessage,
+    ValueWrapper<String?>? errorMessage,
+    ValueWrapper<String?>? successMessage,
     bool? isGpsSuccess,
   }) {
     return LocationState(
@@ -38,8 +44,9 @@ class LocationState {
       availableAreas: availableAreas ?? this.availableAreas,
       selectedZone: selectedZone != null ? selectedZone.value : this.selectedZone,
       selectedArea: selectedArea != null ? selectedArea.value : this.selectedArea,
-      isLoading: isLoading ?? this.isLoading,
-      errorMessage: errorMessage,
+      detectedAddress: detectedAddress != null ? detectedAddress.value : this.detectedAddress,
+      errorMessage: errorMessage != null ? errorMessage.value : this.errorMessage,
+      successMessage: successMessage != null ? successMessage.value : this.successMessage,
       isGpsSuccess: isGpsSuccess ?? this.isGpsSuccess,
     );
   }

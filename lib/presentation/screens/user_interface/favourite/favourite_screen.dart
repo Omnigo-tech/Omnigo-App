@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -26,6 +27,13 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
   List<GroceryItemModel> selectedItems = [];
 
   @override
+  void initState() {
+    super.initState();
+
+    context.read<GroceryDetailBloc>().add(LoadFavoritesEvent());
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
@@ -44,16 +52,17 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
 
       body: BlocBuilder<GroceryDetailBloc, GroceryDetailState>(
         builder: (context, state) {
-          final favList =
-          state.items.where((item) => item.isFavorite).toList();
+          final favList = state.favorites;
           if (favList.isEmpty) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.favorite_border,
-                      size: DimensionsResources.D_80.sp,
-                      color: AppColors.grey),
+                  Icon(
+                    Icons.favorite_border,
+                    size: DimensionsResources.D_80.sp,
+                    color: AppColors.grey,
+                  ),
                   SizedBox(height: DimensionsResources.D_16.h),
                   Text(
                     StringResources.noFavoritesYet,
@@ -67,8 +76,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
             );
           }
           return ListView.separated(
-            padding:
-            EdgeInsets.symmetric(vertical: DimensionsResources.D_10.h),
+            padding: EdgeInsets.symmetric(vertical: DimensionsResources.D_10.h),
             itemCount: favList.length,
             separatorBuilder: (_, __) => Divider(
               color: AppColors.border,
@@ -95,29 +103,30 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                     ToggleFavoriteEvent(item.id),
                   );
                   ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Item deleted successfully"),
-                        backgroundColor: Colors.green,
-                      ),
+                    const SnackBar(
+                      content: Text("Item deleted successfully"),
+                      backgroundColor: Colors.green,
+                    ),
                   );
                   return true;
                 },
                 onDismissed: (_) {
                   setState(() {
                     selectedItems.remove(item);
-                  });},
+                  });
+                },
                 background: Container(
                   alignment: Alignment.centerRight,
-                  padding: EdgeInsets.symmetric(horizontal: DimensionsResources.D_20.w),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: DimensionsResources.D_20.w,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.red,
-                    borderRadius: BorderRadius.circular(DimensionsResources.D_12.r),
+                    borderRadius: BorderRadius.circular(
+                      DimensionsResources.D_12.r,
+                    ),
                   ),
-                  child: Icon(
-                    Icons.delete,
-                    color: Colors.white,
-                    size: 28.sp,
-                  ),
+                  child: Icon(Icons.delete, color: Colors.white, size: 28.sp),
                 ),
                 child: ListTile(
                   onTap: () {
@@ -132,7 +141,10 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                     );
                   },
 
-                  contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                    vertical: 8.h,
+                  ),
 
                   leading: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -153,11 +165,12 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
 
                       SizedBox(width: 8.w),
 
-                      Image.asset(
-                        item.image,
-                        width: 50.w,
-                        height: 50.h,
-                        fit: BoxFit.contain,
+                      CachedNetworkImage(
+                        imageUrl: item.image,
+                        width: 50,
+                        height: 50,
+                        fit: BoxFit.cover,
+
                       ),
                     ],
                   ),
@@ -189,8 +202,11 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                         ),
                       ),
                       SizedBox(width: 8.w),
-                      const Icon(Icons.arrow_forward_ios,
-                          size: 16, color: AppColors.black),
+                      const Icon(
+                        Icons.arrow_forward_ios,
+                        size: 16,
+                        color: AppColors.black,
+                      ),
                     ],
                   ),
                 ),
@@ -217,9 +233,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                 );
               } else {
                 for (var item in selectedItems) {
-                  context.read<GroceryDetailBloc>().add(
-                    AddToCartEvent(item),
-                  );
+                  context.read<GroceryDetailBloc>().add(AddToCartEvent(item));
                 }
                 GlobalDialogs.showAddedToCartDialog(
                   context,
@@ -245,8 +259,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                     padding: EdgeInsets.symmetric(horizontal: 16.w),
                     child: Stack(
                       children: [
-                        const Icon(Icons.shopping_cart,
-                            color: Colors.white),
+                        const Icon(Icons.shopping_cart, color: Colors.white),
 
                         if (selectedItems.isNotEmpty)
                           Positioned(

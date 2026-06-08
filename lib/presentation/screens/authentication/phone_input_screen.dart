@@ -6,9 +6,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:grocery_app/core/helper/extension/validation_extension.dart';
 import 'package:grocery_app/widgets/auth_button.dart';
 
+import '../../../core/di/service_locator.dart';
+import '../../../core/enums/otp_purpose.dart';
 import '../../../core/helper/constants/colors_resources.dart';
 import '../../../core/helper/constants/dimensions-resource.dart';
 import '../../../core/helper/constants/strings-resource.dart';
+import '../../../data/datasource/local/auth_local_data_source.dart';
 import '../../../widgets/custom_snackbar.dart';
 import '../../bloc/auth/auth_bloc.dart';
 import '../../bloc/auth/auth_event.dart';
@@ -16,11 +19,9 @@ import '../../bloc/auth/auth_state.dart';
 import 'otp_screen.dart';
 
 class PhoneInputScreen extends StatefulWidget {
-  final String id;
 
   const PhoneInputScreen({
     super.key,
-    required this.id,
   });
 
   @override
@@ -30,15 +31,21 @@ class PhoneInputScreen extends StatefulWidget {
 class _PhoneInputScreenState extends State<PhoneInputScreen> {
   final TextEditingController phoneController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  final String? userId = sl<AuthLocalDataSource>().getUserId();
 
   /// SEND OTP
   void sendOtp() {
     if (!_formKey.currentState!.validate()) return;
-
+    if (userId == null) {
+      CustomSnackBar.show(context, "User ID not found. Please login again.", isError: true);
+      return;
+    }
     context.read<AuthBloc>().add(
       SendOtpEvent(
-        phoneController.text.trim(),
-        widget.id,
+        userId: userId!,
+        type: OtpType.phone,
+        value: phoneController.text.trim(),
+        purpose: OtpPurpose.phoneVerification,
       ),
     );
   }
@@ -75,8 +82,10 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
               context,
               MaterialPageRoute(
                 builder: (_) => OtpScreen(
-                  phone: phoneController.text.trim(),
-                  userId: widget.id,
+                  value: phoneController.text.trim(),
+                  userId: userId!,
+                  purpose: OtpPurpose.phoneVerification,
+                  type: OtpType.email,
                 ),
               ),
             );

@@ -15,8 +15,8 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 3), () {
-      Navigator.pushReplacementNamed(context, AppRoutes.signup);
+    Timer(const Duration(seconds: 3), () {
+      Navigator.pushReplacementNamed(context, AppRoutes.getStarted);
     });
   }
 
@@ -34,7 +34,7 @@ class _SplashScreenState extends State<SplashScreen> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     "Omnigo",
                     style: TextStyle(
                       color: AppColors.border,

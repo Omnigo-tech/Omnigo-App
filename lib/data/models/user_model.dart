@@ -4,11 +4,13 @@ part 'user_model.g.dart';
 
 @JsonSerializable()
 class UserModel {
+  final bool success;
   final String message;
   final String token;
   final User user;
 
   UserModel({
+    required this.success,
     required this.message,
     required this.token,
     required this.user,
@@ -22,12 +24,17 @@ class UserModel {
 
 @JsonSerializable()
 class User {
+  @JsonKey(name: 'id')
   final String id;
   final String role;
   final bool isPhoneVerified;
   final bool isEmailVerified;
   final String name;
   final String email;
+  final String? phone;
+  final String? lastLogin; // ✨ Isko nullable (?) kiya kyunki Google login mein yeh null ho sakta hai
+  final bool hasLocation;
+  final UserLocation? location;
 
   User({
     required this.id,
@@ -36,10 +43,54 @@ class User {
     required this.isEmailVerified,
     required this.name,
     required this.email,
+    this.phone,
+    this.lastLogin, // ✨ required hata diya
+    required this.hasLocation,
+    this.location,
   });
 
   factory User.fromJson(Map<String, dynamic> json) =>
       _$UserFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserToJson(this);
+}
+
+@JsonSerializable()
+class UserLocation {
+  final String? type;
+  final Coordinates? coordinates;
+  final String? zone;    // ✨ Isko nullable (?) kiya kyunki naye user ki location empty ho sakti hai
+  final String? area;    // ✨ Isko nullable (?) kiya
+  final String? address; // ✨ Isko nullable (?) kiya
+  final bool? isEnabled; // ✨ Isko bhi nullable (?) kar dein safe side ke liye
+
+  UserLocation({
+    this.type,
+    this.coordinates,
+    this.zone,    // ✨ required hata diya
+    this.area,    // ✨ required hata diya
+    this.address, // ✨ required hata diya
+    this.isEnabled,
+  });
+
+  factory UserLocation.fromJson(Map<String, dynamic> json) =>
+      _$UserLocationFromJson(json);
+
+  Map<String, dynamic> toJson() => _$UserLocationToJson(this);
+}
+
+@JsonSerializable()
+class Coordinates {
+  final double? lat;
+  final double? lng;
+
+  Coordinates({
+    this.lat,
+    this.lng,
+  });
+
+  factory Coordinates.fromJson(Map<String, dynamic> json) =>
+      _$CoordinatesFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CoordinatesToJson(this);
 }

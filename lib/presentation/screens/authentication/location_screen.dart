@@ -1,7 +1,8 @@
-// lib/presentation/pages/location/location_screen.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:grocery_app/core/routes/AppRoutes.dart';
 import '../../../core/di/service_locator.dart';
 import '../../../core/helper/constants/colors_resources.dart';
 import '../../../core/helper/constants/dimensions-resource.dart';
@@ -9,6 +10,8 @@ import '../../../core/helper/constants/images-resources.dart';
 import '../../../core/helper/constants/strings-resource.dart';
 import '../../../core/helper/utils/dialogs/show_cart_dialog.dart';
 import '../../../widgets/auth_button.dart';
+import '../../../widgets/auth_textfield.dart';
+import '../../../widgets/custom_snackbar.dart';
 import '../../bloc/location/location_bloc.dart';
 import '../../bloc/location/location_event.dart';
 import '../../bloc/location/location_state.dart';
@@ -22,6 +25,7 @@ class LocationScreen extends StatefulWidget {
 
 class _LocationScreenState extends State<LocationScreen> {
   final _bloc = sl<LocationBloc>();
+  final TextEditingController _addressController = TextEditingController();
 
   @override
   void initState() {
@@ -30,6 +34,11 @@ class _LocationScreenState extends State<LocationScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       showLocationDialog(context);
     });
+  }
+  @override
+  void dispose() {
+    _addressController.dispose();
+    super.dispose();
   }
 
   void showLocationDialog(BuildContext screenContext) {
@@ -60,16 +69,20 @@ class _LocationScreenState extends State<LocationScreen> {
       child: Scaffold(
         body: BlocConsumer<LocationBloc, LocationState>(
           listener: (context, state) {
-            if (state.errorMessage != null) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.errorMessage!)),
-              );
-            }
-            if (state.isGpsSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text(StringResources.locationSelectSuccess)),
-              );
-            }
+              if (state.errorMessage != null) {
+                CustomSnackBar.show(context, state.errorMessage!, isError: true);
+              }
+
+              if (state.successMessage != null) {
+                CustomSnackBar.show(context, state.successMessage!, isError: false);
+                Navigator.pushNamed(context, AppRoutes.home);
+              }
+
+              if (state.detectedAddress != null && state.detectedAddress!.isNotEmpty) {
+                _addressController.text = state.detectedAddress!;
+              } else if (state.selectedZone == null) {
+                _addressController.clear();
+              }
           },
           builder: (context, state) {
             return Stack(
@@ -136,7 +149,7 @@ class _LocationScreenState extends State<LocationScreen> {
                             DropdownButtonFormField<String>(
                               value: state.selectedZone,
                               key: ValueKey('zone_${state.selectedZone}'),
-                              style: textTheme.bodyLarge?.copyWith(fontSize: DimensionsResources.FONT_SIZE_2X_EXTRA_MEDIUM.sp),
+                              style: textTheme.bodyMedium?.copyWith(fontSize: DimensionsResources.FONT_SIZE_MEDIUM.sp),
                               decoration: const InputDecoration(
                                 labelText: StringResources.yourZone,
                                 border: OutlineInputBorder(),
@@ -157,11 +170,10 @@ class _LocationScreenState extends State<LocationScreen> {
 
                             SizedBox(height: DimensionsResources.D_20.h),
 
-                            /// AREA DROPDOWN
                             DropdownButtonFormField<String>(
                               value: state.selectedArea,
                               key: ValueKey('area_${state.selectedArea}'),
-                              style: textTheme.bodyLarge?.copyWith(fontSize: DimensionsResources.FONT_SIZE_1X_EXTRA_MEDIUM.sp),
+                              style: textTheme.bodyMedium?.copyWith(fontSize: DimensionsResources.FONT_SIZE_MEDIUM.sp),
                               decoration: const InputDecoration(
                                 labelText: StringResources.yourArea,
                                 border: OutlineInputBorder(),
@@ -179,21 +191,44 @@ class _LocationScreenState extends State<LocationScreen> {
                                 if (v != null) _bloc.add(ChangeAreaEvent(v));
                               },
                             ),
+                            SizedBox(height: DimensionsResources.D_20.h),
 
-                            const Spacer(),
+                            AuthTextField(
+                              label: StringResources.address,
+                              hint: (state.detectedAddress != null && state.detectedAddress!.isNotEmpty)
+                                  ? state.detectedAddress!
+                                  : "Enter full Address",
+                              controller: _addressController,
+                              keyboardType: TextInputType.streetAddress,
+                            ),
+                            SizedBox(height: DimensionsResources.D_30.h),
 
                             /// SUBMIT ACTION BUTTON
                             AuthButton(
                               text: StringResources.submit,
-                              onTap: () {
-                                if (state.selectedZone != null && state.selectedArea != null) {
-                                  print("Submitted Data: ${state.selectedZone}, ${state.selectedArea}");
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text(StringResources.locationRequiredError)),
+                                onTap: () {
+
+                                  if (state.selectedZone == null ||
+                                      state.selectedArea == null ||
+                                      _addressController.text.trim().isEmpty) {
+
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text("Please fill all fields"),
+                                      ),
+                                    );
+
+                                    return;
+                                  }
+
+                                  _bloc.add(
+                                    SubmitManualLocationEvent(
+                                      zone: state.selectedZone!,
+                                      area: state.selectedArea!,
+                                      address: _addressController.text.trim(),
+                                    ),
                                   );
                                 }
-                              },
                             ),
                             SizedBox(height: DimensionsResources.D_20.h),
                           ],

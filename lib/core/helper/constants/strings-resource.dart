@@ -13,6 +13,15 @@ class StringResources {
   static const String account = 'Account';
   static const String vegetables = 'Vegetables';
 
+  // Welcome Screen
+  static const String welcomeToOmnigo = 'WELCOME TO\nOMNIGO';
+  static const String getStarted = 'Get Started';
+
+  // Onboarding / Homepage Info
+  static const String skip = 'SKIP';
+  static const String freshGroceriesTitle = 'Fresh Groceries\nDelivered Fast';
+  static const String freshGroceriesSubtitle = 'Fast delivery of fresh and\nquality products';
+
   // Grocery Details & Cart
   static const String myCart = 'My Cart';
   static const String addedToCart = 'Added to Cart';
@@ -176,6 +185,7 @@ class StringResources {
   static const String signUp = 'Sign Up';
   static const String username = 'Username';
   static const String email = 'Email';
+  static const String address = 'Address';
   static const String password = 'Password';
   static const String enterCredentials = 'Enter your credentials to continue';
   static const String alreadyHaveAccount = 'Already have an account?';

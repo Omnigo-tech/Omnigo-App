@@ -29,12 +29,10 @@ class AuthRepository {
       );
 
       // Trigger sign in
-      final GoogleSignInAccount googleUser =
-      await _googleSignIn.authenticate();
+      final GoogleSignInAccount googleUser = await _googleSignIn.authenticate();
 
       // Get auth details
-      final GoogleSignInAuthentication googleAuth =
-          googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth = googleUser.authentication;
 
       final String? idToken = googleAuth.idToken;
 
@@ -48,7 +46,6 @@ class AuthRepository {
       };
 
       return await apiService.googleLogin(body);
-
     } on DioException catch (e) {
       throw ErrorHandler.handle(e);
     } catch (e) {
@@ -75,7 +72,6 @@ class AuthRepository {
       } else {
         throw Exception(result.message ?? "Facebook Sign-In failed");
       }
-
     } on DioException catch (e) {
       throw ErrorHandler.handle(e);
     } catch (e) {
@@ -96,23 +92,19 @@ class AuthRepository {
       };
 
       return await apiService.signup(body);
-
     } on DioException catch (e) {
-
       throw ErrorHandler.handle(e);
     }
   }
 
-  Future<UserModel> login({required String email, required String password}) async {
+  Future<UserModel> login({
+    required String email,
+    required String password,
+  }) async {
     try {
-      final data = {
-        "email": email,
-        "password": password,
-      };
+      final data = {"email": email, "password": password};
       return await apiService.login(data);
-    }
-
-    on DioException catch (e) {
+    } on DioException catch (e) {
       throw ErrorHandler.handle(e);
     }
   }
@@ -164,6 +156,7 @@ class AuthRepository {
     on DioException catch (e) {
       throw ErrorHandler.handle(e);
     }
+
   }
 
   Future<dynamic> verifyForgotPasswordOtp({
@@ -182,7 +175,7 @@ class AuthRepository {
         "otp": otp,
       };
 
-      return await apiService.verifyForgotPasswordOtp(data);
+      return await apiService.verifyOtp(data);
 
     }
     on DioException catch (e) {

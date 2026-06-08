@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:grocery_app/core/di/service_locator.dart';
 import 'package:grocery_app/presentation/bloc/address/address_bloc.dart';
 import 'package:grocery_app/presentation/bloc/address/address_event.dart';
 import 'package:grocery_app/presentation/bloc/payment/payment_bloc.dart';
@@ -91,7 +92,7 @@ class RouteGenerator {
             providers: [
               BlocProvider(create: (_) => HomeBloc()..add(LoadHomeData())),
               BlocProvider(
-                create: (_) => GroceryBloc()
+                create: (_) => sl<GroceryBloc>()
                   ..add(LoadGroceryEvent())
                   ..add(SelectCategoryEvent(category)),
               ),
@@ -114,17 +115,14 @@ class RouteGenerator {
       case AppRoutes.chat:
         return MaterialPageRoute(
           builder: (_) =>
-              BlocProvider(create: (_) => ChatBloc(),
-                  child: ChatScreen()),
+              BlocProvider(create: (_) => ChatBloc(), child: ChatScreen()),
         );
 
       case AppRoutes.call:
         return MaterialPageRoute(builder: (_) => const CallScreen());
 
       case AppRoutes.paymentmethodScreen:
-       return MaterialPageRoute(
-       builder: (_) =>  PaymentMethodScreen(),
-      );
+        return MaterialPageRoute(builder: (_) => PaymentMethodScreen());
 
       case AppRoutes.trackingOrder:
         return MaterialPageRoute(
@@ -138,9 +136,7 @@ class RouteGenerator {
           ),
         );
       case AppRoutes.review:
-        return MaterialPageRoute(
-          builder: (_) => const ReviewScreen(),
-        );
+        return MaterialPageRoute(builder: (_) => const ReviewScreen());
 
       default:
         return MaterialPageRoute(

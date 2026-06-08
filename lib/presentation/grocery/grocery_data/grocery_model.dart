@@ -3,7 +3,7 @@ part 'grocery_model.g.dart';
 
 @JsonSerializable()
 class GroceryModel {
-  @JsonKey(name: 'id')
+  @JsonKey(name: '_id')
   final String id;
   @JsonKey(name: 'name')
   final String name;
@@ -28,6 +28,7 @@ class GroceryModel {
     this.weight,
   });
 
-  factory GroceryModel.fromJson(Map<String, dynamic> json) => _$GroceryModelFromJson(json);
+  factory GroceryModel.fromJson(Map<String, dynamic> json) =>
+      _$GroceryModelFromJson(json);
   Map<String, dynamic> toJson() => _$GroceryModelToJson(this);
 }

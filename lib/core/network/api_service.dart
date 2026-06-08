@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:grocery_app/data/models/user_model.dart';
 import 'package:grocery_app/data/models/wishlist_toggle_response_model.dart';
+import 'package:grocery_app/presentation/grocery/grocery_data/grocery_model.dart';
 import 'package:retrofit/error_logger.dart';
 import 'package:retrofit/http.dart';
 
@@ -17,40 +18,22 @@ abstract class ApiService {
   factory ApiService(Dio dio, {String baseUrl}) = _ApiService;
 
   @POST("auth/signup")
-  Future<UserModel> signup(
-      @Body() Map<String, dynamic> body,
-      );
+  Future<UserModel> signup(@Body() Map<String, dynamic> body);
 
   @POST("auth/login")
-  Future<UserModel> login(
-      @Body() Map<String, dynamic> body,
-      );
+  Future<UserModel> login(@Body() Map<String, dynamic> body);
 
   @POST("auth/send-otp")
-  Future<dynamic> sendOtp(
-      @Body() Map<String, dynamic> body,
-      );
+  Future<dynamic> sendOtp(@Body() Map<String, dynamic> body);
 
   @POST("auth/verify-otp")
-  Future<dynamic> verifyOtp(
-      @Body() Map<String, dynamic> body,
-      );
-
-
-  @POST("auth/verify-forgot-password-otp")
-  Future<dynamic> verifyForgotPasswordOtp(
-      @Body() Map<String, dynamic> body,
-      );
+  Future<dynamic> verifyOtp(@Body() Map<String, dynamic> body);
 
   @POST("auth/forgot-password")
-  Future<dynamic> forgotPassword(
-      @Body() Map<String, dynamic> body,
-      );
+  Future<dynamic> forgotPassword(@Body() Map<String, dynamic> body);
 
   @POST("auth/reset-password")
-  Future<dynamic> resetPassword(
-      @Body() Map<String, dynamic> body,
-      );
+  Future<dynamic> resetPassword(@Body() Map<String, dynamic> body);
 
   @POST("auth/google-login")
   Future<GoogleLoginResponse> googleLogin(
@@ -86,4 +69,10 @@ abstract class ApiService {
 
   @GET("wishlist")
   Future<FavoriteResponse> getFavorites();
+
+  @GET("products")
+  Future<List<GroceryModel>> getProducts(
+      @Query("category") String? category,
+      @Query("q") String? search,
+      );
 }

@@ -17,11 +17,14 @@ class AuthFailure extends AuthState {
   AuthFailure(this.error);
 }
 
+
 class OtpSentState extends AuthState {
   final String message;
+  final String? userId;
 
-  OtpSentState(this.message);
-}
+  OtpSentState(this.message, this.userId);
+  }
+
 class OtpVerifiedState extends AuthState {
   final String message;
   final dynamic data;

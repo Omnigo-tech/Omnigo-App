@@ -1,13 +1,16 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery_app/data/models/order_model.dart';
 import '../../../data/datasource/repositories/glocery_data.dart';
+import '../../../data/datasource/repositories/wishlist_repository.dart';
 import '../../../data/models/grocery-item.dart';
 import 'package:uuid/uuid.dart';
 import 'item_detail_event.dart';
 import 'item_detail_state.dart';
 
 class GroceryDetailBloc extends Bloc<GroceryDetailEvent, GroceryDetailState> {
-  GroceryDetailBloc() : super(GroceryDetailState(items: [], cart: [])) {
+  final WishlistRepository wishlistRepository;
+
+  GroceryDetailBloc(this.wishlistRepository) : super(GroceryDetailState(items: [], cart: [])) {
     on<LoadItemsEvent>((event, emit) {
       final items = GroceryData.getGroceryList()
           .map(
@@ -25,15 +28,38 @@ class GroceryDetailBloc extends Bloc<GroceryDetailEvent, GroceryDetailState> {
       emit(state.copyWith(items: items));
     });
 
-    on<ToggleFavoriteEvent>((event, emit) {
-      final updated = state.items.map((item) {
-        if (item.id == event.id) {
-          return item.copyWith(isFavorite: !item.isFavorite);
-        }
-        return item;
-      }).toList();
+    on<ToggleFavoriteEvent>((event, emit) async {
+      try {
+        final response =
+        await wishlistRepository.toggleWishlist(event.id);
 
-      emit(state.copyWith(items: updated));
+        final updated = state.items.map((item) {
+          if (item.id == event.id) {
+            return item.copyWith(
+              isFavorite: response.isFavorite,
+            );
+          }
+          return item;
+        }).toList();
+
+        emit(state.copyWith(items: updated));
+      } catch (e) {
+        print("Wishlist Error: $e");
+      }
+    });
+
+    on<LoadFavoritesEvent>((event, emit) async {
+      try {
+        final favorites = await wishlistRepository.getFavorites();
+
+        emit(
+          state.copyWith(
+            favorites: favorites,
+          ),
+        );
+      } catch (e) {
+        print(e);
+      }
     });
 
     on<IncrementQtyEvent>((event, emit) {

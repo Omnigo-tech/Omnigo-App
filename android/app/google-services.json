@@ -1,21 +1,30 @@
 {
   "project_info": {
-    "project_number": "469971596118",
-    "project_id": "omnigo-app-df7e2",
-    "storage_bucket": "omnigo-app-df7e2.firebasestorage.app"
+    "project_number": "356810750168",
+    "project_id": "omnigo-app-498317",
+    "storage_bucket": "omnigo-app-498317.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:469971596118:android:dd7f07ca80d3f325039cf7",
+        "mobilesdk_app_id": "1:356810750168:android:d637a9153253fa18b37fad",
         "android_client_info": {
           "package_name": "com.example.grocery_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "356810750168-8f7fchgm06su5q9n7tgfn46geh78oqag.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.grocery_app",
+            "certificate_hash": "ac29fbf97bdb7e1120dd7cde8c0bcdcb37751f0a"
+          }
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyCYmbyCrwk7PyPuHFEDsUMBAf4rZtmrNrg"
+          "current_key": "AIzaSyAhzpnHOtzHyG4Nawm_dMB4D3oh2H8fj1g"
         }
       ],
       "services": {

@@ -37,7 +37,7 @@ class ImageResource {
   static const String GROCERY_IMG = '${DIR_IMAGE}grocery.png';
   static const String LOCATION_IMG = '${DIR_IMAGE}location_img_popup.png';
   static const String OMINGO_LOCATION_LOGO_IMG = '${DIR_IMAGE}omingo_location.png';
-
+  static const String GET_STARTED_BACKGROUND = '${DIR_IMAGE}get_started_img.png';
 
 
   static const String WORD_MAP = '${DIR_IMAGE}word_map.png';

@@ -6,9 +6,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:grocery_app/core/helper/constants/colors_resources.dart';
 import 'package:grocery_app/widgets/header_widget.dart';
 
+import '../../../../core/di/service_locator.dart';
 import '../../../../core/helper/constants/dimensions-resource.dart';
 import '../../../../core/helper/constants/images-resources.dart';
 import '../../../../core/helper/constants/strings-resource.dart';
+import '../../../../data/datasource/local/auth_local_data_source.dart';
 import '../../../../widgets/categories_widget.dart';
 import '../../../../widgets/promo_section_widget.dart';
 import '../../../../widgets/vehicle_services_widget.dart';
@@ -20,6 +22,9 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localData = sl<AuthLocalDataSource>().getUserLocation();
+    String currentAddress = localData?['address'] ?? "No Address Selected";
+
     return  Material(
       color: AppColors.homeBackground,
       child: BlocBuilder<HomeBloc, HomeState>(
@@ -58,7 +63,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                           child: Column(
                             children: [
-                              _locationCard(),
+                              _locationCard(currentAddress),
                               SizedBox(height: DimensionsResources.D_20.h),
                               VehicleServicesWidget(services: state.services),
                               SizedBox(height: DimensionsResources.D_20.h),
@@ -128,7 +133,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _locationCard() {
+  Widget _locationCard(String currentAddress) {
     return Row(
       children: [
         const Icon(Icons.location_on, color: AppColors.primary),
@@ -147,7 +152,7 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               Text(
-                StringResources.locationAddress,
+                currentAddress,
                 style: GoogleFonts.poppins(
                   fontSize: DimensionsResources.FONT_SIZE_SMALL.sp,
                   fontWeight: FontWeight.w500,

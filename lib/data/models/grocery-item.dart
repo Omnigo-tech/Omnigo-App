@@ -7,7 +7,6 @@ class GroceryItemModel extends Equatable {
   final String image;
   final String description;
   final double price;
-
   final bool isFavorite;
   final int quantity;
 
@@ -21,6 +20,21 @@ class GroceryItemModel extends Equatable {
     this.isFavorite = false,
     this.quantity = 1,
   });
+
+  factory GroceryItemModel.fromJson(Map<String, dynamic> json) {
+    return GroceryItemModel(
+      id: json['_id'] ?? '',
+      name: json['name'] ?? '',
+      image: json['image'] ?? '',
+      description: json['description'] ?? '',
+      weight: json['weight'],
+      price: (json['price'] ?? 0).toDouble(),
+      quantity: json['quantity'] ?? 1,
+
+      // Wishlist API se aane wale items already favorite hain
+      isFavorite: true,
+    );
+  }
 
   GroceryItemModel copyWith({
     bool? isFavorite,
@@ -40,5 +54,14 @@ class GroceryItemModel extends Equatable {
   }
 
   @override
-  List<Object?> get props => [id, name, weight, image, description, price, isFavorite, quantity];
+  List<Object?> get props => [
+    id,
+    name,
+    weight,
+    image,
+    description,
+    price,
+    isFavorite,
+    quantity,
+  ];
 }

@@ -1,7 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:grocery_app/data/models/user_model.dart';
+import 'package:grocery_app/data/models/wishlist_toggle_response_model.dart';
 import 'package:retrofit/error_logger.dart';
 import 'package:retrofit/http.dart';
+
+import '../../data/models/favourite_response_model.dart';
+import '../../data/models/google_login_response_model.dart';
+import '../../data/models/onboarding_model.dart';
+import '../../data/models/onboarding_response_model.dart';
+
 
 part 'api_service.g.dart';
 
@@ -29,6 +36,12 @@ abstract class ApiService {
       @Body() Map<String, dynamic> body,
       );
 
+
+  @POST("auth/verify-forgot-password-otp")
+  Future<dynamic> verifyForgotPasswordOtp(
+      @Body() Map<String, dynamic> body,
+      );
+
   @POST("auth/forgot-password")
   Future<dynamic> forgotPassword(
       @Body() Map<String, dynamic> body,
@@ -39,8 +52,8 @@ abstract class ApiService {
       @Body() Map<String, dynamic> body,
       );
 
-  @POST("google-login")
-  Future<UserModel> googleLogin(
+  @POST("auth/google-login")
+  Future<GoogleLoginResponse> googleLogin(
       @Body() Map<String, dynamic> body,
       );
 
@@ -49,4 +62,28 @@ abstract class ApiService {
   Future<UserModel> facebookLogin(
       @Body() Map<String, dynamic> body,
       );
+
+  @GET("auth/location/zones")
+  Future<dynamic> getZones();
+
+  @POST("auth/location/manual")
+  Future<dynamic> saveManualLocation(
+      @Body() Map<String, dynamic> body,
+      );
+
+  @POST("auth/location/auto")
+  Future<dynamic> saveAutoLocation(
+      @Body() Map<String, dynamic> body,
+      );
+
+  @GET("onboarding")
+  Future<OnboardingResponseModel> getOnboardingData();
+
+  @POST("wishlist/toggle")
+  Future<WishlistToggleResponseModel> toggleWishlist(
+      @Body() Map<String, dynamic> body,
+      );
+
+  @GET("wishlist")
+  Future<FavoriteResponse> getFavorites();
 }

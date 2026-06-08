@@ -1,35 +1,81 @@
 import 'package:get_it/get_it.dart';
-import 'package:grocery_app/presentation/bloc/auth/auth_bloc.dart';
+import 'package:grocery_app/data/datasource/repositories/wishlist_repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../data/datasource/local/auth_local_data_source.dart';
 import '../../data/datasource/repositories/auth_repository.dart';
 import '../../data/datasource/repositories/location_repository.dart';
+import '../../data/datasource/repositories/onboarding_repository.dart';
 import '../../data/datasource/services/location_service.dart';
+import '../../presentation/bloc/auth/auth_bloc.dart';
+import '../../presentation/bloc/grocery_details/item_detail_bloc.dart';
 import '../../presentation/bloc/location/location_bloc.dart';
+import '../../presentation/bloc/onboarding/onboarding_bloc.dart';
 import '../network/api_service.dart';
 import '../network/dio_client.dart';
 
 final sl = GetIt.instance;
 
-void setup() {
-  // Core / Network
-  sl.registerLazySingleton(() => DioClient.getDio());
-  sl.registerLazySingleton(() => ApiService(sl()));
+Future<void> setup() async {
 
-  // ================= AUTH FEATURE =================
-  sl.registerLazySingleton(() => AuthRepository(sl()));
+  // ================= SHARED PREF =================
+  final prefs = await SharedPreferences.getInstance();
+  sl.registerLazySingleton<SharedPreferences>(() => prefs);
+
+  // ================= LOCAL DATA =================
+  sl.registerLazySingleton<AuthLocalDataSource>(
+        () => AuthLocalDataSource(sl()),
+  );
+
+  // ================= CORE =================
+  sl.registerLazySingleton<DioClient>(
+        () => DioClient(sl()),
+  );
+
+  sl.registerLazySingleton(() => sl<DioClient>().getDio());
+
+  sl.registerLazySingleton<ApiService>(
+        () => ApiService(sl()),
+  );
+
+  // ================= SERVICES =================
+  sl.registerLazySingleton(() => LocationService());
+
+  // ================= REPOSITORIES =================
+  sl.registerLazySingleton<AuthRepository>(
+        () => AuthRepository(
+      sl(),
+      sl(),
+    ),
+  );
+
+  sl.registerLazySingleton<LocationRepository>(
+        () => LocationRepository(
+      sl(),
+      sl(),
+      sl(),
+    ),
+  );
+  sl.registerLazySingleton<OnboardingRepository>(() => OnboardingRepository(sl()));
+
+  sl.registerLazySingleton<WishlistRepository>(() => WishlistRepository(sl()));
+
+  // ================= BLOCS =================
   sl.registerFactory<AuthBloc>(
         () => AuthBloc(sl()),
   );
 
-  // ================= LOCATION FEATURE =================
-  // 1. Location Service (GPS hardware ke liye)
-  sl.registerLazySingleton(() => LocationService());
-
-  // 2. Location Repository (Is mein service inject ho rahi ha)
-  sl.registerLazySingleton(() => LocationRepository(sl()));
-
-  // 3. Location Bloc (Factory taake har dafa naya state mile)
   sl.registerFactory<LocationBloc>(
         () => LocationBloc(sl()),
   );
+
+  sl.registerFactory<OnboardingBloc>(() => OnboardingBloc(sl()));
+
+  sl.registerFactory<GroceryDetailBloc>(
+        () => GroceryDetailBloc(
+      sl<WishlistRepository>(),
+    ),
+  );
+
+
 }

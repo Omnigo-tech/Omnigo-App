@@ -13,9 +13,12 @@ import 'package:grocery_app/widgets/auth_textfield.dart';
 import '../../../core/helper/constants/colors_resources.dart';
 import '../../../core/helper/constants/images-resources.dart';
 import '../../../core/helper/constants/strings-resource.dart';
+import '../../../core/routes/AppRoutes.dart';
 import '../../../widgets/custom_snackbar.dart';
 import '../../bloc/auth/auth_bloc.dart';
 import '../../bloc/auth/auth_state.dart';
+import '../user_interface/home/home_screen.dart';
+import 'location_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -54,12 +57,31 @@ class _LoginScreenState extends State<LoginScreen> {
         listener: (context, state) {
           if (state is AuthSuccess) {
             CustomSnackBar.show(context, state.message, isError: false);
-            // Fix: Changed pushReplacement to push so user can go back to login from PhoneInput
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => PhoneInputScreen(id: state.data.user.id)),
-            );
-          }
+
+            // 1. Get user data from state
+            final user = state.data.user;
+
+            if (user.isPhoneVerified == false) {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                AppRoutes.phoneInput, // 👈 Apni phone verification screen ka route name check kar lein
+                    (route) => false,
+              );
+            } else if (user.hasLocation == false) {
+
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                AppRoutes.location,
+                    (route) => false,
+              );
+            } else {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                AppRoutes.home,
+                    (route) => false,
+              );
+            }}
+
           if (state is AuthFailure) {
             CustomSnackBar.show(context, state.error, isError: true);
           }
@@ -121,7 +143,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     Align(
                       alignment: Alignment.centerRight,
                       child: GestureDetector(
-                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ForgetPassword())),
+                        onTap: () {
+                          // Safe access to ID if state is AuthSuccess, else pass empty string
+                          String userId = "";
+                          if (state is AuthSuccess) {
+                            userId = state.data.user.id;
+                          }
+                          Navigator.push(
+                            context, 
+                            MaterialPageRoute(builder: (_) => ForgetPassword())
+                          );
+                        },
                         child: Text(
                           StringResources.forgotPassword,
                           style: GoogleFonts.dmSans(

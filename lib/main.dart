@@ -37,7 +37,10 @@ void main() async {
   runApp(
     MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => GroceryDetailBloc()..add(LoadItemsEvent())),
+        BlocProvider(
+          create: (_) => sl<GroceryDetailBloc>()
+            ..add(LoadItemsEvent()),
+        ),
         BlocProvider(create: (_) => AddressBloc()..add(LoadAddresses())),
         BlocProvider(create: (context) => CallBloc()),
         BlocProvider(create: (_) => ReviewBloc(),),

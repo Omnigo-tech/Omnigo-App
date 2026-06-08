@@ -9,9 +9,11 @@ import 'package:grocery_app/presentation/screens/authentication/reset_password.d
 import 'package:grocery_app/widgets/auth_button.dart';
 import 'package:grocery_app/widgets/auth_textfield.dart';
 
+import '../../../core/enums/otp_purpose.dart';
 import '../../../core/helper/constants/colors_resources.dart';
 import '../../../core/helper/constants/dimensions-resource.dart';
 import '../../../core/helper/constants/strings-resource.dart';
+import 'otp_screen.dart';
 
 class ForgetPassword extends StatefulWidget {
   const ForgetPassword({super.key});
@@ -26,7 +28,8 @@ class _ForgetPasswordState extends State<ForgetPassword> {
 
   void sendOtp() {
     if (!_formKey.currentState!.validate()) return;
-    context.read<AuthBloc>().add(ForgotPasswordEvent(inputController.text.trim()));
+    context.read<AuthBloc>().add(
+        ForgotPasswordEvent(inputController.text.trim()));
   }
 
   @override
@@ -58,7 +61,12 @@ class _ForgetPasswordState extends State<ForgetPassword> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (_) => ResetPasswordScreen(emailOrPhone: inputController.text.trim()),
+                builder: (_) => OtpScreen(
+                  value: inputController.text.trim(),
+                  userId: state.userId!,
+                  type: OtpType.email,
+                  purpose: OtpPurpose.forgotPassword,
+                ),
               ),
             );
           }

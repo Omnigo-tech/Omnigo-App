@@ -1,3 +1,5 @@
+import '../../../core/enums/otp_purpose.dart';
+
 abstract class AuthEvent {}
 
 class SignupEvent extends AuthEvent {
@@ -20,17 +22,34 @@ class LoginEvent extends AuthEvent {
 }
 
 class SendOtpEvent extends AuthEvent {
-  final String userId;
-  final String phone;
 
-  SendOtpEvent(this.phone,this.userId);
+  final String userId;
+  final OtpType type;
+  final String value; // phone OR email
+  final OtpPurpose purpose;
+
+  SendOtpEvent({
+    required this.userId,
+    required this.type,
+    required this.value,
+    required this.purpose,
+  });
 }
 
 class VerifyOtpEvent extends AuthEvent {
-  final String phone;
+  final String userId;
+  final String value; // phone OR email
   final String otp;
+  final OtpPurpose purpose;
+  final OtpType type;
 
-  VerifyOtpEvent(this.phone, this.otp);
+  VerifyOtpEvent({
+    required this.userId,
+    required this.value,
+    required this.otp,
+    required this.purpose,
+    required this.type,
+  });
 }
 
 class ForgotPasswordEvent extends AuthEvent {
@@ -39,10 +58,9 @@ class ForgotPasswordEvent extends AuthEvent {
 }
 
 class ResetPasswordEvent extends AuthEvent {
-  final String emailOrPhone;
-  final String otp;
+  final String userId;
   final String newPassword;
-  ResetPasswordEvent(this.emailOrPhone, this.otp, this.newPassword);
+  ResetPasswordEvent(this.userId, this.newPassword);
 }
 
 class LogoutEvent extends AuthEvent {}

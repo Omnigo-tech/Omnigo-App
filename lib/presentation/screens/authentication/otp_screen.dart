@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:grocery_app/presentation/screens/authentication/reset_password.dart';
 import 'package:grocery_app/widgets/auth_button.dart';
 
+import '../../../core/enums/otp_purpose.dart';
 import '../../../core/helper/constants/colors_resources.dart';
 import '../../../core/helper/constants/strings-resource.dart';
 import '../../../widgets/custom_snackbar.dart';
@@ -14,13 +16,17 @@ import '../../bloc/auth/auth_state.dart';
 import 'location_screen.dart';
 
 class OtpScreen extends StatefulWidget {
-  final String phone;
+  final String value;
   final String userId;
+  final OtpType type;
+  final OtpPurpose purpose;
 
   const OtpScreen({
     super.key,
-    required this.phone,
+    required this.value,
     required this.userId,
+    required this.type,
+    required this.purpose,
   });
 
   @override
@@ -46,17 +52,36 @@ class _OtpScreenState extends State<OtpScreen> {
 
   void verifyOtp() {
     if (otp.length != 6) {
-      CustomSnackBar.show(context, StringResources.completeOtpRequired, isError: true);
+      CustomSnackBar.show(
+        context,
+        StringResources.completeOtpRequired,
+        isError: true,
+      );
       return;
     }
-    context.read<AuthBloc>().add(VerifyOtpEvent(widget.phone.trim(), otp));
+
+    context.read<AuthBloc>().add(
+      VerifyOtpEvent(
+        userId: widget.userId,
+        value: widget.value,
+        otp: otp,
+        purpose: widget.purpose,
+        type: widget.type,
+      ),
+    );
   }
 
   void resendOtp() {
-    context.read<AuthBloc>().add(SendOtpEvent(widget.phone, widget.userId));
+    context.read<AuthBloc>().add(
+      SendOtpEvent(
+        userId: widget.userId,
+        value: widget.value,
+        purpose: widget.purpose,
+        type: widget.type
+      ),
+    );
   }
 
-  @override
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,11 +101,25 @@ class _OtpScreenState extends State<OtpScreen> {
           if (state is OtpVerifiedState) {
             CustomSnackBar.show(context, state.message, isError: false);
 
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (_) => const LocationScreen()),
-                  (route) => false,
-            );
+            if (widget.purpose == OtpPurpose.forgotPassword) {
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => ResetPasswordScreen(userId: widget.userId),
+                ),
+              );
+
+            } else {
+
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const LocationScreen(),
+                ),
+                    (route) => false,
+              );
+            }
           }
 
           if (state is AuthFailure) {
@@ -114,8 +153,10 @@ class _OtpScreenState extends State<OtpScreen> {
 
                   /// SUBTITLE
                   Text(
-                    "Enter the 6-digit code sent to your number\n"
-                        "${StringResources.countryCodePk} ${widget.phone}",
+                    widget.type == OtpPurpose.phoneVerification
+                        ? "Enter the OTP sent to your phone"
+                        : "Enter the OTP sent to your email"
+                        "${StringResources.countryCodePk} ${widget.value}",
                     style: GoogleFonts.dmSans(
                       fontSize: 15.sp,
                       color: AppColors.lightText,

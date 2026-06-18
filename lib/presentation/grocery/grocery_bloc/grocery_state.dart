@@ -3,121 +3,80 @@ import 'package:grocery_app/presentation/grocery/grocery_data/grocery_model.dart
 
 class GroceryState extends Equatable {
   final bool isLoading;
+  final bool isSearching;
   final String? error;
 
   final List<GroceryModel> allItems;
   final List<GroceryModel> filteredItems;
+  final List<GroceryModel> searchResults;
   final String selectedCategory;
+
+  // Categories extracted from API products (no hardcoding)
+  final List<String> categories;
+
+  // Product names extracted from API for suggestions (no hardcoding)
+  final List<String> productSuggestions;
 
   const GroceryState({
     required this.isLoading,
+    required this.isSearching,
     required this.error,
     required this.allItems,
     required this.filteredItems,
+    required this.searchResults,
     required this.selectedCategory,
+    required this.categories,
+    required this.productSuggestions,
   });
 
   factory GroceryState.initial() {
     return const GroceryState(
       isLoading: false,
-      error: null, // ✅ Fix #5: use null instead of ""
+      isSearching: false,
+      error: null,
       allItems: [],
       filteredItems: [],
-      selectedCategory: "Vegetables",
+      searchResults: [],
+      selectedCategory: "",
+      categories: [],
+      productSuggestions: [],
     );
   }
 
   GroceryState copyWith({
     bool? isLoading,
+    bool? isSearching,
     String? error,
     List<GroceryModel>? allItems,
     List<GroceryModel>? filteredItems,
+    List<GroceryModel>? searchResults,
     String? selectedCategory,
+    List<String>? categories,
+    List<String>? productSuggestions,
   }) {
     return GroceryState(
       isLoading: isLoading ?? this.isLoading,
-      error: error, // ✅ Fix: allow setting error to null
+      isSearching: isSearching ?? this.isSearching,
+      error: error,
       allItems: allItems ?? this.allItems,
       filteredItems: filteredItems ?? this.filteredItems,
+      searchResults: searchResults ?? this.searchResults,
       selectedCategory: selectedCategory ?? this.selectedCategory,
+      categories: categories ?? this.categories,
+      productSuggestions: productSuggestions ?? this.productSuggestions,
     );
   }
 
   @override
-  // ✅ Fix #5: Added isLoading and error to props
   List<Object?> get props => [
     isLoading,
+    isSearching,
     error,
     allItems,
     filteredItems,
+    searchResults,
     selectedCategory,
+    categories,
+    productSuggestions,
   ];
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*import 'package:equatable/equatable.dart';
-import 'package:grocery_app/presentation/grocery/grocery_data/grocery_model.dart';
-
-class GroceryState extends Equatable {
-  final bool isLoading;
-  final String? error;
-
-  final List<GroceryModel> allItems;
-  final List<GroceryModel> filteredItems;
-  final String selectedCategory;
-
-  const GroceryState({
-    required this.isLoading,
-    required this.error,
-    required this.allItems,
-    required this.filteredItems,
-    required this.selectedCategory,
-  });
-
-  factory GroceryState.initial() {
-    return const GroceryState(
-      isLoading: false,
-      error: "",
-      allItems: [],
-      filteredItems: [],
-      selectedCategory: "Vegetables",
-    );
-  }
-
-  GroceryState copyWith({
-    bool? isLoading,
-    String? error,
-    List<GroceryModel>? allItems,
-    List<GroceryModel>? filteredItems,
-    String? selectedCategory,
-  }) {
-    return GroceryState(
-      isLoading: isLoading ?? this.isLoading,
-      error: error ?? this.error,
-      allItems: allItems ?? this.allItems,
-      filteredItems: filteredItems ?? this.filteredItems,
-      selectedCategory: selectedCategory ?? this.selectedCategory,
-    );
-  }
-
-  @override
-  List<Object?> get props => [
-    isLoading,
-    error,
-    allItems,
-    filteredItems,
-    selectedCategory,
-  ];
-}*/
-

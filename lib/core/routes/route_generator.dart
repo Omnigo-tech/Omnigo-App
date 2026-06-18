@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery_app/core/di/service_locator.dart';
 import 'package:grocery_app/presentation/bloc/address/address_bloc.dart';
 import 'package:grocery_app/presentation/bloc/address/address_event.dart';
-import 'package:grocery_app/presentation/bloc/payment/payment_bloc.dart';
 import 'package:grocery_app/presentation/grocery/grocery_bloc/grocery_bloc.dart';
 import 'package:grocery_app/presentation/grocery/grocery_bloc/grocery_event.dart';
 import 'package:grocery_app/presentation/grocery/grocery_home/grocery_home_screen.dart';
@@ -19,8 +18,6 @@ import 'package:grocery_app/widgets/bottom_navigation_bar.dart';
 import '../../presentation/bloc/chat/chat_bloc.dart';
 import '../../presentation/bloc/home/home_bloc.dart';
 import '../../presentation/bloc/home/home_event.dart';
-import '../../presentation/bloc/review/review_bloc.dart';
-import '../../presentation/bloc/review/review_event.dart';
 import '../../presentation/bloc/tracking/tracking_bloc.dart';
 import '../../presentation/bloc/tracking/tracking_event.dart';
 import '../../presentation/screens/authentication/location_screen.dart';
@@ -58,19 +55,17 @@ class RouteGenerator {
 
       case AppRoutes.otp:
         return MaterialPageRoute(
-          builder: (_) => const OtpScreen(  value: "",
+          builder: (_) => const OtpScreen(
+            value: "",
             userId: "",
             purpose: OtpPurpose.phoneVerification,
             type: OtpType.phone,
-
           ),
         );
       case AppRoutes.location:
         return MaterialPageRoute(builder: (_) => const LocationScreen());
       case AppRoutes.phoneInput:
-        return MaterialPageRoute(
-          builder: (_) => const PhoneInputScreen(),
-        );
+        return MaterialPageRoute(builder: (_) => const PhoneInputScreen());
       case AppRoutes.home:
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(

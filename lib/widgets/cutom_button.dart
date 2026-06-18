@@ -88,8 +88,7 @@ class CustomButton extends StatelessWidget {
               SizedBox(width: DimensionsResources.D_6.w),
             ],
             Flexible(
-              child:
-              Center(
+              child: Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -99,11 +98,11 @@ class CustomButton extends StatelessWidget {
                           text ?? "",
                           overflow: TextOverflow.ellipsis,
                           style:
-                          fontStyle ??
+                              fontStyle ??
                               TextStyle(
                                 color: textColor ?? AppColors.homeBackground,
                                 fontSize:
-                                fontSize ??
+                                    fontSize ??
                                     DimensionsResources.FONT_SIZE_MEDIUM.r,
                                 fontWeight: fontWeight ?? FontWeight.w600,
                               ),
@@ -112,8 +111,11 @@ class CustomButton extends StatelessWidget {
                       Text(
                         subText!,
                         style: TextStyle(
-                          color: (textColor ?? AppColors.white).withOpacity(0.7),
-                          fontSize: DimensionsResources.FONT_SIZE_1X_EXTRA_SMALL.sp,
+                          color: (textColor ?? AppColors.white).withValues(
+                            alpha: 0.7,
+                          ),
+                          fontSize:
+                              DimensionsResources.FONT_SIZE_1X_EXTRA_SMALL.sp,
                           fontWeight: FontWeight.w400,
                         ),
                       ),

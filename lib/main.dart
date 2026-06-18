@@ -14,8 +14,6 @@ import 'package:grocery_app/presentation/bloc/location/location_bloc.dart';
 import 'package:grocery_app/presentation/bloc/payment/payment_bloc.dart';
 import 'package:grocery_app/presentation/bloc/review/review_bloc.dart';
 import 'package:grocery_app/presentation/grocery/grocery_bloc/grocery_bloc.dart';
-import 'package:grocery_app/presentation/grocery/grocery_home/grocery_home_screen.dart';
-import 'package:grocery_app/presentation/screens/welcome_screen.dart';
 import 'core/di/service_locator.dart';
 import 'core/helper/constants/dimensions-resource.dart';
 import 'core/helper/utils/svg-utils.dart';
@@ -31,8 +29,15 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   setup();
   await Firebase.initializeApp();
-  await NotificationService.init();
-  await NotificationService.getToken();
+  //await NotificationService.init();
+  //await NotificationService.getToken();
+
+  try {
+    await NotificationService.init();
+    await NotificationService.getToken();
+  } catch (e) {
+    print("Notification init failed (non-fatal): $e");
+  }
 
   // Screen orientation and basic UI mode
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
@@ -42,12 +47,11 @@ void main() async {
     MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => sl<GroceryDetailBloc>()
-            ..add(LoadItemsEvent()),
+          create: (_) => sl<GroceryDetailBloc>()..add(LoadItemsEvent()),
         ),
         BlocProvider(create: (_) => AddressBloc()..add(LoadAddresses())),
         BlocProvider(create: (context) => CallBloc()),
-        BlocProvider(create: (_) => ReviewBloc()),
+        BlocProvider(create: (_) => sl<ReviewBloc>()),
         BlocProvider(create: (_) => PaymentBloc()),
         BlocProvider(create: (_) => GroceryBloc(sl<GroceryRepository>())),
         BlocProvider<AuthBloc>(create: (_) => sl<AuthBloc>()),

@@ -78,7 +78,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
           return ListView.separated(
             padding: EdgeInsets.symmetric(vertical: DimensionsResources.D_10.h),
             itemCount: favList.length,
-            separatorBuilder: (_, __) => Divider(
+            separatorBuilder: (_, _) => Divider(
               color: AppColors.border,
               indent: DimensionsResources.D_16.w,
               endIndent: DimensionsResources.D_16.w,
@@ -170,7 +170,6 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                         width: 50,
                         height: 50,
                         fit: BoxFit.cover,
-
                       ),
                     ],
                   ),
@@ -184,7 +183,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                   ),
 
                   subtitle: Text(
-                    "${item.weight ?? ''}",
+                    item.weight ?? '',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: AppColors.grey,
                       fontSize: 14.sp,

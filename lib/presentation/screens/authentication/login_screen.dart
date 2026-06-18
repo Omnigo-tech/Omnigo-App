@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:grocery_app/core/helper/extension/validation_extension.dart';
 import 'package:grocery_app/presentation/bloc/auth/auth_event.dart';
 import 'package:grocery_app/presentation/screens/authentication/forget_password.dart';
-import 'package:grocery_app/presentation/screens/authentication/phone_input_screen.dart';
 import 'package:grocery_app/presentation/screens/authentication/signup_screen.dart';
 import 'package:grocery_app/widgets/auth_button.dart';
 import 'package:grocery_app/widgets/auth_textfield.dart';
@@ -17,8 +16,6 @@ import '../../../core/routes/AppRoutes.dart';
 import '../../../widgets/custom_snackbar.dart';
 import '../../bloc/auth/auth_bloc.dart';
 import '../../bloc/auth/auth_state.dart';
-import '../user_interface/home/home_screen.dart';
-import 'location_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -35,10 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> loginUser() async {
     if (!_formKey.currentState!.validate()) return;
     context.read<AuthBloc>().add(
-      LoginEvent(
-        emailController.text.trim(),
-        passwordController.text.trim(),
-      ),
+      LoginEvent(emailController.text.trim(), passwordController.text.trim()),
     );
   }
 
@@ -64,23 +58,24 @@ class _LoginScreenState extends State<LoginScreen> {
             if (user.isPhoneVerified == false) {
               Navigator.pushNamedAndRemoveUntil(
                 context,
-                AppRoutes.phoneInput, // 👈 Apni phone verification screen ka route name check kar lein
-                    (route) => false,
+                AppRoutes
+                    .phoneInput, // 👈 Apni phone verification screen ka route name check kar lein
+                (route) => false,
               );
             } else if (user.hasLocation == false) {
-
               Navigator.pushNamedAndRemoveUntil(
                 context,
                 AppRoutes.location,
-                    (route) => false,
+                (route) => false,
               );
             } else {
               Navigator.pushNamedAndRemoveUntil(
                 context,
                 AppRoutes.home,
-                    (route) => false,
+                (route) => false,
               );
-            }}
+            }
+          }
 
           if (state is AuthFailure) {
             CustomSnackBar.show(context, state.error, isError: true);
@@ -121,7 +116,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     SizedBox(height: 32.h),
-                    
+
                     AuthTextField(
                       label: StringResources.email,
                       hint: "example@gmail.com",
@@ -130,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       validator: (v) => v.validateEmail(),
                     ),
                     SizedBox(height: 20.h),
-                    
+
                     AuthTextField(
                       label: StringResources.password,
                       hint: "Enter your secure password",
@@ -138,7 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       obscure: true,
                       validator: (v) => v.validatePassword(),
                     ),
-                    
+
                     SizedBox(height: 12.h),
                     Align(
                       alignment: Alignment.centerRight,
@@ -150,8 +145,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             userId = state.data.user.id;
                           }
                           Navigator.push(
-                            context, 
-                            MaterialPageRoute(builder: (_) => ForgetPassword())
+                            context,
+                            MaterialPageRoute(builder: (_) => ForgetPassword()),
                           );
                         },
                         child: Text(
@@ -165,23 +160,31 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     SizedBox(height: 40.h),
-                    
+
                     AuthButton(
                       text: StringResources.login,
                       isLoading: state is AuthLoading,
                       onTap: loginUser,
                     ),
-                    
+
                     SizedBox(height: 24.h),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           StringResources.dontHaveAccount,
-                          style: GoogleFonts.dmSans(color: AppColors.lightText, fontSize: 14.sp),
+                          style: GoogleFonts.dmSans(
+                            color: AppColors.lightText,
+                            fontSize: 14.sp,
+                          ),
                         ),
                         GestureDetector(
-                          onTap: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const SignupScreen())),
+                          onTap: () => Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const SignupScreen(),
+                            ),
+                          ),
                           child: Text(
                             "  ${StringResources.signUp}",
                             style: GoogleFonts.dmSans(

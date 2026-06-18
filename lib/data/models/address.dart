@@ -12,10 +12,10 @@ class AddressModel {
     required this.username,
     required this.phone,
     required this.address,
-     this.zipcode,
-     this.city,
-     this.isSave,
+    this.zipcode,
+    this.city,
+    this.isSave,
   });
 
-  operator +(int other) {}
+  void operator +(int other) {}
 }

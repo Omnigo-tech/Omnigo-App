@@ -8,7 +8,6 @@ import 'package:grocery_app/core/helper/constants/strings-resource.dart';
 import 'package:grocery_app/core/routes/AppRoutes.dart';
 import 'package:grocery_app/widgets/auth_button.dart';
 
-import '../core/routes/AppRoutes.dart';
 import 'cutom_button.dart';
 
 class ConfirmOrder extends StatelessWidget {

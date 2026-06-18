@@ -56,11 +56,15 @@ class OrderDetailScreen extends StatelessWidget {
                   order.status == "delivered"
                       ? StringResources.deliveryCompleted
                       : "${StringResources.order} ${order.status}",
-                  style: textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500),
+                  style: textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
                 Text(
-                    "6:30 pm",
-                    style: textTheme.bodyLarge?.copyWith(color: AppColors.primaryBlue)
+                  "6:30 pm",
+                  style: textTheme.bodyLarge?.copyWith(
+                    color: AppColors.primaryBlue,
+                  ),
                 ),
               ],
             ),
@@ -78,9 +82,13 @@ class OrderDetailScreen extends StatelessWidget {
 
             Container(
               width: double.infinity,
-              padding: EdgeInsets.symmetric(vertical: DimensionsResources.D_14.h),
+              padding: EdgeInsets.symmetric(
+                vertical: DimensionsResources.D_14.h,
+              ),
               decoration: BoxDecoration(
-                color: AppColors.primaryBlue.withOpacity(DimensionsResources.D_0_2),
+                color: AppColors.primaryBlue.withValues(
+                  alpha: DimensionsResources.D_0_2,
+                ),
                 borderRadius: BorderRadius.circular(DimensionsResources.D_12.r),
               ),
               child: Center(
@@ -95,7 +103,9 @@ class OrderDetailScreen extends StatelessWidget {
 
             Container(
               decoration: BoxDecoration(
-                color: AppColors.primaryBlue.withOpacity(DimensionsResources.D_0_1),
+                color: AppColors.primaryBlue.withValues(
+                  alpha: DimensionsResources.D_0_1,
+                ),
                 borderRadius: BorderRadius.circular(DimensionsResources.D_12.r),
               ),
               child: Column(
@@ -106,20 +116,38 @@ class OrderDetailScreen extends StatelessWidget {
                       height: DimensionsResources.D_50.h,
                       decoration: BoxDecoration(
                         color: AppColors.white,
-                        borderRadius: BorderRadius.circular(DimensionsResources.D_8.r),
+                        borderRadius: BorderRadius.circular(
+                          DimensionsResources.D_8.r,
+                        ),
                       ),
                     ),
                     title: Text(item.name, style: textTheme.bodyLarge),
-                    subtitle: Text(item.weight ?? '', style: textTheme.bodySmall),
+                    subtitle: Text(
+                      item.weight ?? '',
+                      style: textTheme.bodySmall,
+                    ),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.remove_circle, color: AppColors.grey, size: DimensionsResources.D_24.r),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: DimensionsResources.D_8.w),
-                          child: Text(item.quantity.toString(), style: textTheme.bodyMedium),
+                        Icon(
+                          Icons.remove_circle,
+                          color: AppColors.grey,
+                          size: DimensionsResources.D_24.r,
                         ),
-                        Icon(Icons.add_circle, color: AppColors.primary, size: DimensionsResources.D_24.r),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: DimensionsResources.D_8.w,
+                          ),
+                          child: Text(
+                            item.quantity.toString(),
+                            style: textTheme.bodyMedium,
+                          ),
+                        ),
+                        Icon(
+                          Icons.add_circle,
+                          color: AppColors.primary,
+                          size: DimensionsResources.D_24.r,
+                        ),
                       ],
                     ),
                   );
@@ -133,7 +161,9 @@ class OrderDetailScreen extends StatelessWidget {
             SizedBox(height: DimensionsResources.D_10.h),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              leading: const CircleAvatar(backgroundColor: AppColors.itemBackground),
+              leading: const CircleAvatar(
+                backgroundColor: AppColors.itemBackground,
+              ),
               title: const Text("Brandon Henry"),
               subtitle: const Text("0331 999 666"),
             ),
@@ -153,7 +183,12 @@ class OrderDetailScreen extends StatelessWidget {
             _billRow(StringResources.subTotal, order.total - 50, textTheme),
             _billRow(StringResources.deliveryFee, 50, textTheme),
             _billRow(StringResources.promoCode, 0, textTheme),
-            _billRow(StringResources.totalCost, order.total, textTheme, isBold: true),
+            _billRow(
+              StringResources.totalCost,
+              order.total,
+              textTheme,
+              isBold: true,
+            ),
 
             SizedBox(height: DimensionsResources.D_20.h),
 
@@ -162,11 +197,17 @@ class OrderDetailScreen extends StatelessWidget {
               children: [
                 Text(StringResources.ratingReview, style: textTheme.bodyLarge),
                 InkWell(
-                  onTap: (){
-                   Navigator.pushNamed(context, AppRoutes.review);
+                  onTap: () {
+                    Navigator.pushNamed(context, AppRoutes.review);
                   },
 
-                    child: Text(StringResources.viewAll, style: textTheme.labelLarge?.copyWith(color: AppColors.primary))),
+                  child: Text(
+                    StringResources.viewAll,
+                    style: textTheme.labelLarge?.copyWith(
+                      color: AppColors.primary,
+                    ),
+                  ),
+                ),
               ],
             ),
             SizedBox(height: DimensionsResources.D_10.h),
@@ -174,13 +215,15 @@ class OrderDetailScreen extends StatelessWidget {
               children: [
                 Text(
                   "4.5",
-                  style: textTheme.displayLarge?.copyWith(fontSize: DimensionsResources.FONT_SIZE_LARGE.sp),
+                  style: textTheme.displayLarge?.copyWith(
+                    fontSize: DimensionsResources.FONT_SIZE_LARGE.sp,
+                  ),
                 ),
                 SizedBox(width: DimensionsResources.D_10.w),
                 Row(
                   children: List.generate(
                     5,
-                        (index) => Icon(
+                    (index) => Icon(
                       Icons.star,
                       color: AppColors.amber,
                       size: DimensionsResources.D_24.r,
@@ -198,16 +241,26 @@ class OrderDetailScreen extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: Container(
-        padding: EdgeInsets.symmetric(horizontal: DimensionsResources.D_16.w,vertical: DimensionsResources.D_60.w ),
+        padding: EdgeInsets.symmetric(
+          horizontal: DimensionsResources.D_16.w,
+          vertical: DimensionsResources.D_60.w,
+        ),
         decoration: BoxDecoration(
           color: AppColors.white,
-          border: Border(top: BorderSide(color: AppColors.border, width: DimensionsResources.D_1)),
+          border: Border(
+            top: BorderSide(
+              color: AppColors.border,
+              width: DimensionsResources.D_1,
+            ),
+          ),
         ),
         child: CustomButton(
           onClick: () {
             // 1. Sync Cart with old items
-            context.read<GroceryDetailBloc>().add(ReorderItemsEvent(order.items));
-            
+            context.read<GroceryDetailBloc>().add(
+              ReorderItemsEvent(order.items),
+            );
+
             // 2. Sync Address
             context.read<AddressBloc>().add(SelectAddressEvent(order.address));
 
@@ -215,7 +268,8 @@ class OrderDetailScreen extends StatelessWidget {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => CheckoutSummaryScreen(selectedMethod: order.paymentMethod),
+                builder: (context) =>
+                    CheckoutSummaryScreen(selectedMethod: order.paymentMethod),
               ),
             );
           },
@@ -226,7 +280,12 @@ class OrderDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _billRow(String title, double value, TextTheme textTheme, {bool isBold = false}) {
+  Widget _billRow(
+    String title,
+    double value,
+    TextTheme textTheme, {
+    bool isBold = false,
+  }) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: DimensionsResources.D_4.h),
       child: Row(

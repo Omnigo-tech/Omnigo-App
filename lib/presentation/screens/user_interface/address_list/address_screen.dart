@@ -30,61 +30,66 @@ class AddressListScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 if (index != state.addresses.length) {
                   final item = state.addresses[index];
-                  print("item is ${item}");
+                  print("item is $item");
                   return GestureDetector(
                     onTap: () {
                       context.read<AddressBloc>().add(SelectAddressEvent(item));
                       Navigator.pop(context);
                     },
                     child: ListTile(
-                  title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(item.locationname,
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
-
-                      Row(
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          IconButton(
-                            icon: const Icon(Icons.edit),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => BlocProvider.value(
-                                    value: context.read<AddressBloc>(),
-                                    child: AddAddressScreen(
-                                      index: index,
-                                      existingAddress: item,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
+                          Text(
+                            item.locationname,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
 
-                          IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () {
-                              context.read<AddressBloc>().add(
-                                DeleteAddressEvent(index),
-                              );
-                            },
+                          Row(
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.edit),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => BlocProvider.value(
+                                        value: context.read<AddressBloc>(),
+                                        child: AddAddressScreen(
+                                          index: index,
+                                          existingAddress: item,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
+                                ),
+                                onPressed: () {
+                                  context.read<AddressBloc>().add(
+                                    DeleteAddressEvent(index),
+                                  );
+                                },
+                              ),
+                            ],
                           ),
                         ],
-                      )
-                    ],
-                  ),
-                subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                const Divider(),
-                Text(item.username),
-                Text(item.phone),
-                Text(item.address),
-                ],
-                ),
-                ),
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Divider(),
+                          Text(item.username),
+                          Text(item.phone),
+                          Text(item.address),
+                        ],
+                      ),
+                    ),
                   );
                 } else {
                   return Center(

@@ -9,7 +9,6 @@ import 'package:grocery_app/widgets/auth_button.dart';
 import '../../../core/di/service_locator.dart';
 import '../../../core/enums/otp_purpose.dart';
 import '../../../core/helper/constants/colors_resources.dart';
-import '../../../core/helper/constants/dimensions-resource.dart';
 import '../../../core/helper/constants/strings-resource.dart';
 import '../../../data/datasource/local/auth_local_data_source.dart';
 import '../../../widgets/custom_snackbar.dart';
@@ -19,10 +18,7 @@ import '../../bloc/auth/auth_state.dart';
 import 'otp_screen.dart';
 
 class PhoneInputScreen extends StatefulWidget {
-
-  const PhoneInputScreen({
-    super.key,
-  });
+  const PhoneInputScreen({super.key});
 
   @override
   State<PhoneInputScreen> createState() => _PhoneInputScreenState();
@@ -37,7 +33,11 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
   void sendOtp() {
     if (!_formKey.currentState!.validate()) return;
     if (userId == null) {
-      CustomSnackBar.show(context, "User ID not found. Please login again.", isError: true);
+      CustomSnackBar.show(
+        context,
+        "User ID not found. Please login again.",
+        isError: true,
+      );
       return;
     }
     context.read<AuthBloc>().add(
@@ -72,11 +72,7 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
         listener: (context, state) {
           /// OTP SENT SUCCESS
           if (state is OtpSentState) {
-            CustomSnackBar.show(
-              context,
-              state.message,
-              isError: false,
-            );
+            CustomSnackBar.show(context, state.message, isError: false);
 
             Navigator.push(
               context,
@@ -92,11 +88,7 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
           }
 
           if (state is AuthFailure) {
-            CustomSnackBar.show(
-              context,
-              state.error,
-              isError: true,
-            );
+            CustomSnackBar.show(context, state.error, isError: true);
           }
         },
         builder: (context, state) {
@@ -162,7 +154,10 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
                           margin: EdgeInsets.only(right: 12.w),
                           decoration: BoxDecoration(
                             border: Border(
-                              right: BorderSide(color: AppColors.border, width: 1),
+                              right: BorderSide(
+                                color: AppColors.border,
+                                width: 1,
+                              ),
                             ),
                           ),
                           child: Row(
@@ -191,11 +186,17 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.r),
-                          borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+                          borderSide: const BorderSide(
+                            color: AppColors.primary,
+                            width: 1.5,
+                          ),
                         ),
                         errorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.r),
-                          borderSide: const BorderSide(color: Colors.red, width: 1),
+                          borderSide: const BorderSide(
+                            color: Colors.red,
+                            width: 1,
+                          ),
                         ),
                       ),
                     ),
@@ -207,7 +208,7 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
                       onTap: sendOtp,
                       isLoading: isLoading,
                     ),
-                    
+
                     SizedBox(height: 30.h),
                   ],
                 ),

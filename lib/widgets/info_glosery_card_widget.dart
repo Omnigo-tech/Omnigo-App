@@ -20,16 +20,19 @@ class InfoGloseryCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin:  EdgeInsets.only(right: DimensionsResources.D_10.sp),
-      padding:  EdgeInsets.all(DimensionsResources.D_12.sp),
+      margin: EdgeInsets.only(right: DimensionsResources.D_10.sp),
+      padding: EdgeInsets.all(DimensionsResources.D_12.sp),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(DimensionsResources.D_14.r),
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withOpacity(0.08),
+            color: AppColors.black.withValues(alpha: 0.08),
             blurRadius: DimensionsResources.D_4,
-            offset: const Offset(DimensionsResources.D_0, DimensionsResources.D_2),
+            offset: const Offset(
+              DimensionsResources.D_0,
+              DimensionsResources.D_2,
+            ),
           ),
         ],
       ),
@@ -42,7 +45,7 @@ class InfoGloseryCardWidget extends StatelessWidget {
             height: DimensionsResources.D_32.h,
             fit: BoxFit.contain,
           ),
-           SizedBox(width: DimensionsResources.D_8.w),
+          SizedBox(width: DimensionsResources.D_8.w),
           Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,17 +53,18 @@ class InfoGloseryCardWidget extends StatelessWidget {
               Text(
                 title,
                 style: GoogleFonts.dmSans(
-                    fontSize: DimensionsResources.FONT_SIZE_SMALL.sp,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.primary
+                  fontSize: DimensionsResources.FONT_SIZE_SMALL.sp,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.primary,
                 ),
               ),
               Text(
                 subtitle,
-                style:GoogleFonts.dmSans(
-                    fontSize: DimensionsResources.FONT_SIZE_SMALL.sp,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.grey),
+                style: GoogleFonts.dmSans(
+                  fontSize: DimensionsResources.FONT_SIZE_SMALL.sp,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.grey,
+                ),
               ),
             ],
           ),

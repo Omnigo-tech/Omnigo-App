@@ -35,12 +35,12 @@ class _CategoriesWidgetState extends State<CategoriesWidget> {
                 ),
               ),
               InkWell(
-                onTap: (){
+                onTap: () {
                   Navigator.pushNamed(
-                      context,
-                      AppRoutes.groceryhome,
-                      arguments: StringResources.vegetables,
-                    );
+                    context,
+                    AppRoutes.groceryhome,
+                    arguments: StringResources.vegetables,
+                  );
                 },
                 child: Text(
                   StringResources.seeAll,
@@ -82,12 +82,12 @@ class _CategoriesWidgetState extends State<CategoriesWidget> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Image.asset(
-                          item.image!,
+                          item.image,
                           height: DimensionsResources.D_40.h,
                         ),
                         SizedBox(height: DimensionsResources.D_5.h),
                         Text(
-                          item.name!,
+                          item.name,
                           style: GoogleFonts.inter(
                             fontSize: DimensionsResources.D_11.sp,
                             fontWeight: FontWeight.w500,

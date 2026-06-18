@@ -35,9 +35,9 @@ class CallScreen extends StatelessWidget {
                     child: Padding(
                       padding: EdgeInsets.all(DimensionsResources.D_20),
                       child: Icon(
-                          Icons.info_outline,
-                          color: AppColors.white,
-                          size: DimensionsResources.D_28
+                        Icons.info_outline,
+                        color: AppColors.white,
+                        size: DimensionsResources.D_28,
                       ),
                     ),
                   ),
@@ -51,8 +51,10 @@ class CallScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
-                          color: AppColors.white.withOpacity(DimensionsResources.D_0_1),
-                          width: DimensionsResources.D_2
+                        color: AppColors.white.withValues(
+                          alpha: DimensionsResources.D_0_1,
+                        ),
+                        width: DimensionsResources.D_2,
                       ),
                       image: const DecorationImage(
                         image: AssetImage(ImageResource.CALL_USER_IMG),
@@ -68,7 +70,8 @@ class CallScreen extends StatelessWidget {
                         ? StringResources.defaultUserName
                         : state.userName,
                     style: textTheme.titleLarge?.copyWith(
-                      color: AppColors.white, // Overriding color for dark background
+                      color: AppColors
+                          .white, // Overriding color for dark background
                     ),
                   ),
 
@@ -82,15 +85,17 @@ class CallScreen extends StatelessWidget {
                           context.read<CallBloc>().add(DeclineCall());
                         },
                         child: Container(
-                          padding: const EdgeInsets.all(DimensionsResources.D_20),
+                          padding: const EdgeInsets.all(
+                            DimensionsResources.D_20,
+                          ),
                           decoration: const BoxDecoration(
                             color: AppColors.callDeclineRed,
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(
-                              Icons.call_end,
-                              color: AppColors.white,
-                              size: DimensionsResources.D_36
+                            Icons.call_end,
+                            color: AppColors.white,
+                            size: DimensionsResources.D_36,
                           ),
                         ),
                       ),

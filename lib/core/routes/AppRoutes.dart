@@ -18,7 +18,7 @@ class AppRoutes {
   static const String review = '/review';
   static const String chat = '/chat';
   static const String call = '/call';
+  static const String order = '/order';
 
-
-  static get addressdetails => null;
+  static Null get addressdetails => null;
 }

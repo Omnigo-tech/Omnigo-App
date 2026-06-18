@@ -20,7 +20,8 @@ class StringResources {
   // Onboarding / Homepage Info
   static const String skip = 'SKIP';
   static const String freshGroceriesTitle = 'Fresh Groceries\nDelivered Fast';
-  static const String freshGroceriesSubtitle = 'Fast delivery of fresh and\nquality products';
+  static const String freshGroceriesSubtitle =
+      'Fast delivery of fresh and\nquality products';
 
   // Grocery Details & Cart
   static const String myCart = 'My Cart';
@@ -56,7 +57,6 @@ class StringResources {
   static const String placeOrder = 'Place Order';
   static const String orderPlacedSuccess = 'Order Placed Successfully!';
   static const String addressDetail = 'Address Detail';
-
 
   // Payment Method
   static const String paymentMethod = 'Payment Method';
@@ -144,7 +144,7 @@ class StringResources {
   static const String waitingForFirstFeedback =
       "Still waiting for first feedback 🤨";
 
-  static const String totalReviews = "52 Reviews";
+  static const String totalReviews = "Reviews";
   static const String writeReview = "Write Review";
 
   // Bottom Sheet
@@ -172,7 +172,7 @@ class StringResources {
   static const String internetConnectionHint = "Using your internet connection";
 
   static const orderDetail = 'Order #';
-  static const order= 'Order';
+  static const order = 'Order';
   static const deliveryCompleted = 'Delivery Completed';
   static const showDeliveryDetails = 'Show Delivery Details';
   static const deliveryMan = 'Delivery Man';
@@ -201,7 +201,8 @@ class StringResources {
   static const String dontHaveAccount = "Don't have an account?";
 
   static const String enterMobileNumber = 'Enter your mobile number';
-  static const String verificationDescription = "We will send a verification code to your mobile number to ensure your account security.";
+  static const String verificationDescription =
+      "We will send a verification code to your mobile number to ensure your account security.";
   static const String phoneRequired = 'Phone number is required';
   static const String digitsOnly = 'Only digits allowed';
   static const String tenDigitsRequired = 'Must be 10 digits';
@@ -216,14 +217,18 @@ class StringResources {
   static const String resendCode = 'Resend Code';
 
   static const String useCurrentLocation = "Use Current Location?";
-  static const String locationDialogSubtitle = "Allowing location helps us find restaurants and grocery stores near you swiftly.";
+  static const String locationDialogSubtitle =
+      "Allowing location helps us find restaurants and grocery stores near you swiftly.";
   static const String allowAccess = "Allow Access";
   static const String enterManually = "Enter Manually";
   static const String selectYourLocation = "Select Your Location";
-  static const String locationScreenSubtitle = "Enable location to stay connected with your area";
+  static const String locationScreenSubtitle =
+      "Enable location to stay connected with your area";
   static const String yourZone = "Your Zone";
   static const String yourArea = "Your Area";
   static const String submit = "Submit";
-  static const String locationSelectSuccess = "Location auto-selected successfully!";
-  static const String locationRequiredError = "Please select both Zone and Area";
+  static const String locationSelectSuccess =
+      "Location auto-selected successfully!";
+  static const String locationRequiredError =
+      "Please select both Zone and Area";
 }

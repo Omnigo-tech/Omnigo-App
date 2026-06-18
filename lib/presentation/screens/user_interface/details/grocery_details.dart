@@ -16,23 +16,18 @@ import '../../../../widgets/info_glosery_card_widget.dart';
 import '../../../bloc/grocery_details/item_detail_bloc.dart';
 import '../../../bloc/grocery_details/item_detail_event.dart';
 import '../../../bloc/grocery_details/item_detail_state.dart';
-import '../../../../core/routes/AppRoutes.dart';
 
 class DetailScreen extends StatelessWidget {
   final GroceryItemModel item;
 
   const DetailScreen({super.key, required this.item});
 
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<GroceryDetailBloc, GroceryDetailState>(
       builder: (context, state) {
         final currentItem = state.items.isNotEmpty
-            ? state.items.firstWhere(
-              (e) => e.id == item.id,
-          orElse: () => item,
-        )
+            ? state.items.firstWhere((e) => e.id == item.id, orElse: () => item)
             : item;
 
         return Scaffold(
@@ -69,16 +64,16 @@ class DetailScreen extends StatelessWidget {
                       child: CircleAvatar(
                         backgroundColor: AppColors.white,
                         child: IconButton(
-                          onPressed: ()=>Navigator.pop(context),
+                          onPressed: () => Navigator.pop(context),
                           icon: SvgPicture.asset(
-                          ImageResource.BACK_ICON,
-                          width: DimensionsResources.D_30.w,
-                          height: DimensionsResources.D_30.h,
-                          colorFilter: ColorFilter.mode(
-                            AppColors.darkSecondary,
-                            BlendMode.srcIn,
+                            ImageResource.BACK_ICON,
+                            width: DimensionsResources.D_30.w,
+                            height: DimensionsResources.D_30.h,
+                            colorFilter: ColorFilter.mode(
+                              AppColors.darkSecondary,
+                              BlendMode.srcIn,
+                            ),
                           ),
-                        ),
                         ),
                       ),
                     ),
@@ -110,89 +105,66 @@ class DetailScreen extends StatelessWidget {
                 Expanded(
                   child: SingleChildScrollView(
                     child: Padding(
-                      padding:
-                      EdgeInsets.all(DimensionsResources.D_20.sp),
+                      padding: EdgeInsets.all(DimensionsResources.D_20.sp),
                       child: Column(
-                        crossAxisAlignment:
-                        CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
                                 currentItem.name,
                                 style: GoogleFonts.dmSans(
                                   fontSize: DimensionsResources
-                                      .FONT_SIZE_EXTRA_LARGE.sp,
+                                      .FONT_SIZE_EXTRA_LARGE
+                                      .sp,
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
                               Container(
                                 width: DimensionsResources.D_100.w,
-                                height:
-                                DimensionsResources.D_40.h,
+                                height: DimensionsResources.D_40.h,
                                 decoration: BoxDecoration(
                                   color: AppColors.white,
-                                  borderRadius:
-                                  BorderRadius.circular(
-                                    DimensionsResources
-                                        .RADIUS_SMALL.r,
+                                  borderRadius: BorderRadius.circular(
+                                    DimensionsResources.RADIUS_SMALL.r,
                                   ),
                                 ),
                                 child: Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment
-                                      .spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     CustomCircleBtn(
                                       icon: Icons.remove,
                                       isAdd: false,
-                                      size:
-                                      DimensionsResources.D_32,
-                                      borderRadius:
-                                      DimensionsResources
-                                          .D_16,
+                                      size: DimensionsResources.D_32,
+                                      borderRadius: DimensionsResources.D_16,
                                       onTap: () {
-                                        context
-                                            .read<
-                                            GroceryDetailBloc>()
-                                            .add(
-                                          DecrementQtyEvent(
-                                              currentItem.id),
+                                        context.read<GroceryDetailBloc>().add(
+                                          DecrementQtyEvent(currentItem.id),
                                         );
                                       },
                                     ),
                                     Text(
-                                      currentItem.quantity
-                                          .toString(),
-                                      style:
-                                      GoogleFonts.dmSans(
-                                        fontWeight:
-                                        FontWeight.w700,
+                                      currentItem.quantity.toString(),
+                                      style: GoogleFonts.dmSans(
+                                        fontWeight: FontWeight.w700,
                                       ),
                                     ),
                                     CustomCircleBtn(
                                       icon: Icons.add,
                                       isAdd: true,
-                                      size:
-                                      DimensionsResources.D_32,
-                                      borderRadius:
-                                      DimensionsResources
-                                          .D_16,
+                                      size: DimensionsResources.D_32,
+                                      borderRadius: DimensionsResources.D_16,
                                       onTap: () {
-                                        context
-                                            .read<
-                                            GroceryDetailBloc>()
-                                            .add(
-                                          IncrementQtyEvent(
-                                              currentItem.id),
+                                        context.read<GroceryDetailBloc>().add(
+                                          IncrementQtyEvent(currentItem.id),
                                         );
                                       },
                                     ),
                                   ],
                                 ),
-                              )
+                              ),
                             ],
                           ),
 
@@ -210,9 +182,7 @@ class DetailScreen extends StatelessWidget {
 
                           Text(
                             currentItem.description,
-                            style: GoogleFonts.dmSans(
-                              color: AppColors.grey,
-                            ),
+                            style: GoogleFonts.dmSans(color: AppColors.grey),
                           ),
 
                           SizedBox(height: 20.h),
@@ -223,17 +193,14 @@ class DetailScreen extends StatelessWidget {
                                 child: InfoGloseryCardWidget(
                                   image: ImageResource.ORGANIC,
                                   title: "100%",
-                                  subtitle:
-                                  StringResources.organic,
+                                  subtitle: StringResources.organic,
                                 ),
                               ),
                               Expanded(
                                 child: InfoGloseryCardWidget(
-                                  image:
-                                  ImageResource.CALENDER,
+                                  image: ImageResource.CALENDER,
                                   title: "1 Year",
-                                  subtitle: StringResources
-                                      .expiration,
+                                  subtitle: StringResources.expiration,
                                 ),
                               ),
                             ],
@@ -247,8 +214,7 @@ class DetailScreen extends StatelessWidget {
                                 child: InfoGloseryCardWidget(
                                   image: ImageResource.RATING,
                                   title: "4.8",
-                                  subtitle: StringResources
-                                      .reviews,
+                                  subtitle: StringResources.reviews,
                                 ),
                               ),
                               Expanded(

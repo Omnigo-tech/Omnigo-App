@@ -9,7 +9,7 @@ class DioClient {
   Dio getDio() {
     final dio = Dio(
       BaseOptions(
-        baseUrl: "http://192.168.100.69:5000/api/",
+        baseUrl: "http://192.168.2.104:5000/api/",
         headers: {"Content-Type": "application/json"},
       ),
     );
@@ -26,9 +26,8 @@ class DioClient {
               !options.path.contains("forgot-password") &&
               !options.path.contains("reset-password") &&
               !options.path.contains("google-login") &&
-              !options.path.contains("facebook-login")&&
-              !options.path.contains("products")
-          ) {
+              !options.path.contains("facebook-login") &&
+              !options.path.contains("products")) {
             final token = _localDataSource.getToken();
 
             if (token != null) {

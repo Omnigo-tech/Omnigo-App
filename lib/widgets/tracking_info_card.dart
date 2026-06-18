@@ -3,8 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../core/helper/constants/colors_resources.dart';
-import '../../core/helper/constants/dimensions-resource.dart';
-import '../core/helper/constants/strings-resource.dart';
 
 class TrackingInfoCard extends StatelessWidget {
   final String status;
@@ -148,13 +146,13 @@ class TrackingInfoCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                  riderTitle,
+                    riderTitle,
                     style: Theme.of(
                       context,
                     ).textTheme.labelSmall?.copyWith(color: AppColors.grey),
                   ),
                   Text(
-                   riderName ,
+                    riderName,
                     style: Theme.of(
                       context,
                     ).textTheme.labelLarge?.copyWith(color: AppColors.black),

@@ -85,7 +85,7 @@ class _OrdersScreenState extends State<OrdersScreen>
     return ListView.separated(
       padding: const EdgeInsets.all(DimensionsResources.D_16),
       itemCount: orders.length,
-      separatorBuilder: (_, __) => const Divider(),
+      separatorBuilder: (_, _) => const Divider(),
       itemBuilder: (context, index) {
         final order = orders[index];
 
@@ -161,7 +161,7 @@ class _OrdersScreenState extends State<OrdersScreen>
             border: Border.all(color: const Color(0xffB9D7FF), width: 1.5.w),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withValues(alpha: 0.05),
                 blurRadius: 8.r,
                 offset: Offset(
                   DimensionsResources.D_0,
@@ -360,7 +360,10 @@ class _OrdersScreenState extends State<OrdersScreen>
                           ),
 
                           onPressed: () {
-                            Navigator.pushNamed(context, AppRoutes.trackingOrder);
+                            Navigator.pushNamed(
+                              context,
+                              AppRoutes.trackingOrder,
+                            );
                           },
 
                           icon: const Icon(

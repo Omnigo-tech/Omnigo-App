@@ -79,7 +79,7 @@ Future<void> setup() async {
   );
   sl.registerFactory(() => GroceryBloc(sl()));
   sl.registerFactory<OnboardingBloc>(() => OnboardingBloc(sl()));
-
+  sl.registerFactory<ReviewBloc>(() => ReviewBloc(sl()));
 
   sl.registerFactory<GroceryDetailBloc>(
         () => GroceryDetailBloc(

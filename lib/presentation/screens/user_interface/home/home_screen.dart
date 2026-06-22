@@ -4,6 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grocery_app/core/helper/constants/colors_resources.dart';
+import 'package:grocery_app/presentation/grocery/grocery_bloc/grocery_bloc.dart';
+import 'package:grocery_app/presentation/grocery/grocery_bloc/grocery_event.dart';
+import 'package:grocery_app/presentation/grocery/grocery_bloc/grocery_state.dart';
 import 'package:grocery_app/widgets/header_widget.dart';
 
 import '../../../../core/di/service_locator.dart';
@@ -17,119 +20,153 @@ import '../../../../widgets/vehicle_services_widget.dart';
 import '../../../bloc/home/home_bloc.dart';
 import '../../../bloc/home/home_state.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Load grocery categories/products once when Home screen opens.
+    // Uses the shared GroceryBloc instance (sl<GroceryBloc>()) so the
+    // same data/selection state is reused when navigating to
+    // GroceryHomeScreen later — no duplicate network calls if it was
+    // already loaded by a prior visit to the grocery tab.
+    context.read<GroceryBloc>().add(LoadGroceryEvent());
+  }
 
   @override
   Widget build(BuildContext context) {
     final localData = sl<AuthLocalDataSource>().getUserLocation();
     String currentAddress = localData?['address'] ?? "No Address Selected";
 
-    return  Material(
+    return Material(
       color: AppColors.homeBackground,
       child: BlocBuilder<HomeBloc, HomeState>(
-          builder: (context, state) {
-            if (state is HomeLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-      
-            if (state is HomeLoaded) {
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    const HeaderWidget(),
-                    SizedBox(height: DimensionsResources.D_30.h),
-                    Transform.translate(
-                      offset: Offset(0, -DimensionsResources.D_20),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: DimensionsResources.D_4.sp,
+        builder: (context, state) {
+          if (state is HomeLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (state is HomeLoaded) {
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  const HeaderWidget(),
+                  SizedBox(height: DimensionsResources.D_30.h),
+                  Transform.translate(
+                    offset: Offset(0, -DimensionsResources.D_20),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: DimensionsResources.D_4.sp,
+                      ),
+                      child: Container(
+                        padding: EdgeInsets.all(DimensionsResources.D_16),
+                        decoration: BoxDecoration(
+                          color: AppColors.whiteTranslucent,
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(
+                              DimensionsResources.D_25.r,
+                            ),
+                            topLeft: Radius.circular(
+                              DimensionsResources.D_25.r,
+                            ),
+                          ),
+                          boxShadow: const [
+                            BoxShadow(blurRadius: 10, color: Colors.black12),
+                          ],
                         ),
-                        child: Container(
-                          padding: EdgeInsets.all(DimensionsResources.D_16),
-                          decoration: BoxDecoration(
-                            color: AppColors.whiteTranslucent,
-                            borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(
-                                DimensionsResources.D_25.r,
-                              ),
-                              topLeft: Radius.circular(
-                                DimensionsResources.D_25.r,
+                        child: Column(
+                          children: [
+                            _locationCard(currentAddress),
+                            SizedBox(height: DimensionsResources.D_20.h),
+                            VehicleServicesWidget(services: state.services),
+                            SizedBox(height: DimensionsResources.D_20.h),
+                            CarouselSlider.builder(
+                              itemCount: ImageResource.banners.length,
+                              itemBuilder: (context, index, realIndex) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(
+                                      DimensionsResources.D_10.r,
+                                    ),
+                                    child: Image.asset(
+                                      ImageResource.banners[index],
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                    ),
+                                  ),
+                                );
+                              },
+                              options: CarouselOptions(
+                                height: DimensionsResources.D_200.h,
+                                autoPlay: true,
+                                autoPlayInterval: const Duration(seconds: 3),
+                                enlargeCenterPage: false,
+                                viewportFraction: 1.0,
+                                aspectRatio: 16 / 9,
+                                initialPage: DimensionsResources.INT_0,
                               ),
                             ),
-                            boxShadow: const [
-                              BoxShadow(blurRadius: 10, color: Colors.black12),
-                            ],
-                          ),
-                          child: Column(
-                            children: [
-                              _locationCard(currentAddress),
-                              SizedBox(height: DimensionsResources.D_20.h),
-                              VehicleServicesWidget(services: state.services),
-                              SizedBox(height: DimensionsResources.D_20.h),
-                              CarouselSlider.builder(
-                                itemCount: ImageResource.banners.length,
-                                itemBuilder: (context, index, realIndex) {
-                                  return Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(
-                                        DimensionsResources.D_10.r,
-                                      ),
-                                      child: Image.asset(
-                                        ImageResource.banners[index],
-                                        fit: BoxFit.cover,
-                                        width: double.infinity,
-                                      ),
+
+                            SizedBox(height: DimensionsResources.D_10.h),
+
+                            // KEY CHANGE: CategoriesWidget now reads
+                            // from GroceryBloc/GroceryState (real API
+                            // data) instead of HomeState.categories
+                            BlocBuilder<GroceryBloc, GroceryState>(
+                              builder: (context, groceryState) {
+                                if (groceryState.isLoading) {
+                                  return const Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 20),
+                                    child: Center(
+                                      child: CircularProgressIndicator(),
                                     ),
                                   );
-                                },
-                                options: CarouselOptions(
-                                  height: DimensionsResources.D_200.h,
-                                  autoPlay: true,
-                                  autoPlayInterval: const Duration(seconds: 3),
-                                  enlargeCenterPage: false,
-                                  viewportFraction: 1.0,
-                                  aspectRatio: 16 / 9,
-                                  initialPage: DimensionsResources.INT_0,
+                                }
+                                return CategoriesWidget(
+                                  categories: groceryState.categories,
+                                  categoryImages: groceryState.categoryImages,
+                                );
+                              },
+                            ),
+
+                            Padding(
+                              padding: EdgeInsets.only(
+                                top: DimensionsResources.D_20.h,
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(
+                                  DimensionsResources.RADIUS_DEFAULT.r,
+                                ),
+                                child: Image.asset(
+                                  ImageResource.BANNER_IMAGE1,
+                                  height: DimensionsResources.D_180.h,
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
-      
-                              SizedBox(height: DimensionsResources.D_10.h),
-      
-                              CategoriesWidget(categories: state.categories),
-      
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  top: DimensionsResources.D_20.h,
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(
-                                    DimensionsResources.RADIUS_DEFAULT.r,
-                                  ),
-                                  child: Image.asset(
-                                    ImageResource.BANNER_IMAGE1,
-                                    height: DimensionsResources.D_180.h,
-                                    width: double.infinity,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
-      
-                    const PromoSection(),
-                  ],
-                ),
-              );
-            }
-      
-            return const SizedBox();
-          },
-        ),
+                  ),
+
+                  const PromoSection(),
+                ],
+              ),
+            );
+          }
+
+          return const SizedBox();
+        },
+      ),
     );
   }
 

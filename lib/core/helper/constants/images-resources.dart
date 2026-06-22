@@ -36,9 +36,11 @@ class ImageResource {
   static const String SALT_IMG = '${DIR_IMAGE}salt_img.png';
   static const String GROCERY_IMG = '${DIR_IMAGE}grocery.png';
   static const String LOCATION_IMG = '${DIR_IMAGE}location_img_popup.png';
-  static const String OMINGO_LOCATION_LOGO_IMG = '${DIR_IMAGE}omingo_location.png';
-  static const String GET_STARTED_BACKGROUND = '${DIR_IMAGE}get_started_img.png';
-
+  static const String OMINGO_LOCATION_LOGO_IMG =
+      '${DIR_IMAGE}omingo_location.png';
+  static const String GET_STARTED_BACKGROUND =
+      '${DIR_IMAGE}get_started_img.png';
+  static const String GROCERY_BACKGROUND = '${DIR_IMAGE}bg.png';
 
   static const String WORD_MAP = '${DIR_IMAGE}word_map.png';
   static const String EASY_PAISA_LOGO = '${DIR_IMAGE}easypaisa_logo.png';
@@ -56,8 +58,6 @@ class ImageResource {
 
   static const String CONFIRM_ORDER = '${DIR_IMAGE}orderconfirm.png';
   static const String FAIL_ORDER = '${DIR_IMAGE}orderfail.png';
-
-
 
   static const List<String> banners = [
     BANNER_IMAGE1,
@@ -77,7 +77,8 @@ class ImageResource {
   static const String BYKE_ICON = '${DIR_ICON}bike_icon.svg';
   static const String CALL_ICON = '${DIR_ICON}call_icon.svg';
   static const String MESSAGE_ICON = '${DIR_ICON}message_icon.svg';
-  static const String HOME_DELIVERED_ICON = '${DIR_ICON}home_delivered_icon.svg';
+  static const String HOME_DELIVERED_ICON =
+      '${DIR_ICON}home_delivered_icon.svg';
   static const String CLOCK_ICON = '${DIR_ICON}clock_icon.svg';
   static const String LOCATION_ICON = '${DIR_ICON}location_icon.svg';
   static const String STORE_ICON = '${DIR_ICON}store_icon.svg';

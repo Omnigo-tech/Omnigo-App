@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:grocery_app/core/helper/constants/colors_resources.dart';
 import 'package:grocery_app/core/helper/constants/dimensions-resource.dart';
+import 'package:grocery_app/core/routes/AppRoutes.dart';
 import '../grocery_bloc/grocery_bloc.dart';
 import '../grocery_bloc/grocery_event.dart';
 import '../grocery_bloc/grocery_state.dart';
@@ -33,15 +34,15 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHeader(),
-            const SizedBox(height: 6),
+            SizedBox(height: 6.h),
             const Text("Sort", style: TextStyle(fontWeight: FontWeight.w500)),
             _buildCheckboxes(),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.h),
             const Text(
               "Categories",
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: 10.h),
             // Categories from API via BlocBuilder
             Expanded(child: _buildCategorySections()),
             _buildApplyButton(context),
@@ -95,7 +96,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
     return Column(
       children: options.map((item) {
         return SizedBox(
-          height: 35,
+          height: 35.h,
           child: ListTile(
             dense: true,
             title: Text(
@@ -192,18 +193,21 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                         ),
                         decoration: BoxDecoration(
                           color: isSelected
-                              ? Colors.green.shade100
+                              ? const Color.fromARGB(255, 186, 227, 241)
                               : Colors.grey.shade200,
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(20.r),
                           border: isSelected
-                              ? Border.all(color: Colors.green, width: 1.5)
+                              ? Border.all(
+                                  color: Color.fromARGB(255, 79, 157, 212),
+                                  width: 1.5.w,
+                                )
                               : null,
                         ),
                         child: Text(
                           item,
                           style: TextStyle(
                             color: isSelected
-                                ? Colors.green
+                                ? Color.fromARGB(255, 61, 147, 208)
                                 : AppColors.lightText,
                             fontWeight: isSelected
                                 ? FontWeight.w600
@@ -226,7 +230,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
   Widget _buildApplyButton(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 12),
+      padding: EdgeInsets.only(top: 12),
       child: SizedBox(
         width: double.infinity,
         child: ElevatedButton(
@@ -245,7 +249,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
             backgroundColor: AppColors.homeBackground,
             padding: const EdgeInsets.symmetric(vertical: 14),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12.r),
             ),
           ),
           child: const Text(

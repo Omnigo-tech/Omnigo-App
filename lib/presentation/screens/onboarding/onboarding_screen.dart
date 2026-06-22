@@ -158,7 +158,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                     fontSize:
                                         DimensionsResources.FONT_SIZE_SMALL.sp,
 
-                                    color: AppColors.white.withOpacity(0.8),
+                                    color: AppColors.white.withValues(
+                                      alpha: 0.8,
+                                    ),
 
                                     fontWeight: FontWeight.w300,
                                   ),
@@ -284,7 +286,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               decoration: BoxDecoration(
                                 color: _currentIndex == index
                                     ? AppColors.white
-                                    : AppColors.white.withOpacity(0.4),
+                                    : AppColors.white.withValues(alpha: 0.4),
 
                                 borderRadius: BorderRadius.circular(4.r),
                               ),

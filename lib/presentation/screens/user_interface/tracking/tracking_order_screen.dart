@@ -25,10 +25,12 @@ class TrackingOrderScreen extends StatelessWidget {
       body: BlocBuilder<TrackingBloc, TrackingState>(
         builder: (context, state) {
           if (state is TrackingLoading) {
-            return const Center(child: SpinKitThreeInOut(
-              color: AppColors.primary,
-              size: DimensionsResources.FONT_SIZE_EXTRA_EXTRA_LARGE,
-            ));
+            return const Center(
+              child: SpinKitThreeInOut(
+                color: AppColors.primary,
+                size: DimensionsResources.FONT_SIZE_EXTRA_EXTRA_LARGE,
+              ),
+            );
           }
 
           if (state is TrackingError) {
@@ -44,7 +46,8 @@ class TrackingOrderScreen extends StatelessWidget {
                   child: Image.asset(
                     ImageResource.TRACKING_ORDER_IMG,
                     fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Container(color: AppColors.lightBackground),
+                    errorBuilder: (context, error, stackTrace) =>
+                        Container(color: AppColors.lightBackground),
                   ),
                 ),
 
@@ -59,7 +62,7 @@ class TrackingOrderScreen extends StatelessWidget {
                         color: AppColors.white,
                         shape: BoxShape.circle,
                       ),
-                      child:  SvgPicture.asset(
+                      child: SvgPicture.asset(
                         ImageResource.BACK_ICON,
                         width: DimensionsResources.D_30.w,
                         height: DimensionsResources.D_30.h,
@@ -85,7 +88,7 @@ class TrackingOrderScreen extends StatelessWidget {
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
+                          color: Colors.black.withValues(alpha: 0.05),
                           blurRadius: DimensionsResources.D_10.r,
                           spreadRadius: DimensionsResources.D_5.r,
                         ),
@@ -102,7 +105,9 @@ class TrackingOrderScreen extends StatelessWidget {
                               height: DimensionsResources.D_4.h,
                               decoration: BoxDecoration(
                                 color: AppColors.border,
-                                borderRadius: BorderRadius.circular(DimensionsResources.D_2.r),
+                                borderRadius: BorderRadius.circular(
+                                  DimensionsResources.D_2.r,
+                                ),
                               ),
                             ),
                           ),
@@ -126,12 +131,14 @@ class TrackingOrderScreen extends StatelessWidget {
                             iconColor: AppColors.primary,
 
                             onMessageTap: () {
-                             Navigator.pushNamed(context, '/chat');
+                              Navigator.pushNamed(context, '/chat');
                             },
 
                             onCallTap: () {
-                              GlobalDialogs.showCallDriverSheet(context,phoneNumber: tracking.phonenumber);
-
+                              GlobalDialogs.showCallDriverSheet(
+                                context,
+                                phoneNumber: tracking.phonenumber,
+                              );
                             },
                           ),
 
@@ -168,8 +175,6 @@ class TrackingOrderScreen extends StatelessWidget {
     );
   }
 
-
-
   Widget _buildTimelineItem({
     required String iconImage,
     required String label,
@@ -183,11 +188,11 @@ class TrackingOrderScreen extends StatelessWidget {
         children: [
           Column(
             children: [
-         SvgPicture.asset(
-          iconImage,
-          width: DimensionsResources.D_16.w,
-          height: DimensionsResources.D_16.h,
-      ),
+              SvgPicture.asset(
+                iconImage,
+                width: DimensionsResources.D_16.w,
+                height: DimensionsResources.D_16.h,
+              ),
               if (!isLast)
                 Expanded(
                   child: Container(
@@ -199,21 +204,25 @@ class TrackingOrderScreen extends StatelessWidget {
           ),
           SizedBox(width: DimensionsResources.D_15.w),
           Padding(
-            padding: EdgeInsets.only(bottom: isLast ? DimensionsResources.D_0 : DimensionsResources.D_25.h),
+            padding: EdgeInsets.only(
+              bottom: isLast
+                  ? DimensionsResources.D_0
+                  : DimensionsResources.D_25.h,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   label,
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: AppColors.grey
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.labelSmall?.copyWith(color: AppColors.grey),
                 ),
                 Text(
                   value,
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                      color:AppColors.black
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.labelLarge?.copyWith(color: AppColors.black),
                 ),
               ],
             ),

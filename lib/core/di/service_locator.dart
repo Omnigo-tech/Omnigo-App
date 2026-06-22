@@ -1,7 +1,9 @@
 import 'package:get_it/get_it.dart';
 import 'package:grocery_app/data/datasource/repositories/cart_repository.dart';
 import 'package:grocery_app/data/datasource/repositories/glocery_data.dart';
+import 'package:grocery_app/data/datasource/repositories/review_repository.dart';
 import 'package:grocery_app/data/datasource/repositories/wishlist_repository.dart';
+import 'package:grocery_app/presentation/bloc/review/review_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/datasource/local/auth_local_data_source.dart';
@@ -65,6 +67,8 @@ Future<void> setup() async {
   sl.registerLazySingleton<WishlistRepository>(() => WishlistRepository(sl()));
   sl.registerLazySingleton<CartRepository>(() => CartRepository(sl<ApiService>()));
   sl.registerLazySingleton<AddressRepository>(() => AddressRepository(sl<ApiService>()));
+  sl.registerLazySingleton(() => ReviewRepository(sl()));
+
   // ================= BLOCS =================
   sl.registerFactory<AuthBloc>(
         () => AuthBloc(sl()),
@@ -83,7 +87,6 @@ Future<void> setup() async {
           sl<GroceryRepository>(),
           sl<CartRepository>(),
     ),
-
 
   );
 

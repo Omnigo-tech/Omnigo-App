@@ -34,7 +34,10 @@ class OtpScreen extends StatefulWidget {
 }
 
 class _OtpScreenState extends State<OtpScreen> {
-  final List<TextEditingController> _controllers = List.generate(6, (_) => TextEditingController());
+  final List<TextEditingController> _controllers = List.generate(
+    6,
+    (_) => TextEditingController(),
+  );
   final List<FocusNode> _focusNodes = List.generate(6, (_) => FocusNode());
 
   @override
@@ -77,7 +80,7 @@ class _OtpScreenState extends State<OtpScreen> {
         userId: widget.userId,
         value: widget.value,
         purpose: widget.purpose,
-        type: widget.type
+        type: widget.type,
       ),
     );
   }
@@ -90,8 +93,11 @@ class _OtpScreenState extends State<OtpScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new,
-              color: Colors.black, size: 22),
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            color: Colors.black,
+            size: 22,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -102,22 +108,17 @@ class _OtpScreenState extends State<OtpScreen> {
             CustomSnackBar.show(context, state.message, isError: false);
 
             if (widget.purpose == OtpPurpose.forgotPassword) {
-
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (_) => ResetPasswordScreen(userId: widget.userId),
                 ),
               );
-
             } else {
-
               Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(
-                  builder: (_) => const LocationScreen(),
-                ),
-                    (route) => false,
+                MaterialPageRoute(builder: (_) => const LocationScreen()),
+                (route) => false,
               );
             }
           }
@@ -156,7 +157,7 @@ class _OtpScreenState extends State<OtpScreen> {
                     widget.type == OtpPurpose.phoneVerification
                         ? "Enter the OTP sent to your phone"
                         : "Enter the OTP sent to your email"
-                        "${StringResources.countryCodePk} ${widget.value}",
+                              "${StringResources.countryCodePk} ${widget.value}",
                     style: GoogleFonts.dmSans(
                       fontSize: 15.sp,
                       color: AppColors.lightText,
@@ -212,33 +213,31 @@ class _OtpScreenState extends State<OtpScreen> {
                         height: 56.h,
                         width: 56.w,
                         decoration: BoxDecoration(
-                          color:
-                          isLoading ? Colors.grey : AppColors.primary,
+                          color: isLoading ? Colors.grey : AppColors.primary,
                           shape: BoxShape.circle,
                           boxShadow: [
                             if (!isLoading)
                               BoxShadow(
-                                color:
-                                AppColors.primary.withOpacity(0.3),
+                                color: AppColors.primary.withValues(alpha: 0.3),
                                 blurRadius: 8,
                                 offset: const Offset(0, 4),
-                              )
+                              ),
                           ],
                         ),
 
                         child: isLoading
                             ? Padding(
-                          padding: EdgeInsets.all(12.r),
-                          child: const CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 2,
-                          ),
-                        )
+                                padding: EdgeInsets.all(12.r),
+                                child: const CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              )
                             : Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          color: Colors.white,
-                          size: 20.r,
-                        ),
+                                Icons.arrow_forward_ios_rounded,
+                                color: Colors.white,
+                                size: 20.r,
+                              ),
                       ),
                     ),
                   ),
@@ -266,13 +265,15 @@ class _OtpScreenState extends State<OtpScreen> {
           color: isFocused ? AppColors.primary : AppColors.border,
           width: 2,
         ),
-        boxShadow: isFocused ? [
-          BoxShadow(
-            color: AppColors.primary.withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          )
-        ] : [],
+        boxShadow: isFocused
+            ? [
+                BoxShadow(
+                  color: AppColors.primary.withValues(alpha: 0.1),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                ),
+              ]
+            : [],
       ),
       child: TextField(
         controller: _controllers[index],

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:grocery_app/widgets/app_bar_widget.dart';
@@ -13,10 +12,7 @@ import '../../../../widgets/tracking_info_card.dart';
 class NotificationScreen extends StatefulWidget {
   final Map<String, dynamic> data;
 
-  const NotificationScreen({
-    super.key,
-    required this.data,
-  });
+  const NotificationScreen({super.key, required this.data});
 
   @override
   State<NotificationScreen> createState() => _NotificationScreenState();
@@ -30,14 +26,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
     tracking = widget.data;
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        title: "Notifications",
-        showBackButton: true,
-      ),
-      body:  Column(
+      appBar: CustomAppBar(title: "Notifications", showBackButton: true),
+      body: Column(
         children: [
           Container(
             child: Container(
@@ -60,15 +54,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 iconColor: AppColors.primary,
 
                 onMessageTap: () {
-                  LauncherHelper.sendSMS(
-                    tracking['phonenumber'],
-                  );
+                  LauncherHelper.sendSMS(tracking['phonenumber']);
                 },
 
                 onCallTap: () {
-                  LauncherHelper.makePhoneCall(
-                    tracking['phonenumber'],
-                  );
+                  LauncherHelper.makePhoneCall(tracking['phonenumber']);
                 },
               ),
             ),
@@ -84,11 +74,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
               },
             ),
           ),
-
         ],
-      )
+      ),
     );
   }
+
   Widget _buildNotificationItem() {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: DimensionsResources.D_20.w),
@@ -117,10 +107,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     ),
                     Text(
                       "3:57 PM",
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        color: Colors.black54,
-                      ),
+                      style: TextStyle(fontSize: 12.sp, color: Colors.black54),
                     ),
                   ],
                 ),

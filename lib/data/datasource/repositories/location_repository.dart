@@ -1,5 +1,3 @@
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../../core/network/api_service.dart';
 import '../local/auth_local_data_source.dart';
 import '../services/location_service.dart';
@@ -11,9 +9,11 @@ class LocationRepository {
   final AuthLocalDataSource _localDataSource;
   List<ZoneModel> _cachedZones = [];
 
-  LocationRepository(this._locationService,
-      this._apiService,
-      this._localDataSource,);
+  LocationRepository(
+    this._locationService,
+    this._apiService,
+    this._localDataSource,
+  );
   // GPS se location data lena (Pehle se majood)
   Future<Map<String, dynamic>?> fetchGpsLocation() async {
     return await _locationService.getUserCurrentAddress();
@@ -25,7 +25,9 @@ class LocationRepository {
       final response = await _apiService.getZones();
       if (response['success'] == true && response['zones'] != null) {
         final List<dynamic> zonesJson = response['zones'];
-        _cachedZones = zonesJson.map((json) => ZoneModel.fromJson(json)).toList();
+        _cachedZones = zonesJson
+            .map((json) => ZoneModel.fromJson(json))
+            .toList();
         return _cachedZones;
       }
       return [];
@@ -43,7 +45,7 @@ class LocationRepository {
   // Selected Zone ke areas cache se filter karna (No Extra Network Call)
   List<String> getAreasByZoneFromCache(String zoneName) {
     final matchedZone = _cachedZones.firstWhere(
-          (z) => z.zoneName.toLowerCase() == zoneName.toLowerCase(),
+      (z) => z.zoneName.toLowerCase() == zoneName.toLowerCase(),
       orElse: () => ZoneModel(id: '', zoneName: '', areas: [], isActive: false),
     );
     return matchedZone.areas;
@@ -63,13 +65,14 @@ class LocationRepository {
       "address": address,
     });
 
-    if (response != null && (response['success'] == true || response['status'] == 200)) {
+    if (response != null &&
+        (response['success'] == true || response['status'] == 200)) {
       await _localDataSource.saveUserLocation({
         "zone": zone,
         "area": area,
         "address": address,
         "isEnabled": true,
-        "coordinates": {"lat": null, "lng": null}
+        "coordinates": {"lat": null, "lng": null},
       });
     }
 
@@ -94,13 +97,14 @@ class LocationRepository {
       "lng": lng,
     });
 
-    if (response != null && (response['success'] == true || response['status'] == 200)) {
+    if (response != null &&
+        (response['success'] == true || response['status'] == 200)) {
       await _localDataSource.saveUserLocation({
         "zone": zone,
         "area": area,
         "address": address,
         "isEnabled": true,
-        "coordinates": {"lat": lat, "lng": lng}
+        "coordinates": {"lat": lat, "lng": lng},
       });
     }
 

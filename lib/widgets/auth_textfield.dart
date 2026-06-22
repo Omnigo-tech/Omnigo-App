@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../core/helper/constants/colors_resources.dart';
-import '../core/helper/constants/dimensions-resource.dart';
 
 class AuthTextField extends StatefulWidget {
   final String? label;
@@ -62,10 +61,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
           keyboardType: widget.keyboardType,
           obscureText: _obscureText,
           validator: widget.validator,
-          style: GoogleFonts.dmSans(
-            fontSize: 15.sp,
-            color: AppColors.black,
-          ),
+          style: GoogleFonts.dmSans(fontSize: 15.sp, color: AppColors.black),
           decoration: InputDecoration(
             isDense: true,
             contentPadding: EdgeInsets.symmetric(
@@ -89,7 +85,9 @@ class _AuthTextFieldState extends State<AuthTextField> {
             suffixIcon: widget.obscure
                 ? IconButton(
                     icon: Icon(
-                      _obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                      _obscureText
+                          ? Icons.visibility_off_outlined
+                          : Icons.visibility_outlined,
                       color: AppColors.black,
                       size: 20.sp,
                     ),
@@ -100,42 +98,31 @@ class _AuthTextFieldState extends State<AuthTextField> {
                     },
                   )
                 : (widget.suffixIcon != null
-                    ? Icon(widget.suffixIcon, color: AppColors.grey, size: 20.sp)
-                    : null),
+                      ? Icon(
+                          widget.suffixIcon,
+                          color: AppColors.grey,
+                          size: 20.sp,
+                        )
+                      : null),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.r),
-              borderSide: const BorderSide(
-                color: AppColors.border,
-                width: 1,
-              ),
+              borderSide: const BorderSide(color: AppColors.border, width: 1),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.r),
-              borderSide: const BorderSide(
-                color: AppColors.border,
-                width: 1,
-              ),
+              borderSide: const BorderSide(color: AppColors.border, width: 1),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.r),
-              borderSide: const BorderSide(
-                color: AppColors.primary,
-                width: 1,
-              ),
+              borderSide: const BorderSide(color: AppColors.primary, width: 1),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.r),
-              borderSide: const BorderSide(
-                color: AppColors.red,
-                width: 1,
-              ),
+              borderSide: const BorderSide(color: AppColors.red, width: 1),
             ),
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.r),
-              borderSide: const BorderSide(
-                color: AppColors.red,
-                width: 1,
-              ),
+              borderSide: const BorderSide(color: AppColors.red, width: 1),
             ),
           ),
         ),

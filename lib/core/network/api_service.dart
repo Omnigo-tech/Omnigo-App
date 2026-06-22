@@ -15,6 +15,7 @@ import '../../data/models/onboarding_response_model.dart';
 import '../../data/models/order_detail_response_model.dart';
 import '../../data/models/place_order_response_model.dart';
 import '../../data/models/remove_favourite_response_model.dart';
+import '../../data/models/review_model.dart';
 
 
 part 'api_service.g.dart';
@@ -147,5 +148,16 @@ abstract class ApiService {
   Future<MyOrdersResponseModel> reorderOrder(
       @Path("id") String orderId,
       );
+
+        // GET all feedbacks
+  @GET("feedback")
+  Future<FeedbackResponse> getFeedbacks();
+
+  // POST submit feedback (token auto-attached by DioClient interceptor)
+  @POST("feedback")
+  Future<SubmitFeedbackResponse> submitFeedback(
+    @Body() Map<String, dynamic> body,
+  );
+
 
 }

@@ -107,20 +107,16 @@ class AuthRepository {
     required OtpPurpose purpose,
   }) async {
     try {
-
-      final String formattedValue =
-      value.trim();
+      final String formattedValue = value.trim();
 
       final data = {
         "userId": userId,
         "type": type.name,
         "value": formattedValue,
-        "purpose":  purpose.apiValue,
-
+        "purpose": purpose.apiValue,
       };
 
       return await apiService.sendOtp(data);
-
     } on DioException catch (e) {
       throw ErrorHandler.handle(e);
     }
@@ -133,20 +129,18 @@ class AuthRepository {
     required OtpType type,
     required OtpPurpose purpose,
   }) async {
-    try{
+    try {
       final data = {
         "userId": userId,
         "type": type.name,
         "value": value,
-        "purpose":  purpose.apiValue,
+        "purpose": purpose.apiValue,
         "otp": otp,
       };
       return await apiService.verifyOtp(data);
-    }
-    on DioException catch (e) {
+    } on DioException catch (e) {
       throw ErrorHandler.handle(e);
     }
-
   }
 
   Future<dynamic> verifyForgotPasswordOtp({
@@ -156,29 +150,24 @@ class AuthRepository {
     required OtpType type,
     required OtpPurpose purpose,
   }) async {
-    try{
+    try {
       final data = {
         "userId": userId,
         "type": type.name,
         "value": value,
-        "purpose":  purpose.apiValue,
+        "purpose": purpose.apiValue,
         "otp": otp,
       };
 
       return await apiService.verifyOtp(data);
-
-    }
-    on DioException catch (e) {
+    } on DioException catch (e) {
       throw ErrorHandler.handle(e);
     }
-
   }
 
   Future<dynamic> forgotPassword(String email) async {
     try {
-      final data = {
-        "email": email,
-      };
+      final data = {"email": email};
 
       return await apiService.forgotPassword(data);
 

@@ -96,7 +96,7 @@ class _OrdersScreenState extends State<OrdersScreen>
     return ListView.separated(
       padding: const EdgeInsets.all(DimensionsResources.D_16),
       itemCount: orders.length,
-      separatorBuilder: (_, __) => const Divider(),
+      separatorBuilder: (_, _) => const Divider(),
       itemBuilder: (context, index) {
         final order = orders[index];
         return ListTile(
@@ -169,7 +169,7 @@ class _OrdersScreenState extends State<OrdersScreen>
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withValues(alpha: 0.05),
                 blurRadius: 8.r,
                 offset: Offset(0, 3.h),
               ),

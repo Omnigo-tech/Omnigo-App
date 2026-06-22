@@ -12,7 +12,6 @@ import 'package:grocery_app/widgets/auth_button.dart';
 import 'package:grocery_app/widgets/auth_textfield.dart';
 
 import '../../../core/helper/constants/colors_resources.dart';
-import '../../../core/helper/constants/dimensions-resource.dart';
 import '../../../core/helper/constants/images-resources.dart';
 import '../../../core/helper/constants/strings-resource.dart';
 import '../../../widgets/custom_snackbar.dart';
@@ -60,11 +59,7 @@ class _SignupScreenState extends State<SignupScreen> {
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthSuccess) {
-            CustomSnackBar.show(
-              context,
-              state.message,
-              isError: false,
-            );
+            CustomSnackBar.show(context, state.message, isError: false);
 
             Navigator.pushReplacement(
               context,
@@ -73,11 +68,7 @@ class _SignupScreenState extends State<SignupScreen> {
           }
 
           if (state is AuthFailure) {
-            CustomSnackBar.show(
-              context,
-              state.error,
-              isError: true,
-            );
+            CustomSnackBar.show(context, state.error, isError: true);
           }
         },
 

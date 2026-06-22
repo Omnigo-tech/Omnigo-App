@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:grocery_app/core/helper/extension/validation_extension.dart';
 import 'package:grocery_app/presentation/bloc/auth/auth_bloc.dart';
 import 'package:grocery_app/presentation/bloc/auth/auth_event.dart';
 import 'package:grocery_app/presentation/bloc/auth/auth_state.dart';
-import 'package:grocery_app/presentation/screens/authentication/reset_password.dart';
 import 'package:grocery_app/widgets/auth_button.dart';
 import 'package:grocery_app/widgets/auth_textfield.dart';
 
@@ -29,7 +27,8 @@ class _ForgetPasswordState extends State<ForgetPassword> {
   void sendOtp() {
     if (!_formKey.currentState!.validate()) return;
     context.read<AuthBloc>().add(
-        ForgotPasswordEvent(inputController.text.trim()));
+      ForgotPasswordEvent(inputController.text.trim()),
+    );
   }
 
   @override
@@ -55,9 +54,9 @@ class _ForgetPasswordState extends State<ForgetPassword> {
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is OtpSentState) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
-            );
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.message)));
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -72,7 +71,9 @@ class _ForgetPasswordState extends State<ForgetPassword> {
           }
           if (state is AuthFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.error.replaceAll("Exception: ", ""))),
+              SnackBar(
+                content: Text(state.error.replaceAll("Exception: ", "")),
+              ),
             );
           }
         },
@@ -114,10 +115,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                   SizedBox(height: DimensionsResources.D_40.h),
                   state is AuthLoading
                       ? const Center(child: CircularProgressIndicator())
-                      : AuthButton(
-                          text: StringResources.next,
-                          onTap: sendOtp,
-                        ),
+                      : AuthButton(text: StringResources.next, onTap: sendOtp),
                 ],
               ),
             ),

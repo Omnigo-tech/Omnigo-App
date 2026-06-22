@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -35,6 +34,7 @@ class _LocationScreenState extends State<LocationScreen> {
       showLocationDialog(context);
     });
   }
+
   @override
   void dispose() {
     _addressController.dispose();
@@ -69,20 +69,25 @@ class _LocationScreenState extends State<LocationScreen> {
       child: Scaffold(
         body: BlocConsumer<LocationBloc, LocationState>(
           listener: (context, state) {
-              if (state.errorMessage != null) {
-                CustomSnackBar.show(context, state.errorMessage!, isError: true);
-              }
+            if (state.errorMessage != null) {
+              CustomSnackBar.show(context, state.errorMessage!, isError: true);
+            }
 
-              if (state.successMessage != null) {
-                CustomSnackBar.show(context, state.successMessage!, isError: false);
-                Navigator.pushNamed(context, AppRoutes.home);
-              }
+            if (state.successMessage != null) {
+              CustomSnackBar.show(
+                context,
+                state.successMessage!,
+                isError: false,
+              );
+              Navigator.pushNamed(context, AppRoutes.home);
+            }
 
-              if (state.detectedAddress != null && state.detectedAddress!.isNotEmpty) {
-                _addressController.text = state.detectedAddress!;
-              } else if (state.selectedZone == null) {
-                _addressController.clear();
-              }
+            if (state.detectedAddress != null &&
+                state.detectedAddress!.isNotEmpty) {
+              _addressController.text = state.detectedAddress!;
+            } else if (state.selectedZone == null) {
+              _addressController.clear();
+            }
           },
           builder: (context, state) {
             return Stack(
@@ -125,7 +130,9 @@ class _LocationScreenState extends State<LocationScreen> {
                               child: Text(
                                 StringResources.selectYourLocation,
                                 style: textTheme.displayMedium?.copyWith(
-                                  fontSize: DimensionsResources.FONT_SIZE_EXTRA_LARGE.sp,
+                                  fontSize: DimensionsResources
+                                      .FONT_SIZE_EXTRA_LARGE
+                                      .sp,
                                   fontWeight: FontWeight.w800,
                                   color: AppColors.black,
                                 ),
@@ -138,7 +145,8 @@ class _LocationScreenState extends State<LocationScreen> {
                               StringResources.locationScreenSubtitle,
                               textAlign: TextAlign.center,
                               style: textTheme.bodyMedium?.copyWith(
-                                fontSize: DimensionsResources.FONT_SIZE_SMALL.sp,
+                                fontSize:
+                                    DimensionsResources.FONT_SIZE_SMALL.sp,
                                 color: AppColors.lightText,
                               ),
                             ),
@@ -147,14 +155,19 @@ class _LocationScreenState extends State<LocationScreen> {
 
                             /// ZONE DROPDOWN
                             DropdownButtonFormField<String>(
-                              value: state.selectedZone,
+                              initialValue: state.selectedZone,
                               key: ValueKey('zone_${state.selectedZone}'),
-                              style: textTheme.bodyMedium?.copyWith(fontSize: DimensionsResources.FONT_SIZE_MEDIUM.sp),
+                              style: textTheme.bodyMedium?.copyWith(
+                                fontSize:
+                                    DimensionsResources.FONT_SIZE_MEDIUM.sp,
+                              ),
                               decoration: const InputDecoration(
                                 labelText: StringResources.yourZone,
                                 border: OutlineInputBorder(),
                                 focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: AppColors.primary),
+                                  borderSide: BorderSide(
+                                    color: AppColors.primary,
+                                  ),
                                 ),
                               ),
                               items: state.availableZones.toSet().map((e) {
@@ -171,14 +184,19 @@ class _LocationScreenState extends State<LocationScreen> {
                             SizedBox(height: DimensionsResources.D_20.h),
 
                             DropdownButtonFormField<String>(
-                              value: state.selectedArea,
+                              initialValue: state.selectedArea,
                               key: ValueKey('area_${state.selectedArea}'),
-                              style: textTheme.bodyMedium?.copyWith(fontSize: DimensionsResources.FONT_SIZE_MEDIUM.sp),
+                              style: textTheme.bodyMedium?.copyWith(
+                                fontSize:
+                                    DimensionsResources.FONT_SIZE_MEDIUM.sp,
+                              ),
                               decoration: const InputDecoration(
                                 labelText: StringResources.yourArea,
                                 border: OutlineInputBorder(),
                                 focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: AppColors.primary),
+                                  borderSide: BorderSide(
+                                    color: AppColors.primary,
+                                  ),
                                 ),
                               ),
                               items: state.availableAreas.toSet().map((e) {
@@ -195,7 +213,9 @@ class _LocationScreenState extends State<LocationScreen> {
 
                             AuthTextField(
                               label: StringResources.address,
-                              hint: (state.detectedAddress != null && state.detectedAddress!.isNotEmpty)
+                              hint:
+                                  (state.detectedAddress != null &&
+                                      state.detectedAddress!.isNotEmpty)
                                   ? state.detectedAddress!
                                   : "Enter full Address",
                               controller: _addressController,
@@ -206,29 +226,27 @@ class _LocationScreenState extends State<LocationScreen> {
                             /// SUBMIT ACTION BUTTON
                             AuthButton(
                               text: StringResources.submit,
-                                onTap: () {
-
-                                  if (state.selectedZone == null ||
-                                      state.selectedArea == null ||
-                                      _addressController.text.trim().isEmpty) {
-
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text("Please fill all fields"),
-                                      ),
-                                    );
-
-                                    return;
-                                  }
-
-                                  _bloc.add(
-                                    SubmitManualLocationEvent(
-                                      zone: state.selectedZone!,
-                                      area: state.selectedArea!,
-                                      address: _addressController.text.trim(),
+                              onTap: () {
+                                if (state.selectedZone == null ||
+                                    state.selectedArea == null ||
+                                    _addressController.text.trim().isEmpty) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text("Please fill all fields"),
                                     ),
                                   );
+
+                                  return;
                                 }
+
+                                _bloc.add(
+                                  SubmitManualLocationEvent(
+                                    zone: state.selectedZone!,
+                                    area: state.selectedArea!,
+                                    address: _addressController.text.trim(),
+                                  ),
+                                );
+                              },
                             ),
                             SizedBox(height: DimensionsResources.D_20.h),
                           ],
@@ -241,11 +259,9 @@ class _LocationScreenState extends State<LocationScreen> {
                 /// BLURRED FULL SCREEN INTERCEPTOR LOADER
                 if (state.isLoading)
                   Container(
-                    color: Colors.black.withOpacity(0.4),
+                    color: Colors.black.withValues(alpha: 0.4),
                     child: const Center(
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                      ),
+                      child: CircularProgressIndicator(color: Colors.white),
                     ),
                   ),
               ],

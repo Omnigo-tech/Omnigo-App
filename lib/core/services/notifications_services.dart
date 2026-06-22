@@ -8,54 +8,46 @@ import '../../presentation/screens/user_interface/notification/notification_scre
 
 class NotificationService {
   static final FlutterLocalNotificationsPlugin _local =
-  FlutterLocalNotificationsPlugin();
+      FlutterLocalNotificationsPlugin();
 
   static Future<void> init() async {
-    const AndroidInitializationSettings android =
-    AndroidInitializationSettings('@mipmap/ic_launcher');
+    const AndroidInitializationSettings android = AndroidInitializationSettings(
+      '@mipmap/ic_launcher',
+    );
 
-    const InitializationSettings settings =
-    InitializationSettings(android: android);
+    const InitializationSettings settings = InitializationSettings(
+      android: android,
+    );
 
     await _local.initialize(
       settings: settings,
 
       onDidReceiveNotificationResponse: (response) {
         if (response.payload != null) {
-
-          final data =
-          jsonDecode(response.payload!);
+          final data = jsonDecode(response.payload!);
 
           navigatorKey.currentState?.push(
-            MaterialPageRoute(
-              builder: (_) => NotificationScreen(
-                data: data,
-              ),
-            ),
+            MaterialPageRoute(builder: (_) => NotificationScreen(data: data)),
           );
         }
       },
     );
 
-    FirebaseMessaging.onBackgroundMessage(
-        _backgroundHandler);
+    FirebaseMessaging.onBackgroundMessage(_backgroundHandler);
 
     FirebaseMessaging.onMessage.listen((message) {
       _showNotification(message);
     });
 
     /// app terminated state
-    FirebaseMessaging.instance
-        .getInitialMessage()
-        .then((message) {
+    FirebaseMessaging.instance.getInitialMessage().then((message) {
       if (message != null) {
         _handleNavigation(message.data);
       }
     });
 
     /// background state
-    FirebaseMessaging.onMessageOpenedApp
-        .listen((message) {
+    FirebaseMessaging.onMessageOpenedApp.listen((message) {
       _handleNavigation(message.data);
     });
   }
@@ -85,29 +77,33 @@ class NotificationService {
 
     await _local.show(
       id: 0,
-      title:message.notification?.title,
-      body:message.notification?.body,
+      title: message.notification?.title,
+      body: message.notification?.body,
       notificationDetails: details,
       payload: jsonEncode(data),
     );
   }
 
-  static void _handleNavigation(
-      Map<String, dynamic> data,
-      ) {
-
+  static void _handleNavigation(Map<String, dynamic> data) {
     navigatorKey.currentState?.push(
-      MaterialPageRoute(
-        builder: (_) => NotificationScreen(
-          data: data,
-        ),
-      ),
+      MaterialPageRoute(builder: (_) => NotificationScreen(data: data)),
     );
   }
 
   static Future<String?> getToken() async {
-    String? token= await FirebaseMessaging.instance.getToken();
+    try {
+      String? token = await FirebaseMessaging.instance.getToken();
+      print("FCM Token: $token");
+      return token;
+    } catch (e) {
+      print("FCM Token Error (non-fatal): $e");
+      return null; // App continues normally
+    }
+  }
+
+  /*static Future<String?> getToken() async {
+    String? token = await FirebaseMessaging.instance.getToken();
     print("Token: $token");
     return token;
-  }
+  }*/
 }

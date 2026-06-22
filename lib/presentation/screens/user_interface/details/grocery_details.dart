@@ -17,6 +17,7 @@ import '../../../../widgets/info_glosery_card_widget.dart';
 import '../../../bloc/grocery_details/item_detail_bloc.dart';
 import '../../../bloc/grocery_details/item_detail_event.dart';
 import '../../../bloc/grocery_details/item_detail_state.dart';
+import '../../../../core/routes/AppRoutes.dart';
 
 class DetailScreen extends StatefulWidget {
   final GroceryItemModel item;

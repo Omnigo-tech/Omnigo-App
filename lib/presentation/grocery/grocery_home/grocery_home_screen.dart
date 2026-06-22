@@ -47,7 +47,7 @@ class _GroceryViewState extends State<GroceryView> {
 
   // Replace localhost with real IP for physical device testing
   String fixImageUrl(String url) {
-    return url.replaceAll('localhost', '192.168.2.104');
+    return url.replaceAll('localhost', '192.168.100.69');
   }
 
   // NOTE: initState intentionally does NOT dispatch LoadGroceryEvent.

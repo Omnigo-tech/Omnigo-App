@@ -27,7 +27,7 @@ class CategoriesWidget extends StatefulWidget {
 class _CategoriesWidgetState extends State<CategoriesWidget> {
   // Same localhost → real IP fix used elsewhere in the app
   String fixImageUrl(String url) {
-    return url.replaceAll('localhost', '192.168.2.104');
+    return url.replaceAll('localhost', '192.168.100.69');
   }
 
   @override

@@ -49,13 +49,16 @@ class MyCartScreen extends StatelessWidget {
       appBar: CustomAppBar(title: StringResources.myCart, showBackButton: true),
       body: BlocListener<GroceryDetailBloc, GroceryDetailState>(
         listenWhen: (previous, current) => current.message.isNotEmpty,
-        listener: (context, state) {
-          CustomSnackBar.show(
-            context,
-            state.message,
-            isError: state.message.toLowerCase().contains('failed'),
-          );
-        },
+          listener: (context, state) {
+            print("Listener Called");
+            print("Message: ${state.message}");
+
+            CustomSnackBar.show(
+              context,
+              state.message,
+              isError: state.message.toLowerCase().contains('failed'),
+            );
+          },
         child: BlocBuilder<GroceryDetailBloc, GroceryDetailState>(
           builder: (context, state) {
             final cartList = state.cart;
@@ -95,7 +98,7 @@ class MyCartScreen extends StatelessWidget {
                           context.read<GroceryDetailBloc>().add(
                             RemoveFromCartEvent(item.id),
                           );
-                          return true;
+                          return false;
                         },
                         background: Container(
                           alignment: Alignment.centerRight,

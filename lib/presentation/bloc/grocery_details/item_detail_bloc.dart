@@ -111,6 +111,7 @@ class GroceryDetailBloc extends Bloc<GroceryDetailEvent, GroceryDetailState> {
         emit(
           state.copyWith(
             cart: response.cartItems,
+            message: "",
           ),
         );
       } catch (e) {
@@ -149,6 +150,7 @@ class GroceryDetailBloc extends Bloc<GroceryDetailEvent, GroceryDetailState> {
         emit(
           state.copyWith(
             cart: response.cartItems,
+            message: "",
           ),
         );
       } catch (e) {
@@ -210,18 +212,14 @@ class GroceryDetailBloc extends Bloc<GroceryDetailEvent, GroceryDetailState> {
     // Purane local logic ko is async handler se replace karein
     on<RemoveFromCartEvent>((event, emit) async {
       try {
-        // UI messaging clear karein
-        emit(state.copyWith(message: ""));
-
         // Live API call: event.id pass ho raha hai jo hamari productId hai
         final response = await cartRepository.removeToCart(event.id);
-
         if (response.success) {
+          emit(state.copyWith(message: ""));
           emit(state.copyWith(
             cart: response.cartItems,
-            message: response.message, // "Item removed"
+            message: response.message,
           ));
-          print("Remove From Cart");
         } else {
           emit(state.copyWith(message: "Failed to remove item from server"));
         }

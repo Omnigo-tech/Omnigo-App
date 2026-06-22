@@ -43,7 +43,6 @@ class GroceryBloc extends Bloc<GroceryEvent, GroceryState> {
     try {
       final products = await repository.getProducts();
 
-      // Group products by normalized category
       final Map<String, List<GroceryModel>> grouped = {};
       for (final product in products) {
         final normalized = _normalizeCategory(product.category);

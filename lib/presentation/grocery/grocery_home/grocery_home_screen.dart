@@ -13,6 +13,7 @@ import 'package:grocery_app/presentation/screens/user_interface/details/grocery_
 import 'package:grocery_app/presentation/grocery/grocery_home/filter_bottom_sheet.dart';
 import 'package:grocery_app/presentation/grocery/grocery_home/search_screen.dart';
 import 'package:grocery_app/presentation/screens/user_interface/my_cart/my_cart_screen.dart';
+import '../../bloc/grocery_details/item_detail_event.dart';
 import '../../screens/user_interface/address_list/address_screen.dart';
 import '../grocery_bloc/grocery_bloc.dart';
 import '../grocery_bloc/grocery_event.dart';
@@ -24,12 +25,6 @@ class GroceryHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Pass the category through to GroceryView. The actual
-    // LoadGroceryEvent(initialCategory: ...) dispatch already happens
-    // once in route_generator.dart when this route is built — GroceryView
-    // does NOT re-dispatch a plain LoadGroceryEvent() in initState
-    // anymore, since that would reset selectedCategory back to the first
-    // category and undo the navigation.
     return GroceryView(initialCategory: nameCategories);
   }
 }
@@ -50,21 +45,6 @@ class _GroceryViewState extends State<GroceryView> {
     return url.replaceAll('localhost', '192.168.100.69');
   }
 
-  // NOTE: initState intentionally does NOT dispatch LoadGroceryEvent.
-  // route_generator.dart's Builder already dispatches
-  // LoadGroceryEvent(initialCategory: category) exactly once when this
-  // route is created, using the SAME shared GroceryBloc instance
-  // (sl<GroceryBloc>()). Dispatching again here would either:
-  //   (a) re-trigger the API call unnecessarily, or
-  //   (b) if it raced with the route's dispatch, override
-  //       selectedCategory back to the first category.
-  // If you ever need this screen reachable WITHOUT going through
-  // route_generator's groceryhome case, add a guard here instead, e.g.:
-  //   if (context.read<GroceryBloc>().state.allItems.isEmpty) {
-  //     context.read<GroceryBloc>().add(
-  //       LoadGroceryEvent(initialCategory: widget.initialCategory),
-  //     );
-  //   }
 
   @override
   void dispose() {
@@ -156,9 +136,10 @@ class _GroceryViewState extends State<GroceryView> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => BlocProvider.value(
-                        value: context.read<GroceryDetailBloc>(),
-                        child: const MyCartScreen(),
+                      builder: (_) =>  BlocProvider.value(
+                        value:context.read<GroceryDetailBloc>()
+                          ..add(GetCartItemsEvent()),
+                        child: MyCartScreen(),
                       ),
                     ),
                   );

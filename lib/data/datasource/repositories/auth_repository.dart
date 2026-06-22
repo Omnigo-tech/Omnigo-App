@@ -22,16 +22,11 @@ class AuthRepository {
 
   Future<GoogleLoginResponse> loginWithGoogle() async {
     try {
-
-      // Initialize Google Sign In
       await _googleSignIn.initialize(
         serverClientId: "356810750168-mats3inacun39petth3inc4masr1v4p6.apps.googleusercontent.com",
       );
 
-      // Trigger sign in
       final GoogleSignInAccount googleUser = await _googleSignIn.authenticate();
-
-      // Get auth details
       final GoogleSignInAuthentication googleAuth = googleUser.authentication;
 
       final String? idToken = googleAuth.idToken;
@@ -40,7 +35,6 @@ class AuthRepository {
         throw Exception("Could not retrieve Google ID Token");
       }
 
-      // Send to backend
       final body = {
         "idToken": idToken,
       };
@@ -53,18 +47,14 @@ class AuthRepository {
     }
   }
 
-  // FACEBOOK LOGIN LOGIC
   Future<UserModel> loginWithFacebook() async {
     try {
-      // 1. Facebook Sign-In flow start karein
       final LoginResult result = await FacebookAuth.instance.login(
         permissions: ['email', 'public_profile'],
       );
 
       if (result.status == LoginStatus.success) {
         final AccessToken accessToken = result.accessToken!;
-
-        // 2. Backend API ko access token bhein
         final body = {"accessToken": accessToken.tokenString};
         return await apiService.facebookLogin(body);
       } else if (result.status == LoginStatus.cancelled) {

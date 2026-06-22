@@ -16,6 +16,7 @@ import 'package:grocery_app/presentation/screens/user_interface/my_cart/my_cart_
 import 'package:grocery_app/presentation/screens/user_interface/tracking/tracking_order_screen.dart';
 import 'package:grocery_app/widgets/bottom_navigation_bar.dart';
 
+import '../../data/datasource/repositories/address_repository.dart';
 import '../../presentation/bloc/chat/chat_bloc.dart';
 import '../../presentation/bloc/home/home_bloc.dart';
 import '../../presentation/bloc/home/home_event.dart';
@@ -107,7 +108,7 @@ class RouteGenerator {
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
             providers: [
-              BlocProvider(create: (_) => AddressBloc()..add(LoadAddresses())),
+              BlocProvider(create: (_) => AddressBloc(sl<AddressRepository>())..add(LoadAddresses())),
             ],
             child: CheckoutSummaryScreen(selectedMethod: method),
           ),

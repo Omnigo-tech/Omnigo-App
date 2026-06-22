@@ -25,6 +25,7 @@ import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_bloc.d
 import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_event.dart';
 
 import 'core/services/notifications_services.dart';
+import 'data/datasource/repositories/address_repository.dart';
 
 final sl = GetIt.instance;
 void main() async {
@@ -32,12 +33,11 @@ void main() async {
   setup();
   await Firebase.initializeApp();
   await NotificationService.init();
-  await NotificationService.getToken();
+  // await NotificationService.getToken();
 
   // Screen orientation and basic UI mode
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   await SvgUtils.preCacheSVGs();
-
   runApp(
     MultiBlocProvider(
       providers: [
@@ -45,7 +45,7 @@ void main() async {
           create: (_) => sl<GroceryDetailBloc>()
             ..add(LoadItemsEvent()),
         ),
-        BlocProvider(create: (_) => AddressBloc()..add(LoadAddresses())),
+        BlocProvider(create: (_) => AddressBloc(sl<AddressRepository>())..add(LoadAddresses())),
         BlocProvider(create: (context) => CallBloc()),
         BlocProvider(create: (_) => ReviewBloc()),
         BlocProvider(create: (_) => PaymentBloc()),

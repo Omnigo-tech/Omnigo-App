@@ -1,4 +1,5 @@
 import 'package:grocery_app/data/models/address.dart';
+import 'package:grocery_app/data/models/address_response_model.dart';
 
 abstract class AddressEvent {}
 
@@ -18,13 +19,11 @@ class AddAddressEvent extends AddressEvent {
 }
 
 class DeleteAddressEvent extends AddressEvent {
-  final int index;
-  DeleteAddressEvent(this.index);
+  final String id;
+  DeleteAddressEvent(this.id);
 }
 
 class UpdateAddressEvent extends AddressEvent {
-  final int index;
   final AddressModel address;
-
-  UpdateAddressEvent(this.index, this.address);
+  UpdateAddressEvent(this.address);
 }

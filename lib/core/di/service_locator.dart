@@ -1,9 +1,11 @@
 import 'package:get_it/get_it.dart';
+import 'package:grocery_app/data/datasource/repositories/cart_repository.dart';
 import 'package:grocery_app/data/datasource/repositories/glocery_data.dart';
 import 'package:grocery_app/data/datasource/repositories/wishlist_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/datasource/local/auth_local_data_source.dart';
+import '../../data/datasource/repositories/address_repository.dart';
 import '../../data/datasource/repositories/auth_repository.dart';
 import '../../data/datasource/repositories/location_repository.dart';
 import '../../data/datasource/repositories/onboarding_repository.dart';
@@ -61,7 +63,8 @@ Future<void> setup() async {
   sl.registerLazySingleton<OnboardingRepository>(() => OnboardingRepository(sl()));
   sl.registerLazySingleton<GroceryRepository>(() => GroceryRepository(sl()));
   sl.registerLazySingleton<WishlistRepository>(() => WishlistRepository(sl()));
-
+  sl.registerLazySingleton<CartRepository>(() => CartRepository(sl<ApiService>()));
+  sl.registerLazySingleton<AddressRepository>(() => AddressRepository(sl<ApiService>()));
   // ================= BLOCS =================
   sl.registerFactory<AuthBloc>(
         () => AuthBloc(sl()),
@@ -73,9 +76,12 @@ Future<void> setup() async {
   sl.registerFactory(() => GroceryBloc(sl()));
   sl.registerFactory<OnboardingBloc>(() => OnboardingBloc(sl()));
 
+
   sl.registerFactory<GroceryDetailBloc>(
         () => GroceryDetailBloc(
-      sl<WishlistRepository>(),
+          sl<WishlistRepository>(),
+          sl<GroceryRepository>(),
+          sl<CartRepository>(),
     ),
 
 

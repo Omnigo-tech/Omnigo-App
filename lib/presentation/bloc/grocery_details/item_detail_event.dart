@@ -11,6 +11,14 @@ class ToggleFavoriteEvent extends GroceryDetailEvent {
   ToggleFavoriteEvent(this.id);
 }
 
+class GetCartItemsEvent extends GroceryDetailEvent {}
+
+class RemoveFavoriteEvent  extends GroceryDetailEvent {
+  final String productId;
+
+  RemoveFavoriteEvent(this.productId);
+}
+
 class AddToCartEvent extends GroceryDetailEvent {
   final GroceryItemModel item;
   AddToCartEvent(this.item);
@@ -44,9 +52,20 @@ class CancelOrderEvent extends GroceryDetailEvent {
   CancelOrderEvent(this.orderId);
 }
 
-class ReorderItemsEvent extends GroceryDetailEvent {
-  final List<GroceryItemModel> items;
-  ReorderItemsEvent(this.items);
-}
 
 class LoadFavoritesEvent extends GroceryDetailEvent {}
+
+class GetMyOrdersEvent extends GroceryDetailEvent {}
+
+class GetOrderDetailsEvent extends GroceryDetailEvent {
+  final String orderId;
+  GetOrderDetailsEvent(this.orderId);
+}
+
+class CallReorderApiEvent extends GroceryDetailEvent {
+  final String orderId;
+  CallReorderApiEvent(this.orderId);
+
+  @override
+  List<Object> get props => [orderId];
+}

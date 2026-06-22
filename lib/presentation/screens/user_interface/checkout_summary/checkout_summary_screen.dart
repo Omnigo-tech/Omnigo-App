@@ -14,11 +14,14 @@ import 'package:grocery_app/presentation/screens/user_interface/address_list/add
 import 'package:grocery_app/presentation/screens/user_interface/address_list/address_screen.dart';
 import 'package:grocery_app/widgets/app_bar_widget.dart';
 import 'package:grocery_app/widgets/circle_button_widget.dart';
+import '../../../../core/helper/utils/phone_formatter.dart';
 import '../../../../core/routes/AppRoutes.dart';
 import '../../../../widgets/confirm_order.dart';
+import '../../../../widgets/cutom_button.dart';
 
 class CheckoutSummaryScreen extends StatefulWidget {
   final String? selectedMethod;
+
   const CheckoutSummaryScreen({super.key, required this.selectedMethod});
 
   @override
@@ -31,8 +34,9 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
   @override
   void initState() {
     super.initState();
-    currentMethod = (widget.selectedMethod == null || widget.selectedMethod!.isEmpty)
-        ? "Cash on delivery" 
+    currentMethod =
+        (widget.selectedMethod == null || widget.selectedMethod!.isEmpty)
+        ? "cash_on_delivery"
         : widget.selectedMethod!;
   }
 
@@ -95,7 +99,10 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                                 ),
                                 child: Row(
                                   children: [
-                                    const Icon(Icons.location_on, color: Colors.grey),
+                                    const Icon(
+                                      Icons.location_on,
+                                      color: Colors.grey,
+                                    ),
                                     SizedBox(width: 10.w),
                                     Expanded(
                                       child: Column(
@@ -105,7 +112,9 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                                           Text(
                                             address?.locationname ??
                                                 "Select Address",
-                                            style: const TextStyle(fontWeight: FontWeight.bold),
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                           Text(address?.address ?? ""),
                                         ],
@@ -184,10 +193,15 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                                     Container(
                                       width: 60.w,
                                       height: 60.h,
-                                      decoration: BoxDecoration(
-                                        color: AppColors.itemBackground,
-                                        borderRadius: BorderRadius.circular(
-                                          10.r,
+                                      child:  Image.network(
+                                        ImageUrl.fixImageUrl(item.image),
+                                        width: 50.w,
+                                        height: 50.h,
+                                        fit: BoxFit.contain,
+                                        errorBuilder: (context, error, stackTrace) => const Icon(
+                                          Icons.image_not_supported,
+                                          color: Colors.grey,
+                                          size: 40,
                                         ),
                                       ),
                                     ),
@@ -282,7 +296,10 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                                   color: Colors.grey.shade200,
                                   borderRadius: BorderRadius.circular(8.r),
                                 ),
-                                child: Icon(Icons.money, color: Colors.green.shade400),
+                                child: Icon(
+                                  Icons.money,
+                                  color: Colors.green.shade400,
+                                ),
                               ),
                               SizedBox(width: 12.w),
                               Expanded(
@@ -291,7 +308,10 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                                   children: [
                                     Text(
                                       "Pay via",
-                                      style: TextStyle(color: Colors.grey, fontSize: 12.sp),
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 12.sp,
+                                      ),
                                     ),
                                     Text(
                                       currentMethod,
@@ -307,11 +327,11 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                                 onPressed: () async {
                                   // Navigating to payment method screen to change selection
                                   final result = await Navigator.pushNamed(
-                                    context, 
+                                    context,
                                     AppRoutes.paymentmethodScreen,
                                     arguments: {'isChange': true},
                                   );
-                                  
+
                                   // Update UI with new selection if returned
                                   if (result != null && result is String) {
                                     setState(() {
@@ -321,7 +341,10 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                                 },
                                 child: Text(
                                   "change",
-                                  style: TextStyle(color: AppColors.primary, fontSize: 14.sp),
+                                  style: TextStyle(
+                                    color: AppColors.primary,
+                                    fontSize: 14.sp,
+                                  ),
                                 ),
                               ),
                             ],
@@ -357,7 +380,9 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                           children: [
                             Expanded(
                               child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 12),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                ),
                                 height: 45,
                                 decoration: BoxDecoration(
                                   color: AppColors.white,
@@ -387,36 +412,36 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                   child: SizedBox(
                     width: double.infinity,
                     height: DimensionsResources.D_50.h,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.homeBackground,
-                      ),
-                      onPressed: () {
+                    child: BlocConsumer<GroceryDetailBloc, GroceryDetailState>(
+                      listener: (context, state) {
+                        if (state.message == "Order placed successfully") {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const ConfirmOrder(),
+                            ),
+                          );
+                        }
+                      },
+                      builder: (context, state) {
                         final address = context
                             .read<AddressBloc>()
                             .state
                             .selectedAddress;
-
-                        if (address == null) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Please select a delivery address")),
-                          );
-                          return;
-                        }
-
-                        context.read<GroceryDetailBloc>().add(
-                          PlaceOrderEvent(
-                            address,
-                            currentMethod,
-                          ),
-                        );
-
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => const ConfirmOrder()),
+                        return CustomButton(
+                          text: "Confirm Your Order",
+                          isLoading: state.isOrderLoading,
+                          onClick: state.isOrderLoading
+                              ? null
+                              : () {
+                                  context.read<GroceryDetailBloc>().add(
+                                    PlaceOrderEvent(address!, currentMethod),
+                                  );
+                                },
+                          color: AppColors.homeBackground,
+                          textColor: AppColors.white,
                         );
                       },
-                      child: const Text("Confirm Your Order"),
                     ),
                   ),
                 ),

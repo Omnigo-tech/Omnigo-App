@@ -1,11 +1,7 @@
-class PhoneFormatter {
-  static String format(String phone) {
-    phone = phone.trim();
+class ImageUrl {
 
-    if (phone.startsWith('0')) {
-      return phone;
-    }
-
-    return '0$phone';
+  // ✅ Fix #3: Helper to replace localhost with actual IP
+static  String fixImageUrl(String url) {
+    return url.replaceAll('localhost', '192.168.100.69');
   }
 }

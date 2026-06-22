@@ -1,7 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:grocery_app/core/helper/constants/colors_resources.dart';
 import 'package:grocery_app/core/helper/constants/dimensions-resource.dart';
 import 'package:grocery_app/core/helper/constants/strings-resource.dart';
@@ -12,8 +12,10 @@ import 'package:grocery_app/presentation/screens/user_interface/details/grocery_
 import 'package:grocery_app/presentation/screens/user_interface/my_cart/my_cart_screen.dart';
 
 import '../../../../core/helper/utils/dialogs/show_cart_dialog.dart';
+import '../../../../core/helper/utils/phone_formatter.dart';
 import '../../../../core/routes/AppRoutes.dart';
 import '../../../../widgets/app_bar_widget.dart';
+import '../../../../widgets/custom_snackbar.dart';
 import '../../../bloc/grocery_details/item_detail_event.dart';
 
 class FavouriteScreen extends StatefulWidget {
@@ -50,8 +52,24 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
         },
       ),
 
-      body: BlocBuilder<GroceryDetailBloc, GroceryDetailState>(
+      body: BlocListener<GroceryDetailBloc, GroceryDetailState>(
+        listener: (context, state) {
+          if (state.message.isNotEmpty) {
+            CustomSnackBar.show(
+              context,
+              state.message,
+              isError: false,
+            );
+          }
+        },
+        child: BlocBuilder<GroceryDetailBloc, GroceryDetailState>(
         builder: (context, state) {
+          if (state.isFavoritesLoading) {
+            return const Center(child: SpinKitThreeInOut(
+              color: AppColors.primary,
+              size: DimensionsResources.FONT_SIZE_EXTRA_EXTRA_LARGE,
+            ));
+          }
           final favList = state.favorites;
           if (favList.isEmpty) {
             return Center(
@@ -78,14 +96,13 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
           return ListView.separated(
             padding: EdgeInsets.symmetric(vertical: DimensionsResources.D_10.h),
             itemCount: favList.length,
-            separatorBuilder: (_, _) => Divider(
+            separatorBuilder: (_, __) => Divider(
               color: AppColors.border,
               indent: DimensionsResources.D_16.w,
               endIndent: DimensionsResources.D_16.w,
             ),
             itemBuilder: (context, index) {
               final item = favList[index];
-
               return Dismissible(
                 key: Key(item.id.toString()),
                 direction: DismissDirection.endToStart,
@@ -93,27 +110,21 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                   if (selectedItems.contains(item)) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text("Unselect item first before deleting"),
+                        content: const Text("Unselect item first before deleting"),
                         backgroundColor: AppColors.red,
                       ),
                     );
                     return false;
                   }
-                  context.read<GroceryDetailBloc>().add(
-                    ToggleFavoriteEvent(item.id),
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Item deleted successfully"),
-                      backgroundColor: Colors.green,
-                    ),
-                  );
                   return true;
                 },
                 onDismissed: (_) {
                   setState(() {
                     selectedItems.remove(item);
                   });
+                  context.read<GroceryDetailBloc>().add(
+                    RemoveFavoriteEvent(item.id),
+                  );
                 },
                 background: Container(
                   alignment: Alignment.centerRight,
@@ -140,12 +151,10 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                       ),
                     );
                   },
-
                   contentPadding: EdgeInsets.symmetric(
                     horizontal: 16.w,
                     vertical: 8.h,
                   ),
-
                   leading: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -162,18 +171,19 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                           });
                         },
                       ),
-
                       SizedBox(width: 8.w),
-
-                      CachedNetworkImage(
-                        imageUrl: item.image,
-                        width: 50,
-                        height: 50,
-                        fit: BoxFit.cover,
-                      ),
+                      Image.network(
+                        ImageUrl.fixImageUrl(item.image),
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) =>
+                        const Icon(
+                          Icons.image_not_supported,
+                          color: Colors.grey,
+                          size: 40,
+                        ),
+                      )
                     ],
                   ),
-
                   title: Text(
                     item.name,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
@@ -181,15 +191,13 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                       fontSize: 16.sp,
                     ),
                   ),
-
                   subtitle: Text(
-                    item.weight ?? '',
+                    "${item.weight ?? ''}",
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: AppColors.grey,
                       fontSize: 14.sp,
                     ),
                   ),
-
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -213,6 +221,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
             },
           );
         },
+      ),
       ),
 
       bottomNavigationBar: SafeArea(
@@ -259,7 +268,6 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                     child: Stack(
                       children: [
                         const Icon(Icons.shopping_cart, color: Colors.white),
-
                         if (selectedItems.isNotEmpty)
                           Positioned(
                             right: 0,

@@ -11,21 +11,16 @@ import 'package:grocery_app/presentation/bloc/address/address_event.dart';
 import 'package:grocery_app/widgets/app_bar_widget.dart';
 import 'package:grocery_app/widgets/auth_button.dart';
 import 'package:grocery_app/widgets/auth_textfield.dart';
-
 import '../../../../core/helper/extension/payment_extention.dart';
 
 class AddAddressScreen extends StatefulWidget {
-  final int? index;
-  final AddressModel? existingAddress;
+  final AddressModel? existingAddress; // Index hata diya, existingAddress hi kafi hai
   const AddAddressScreen({
     super.key,
-    this.index,
     this.existingAddress,
   });
 
-
   @override
-
   State<AddAddressScreen> createState() => _AddAddressScreenState();
 }
 
@@ -36,28 +31,28 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
   final zipController = TextEditingController();
   final cityController = TextEditingController();
   final phoneController = TextEditingController();
-
   bool saveAddress = false;
   String country = "Pakistan";
+
   @override
   void initState() {
     super.initState();
-
     if (widget.existingAddress != null) {
-      addressController.text = widget.existingAddress!.address;
-      phoneController.text = widget.existingAddress!.phone;
+      // Edit mode: Agar comma-separated format hai to main address extract karein
+      addressController.text = widget.existingAddress!.address.split(',').first;
       zipController.text = widget.existingAddress!.zipcode.toString();
       cityController.text = widget.existingAddress!.city ?? "";
       saveAddress = widget.existingAddress!.isSave ?? false;
-      String phone = widget.existingAddress!.phone;
+      country = widget.existingAddress!.country.isNotEmpty ? widget.existingAddress!.country : "Pakistan";
 
+      String phone = widget.existingAddress!.phone;
       if (phone.startsWith("+92")) {
         phone = phone.replaceFirst("+92", "");
       }
-
       phoneController.text = phone;
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,23 +60,17 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
         title: StringResources.checkout,
         showBackButton: true,
       ),
-
       body: Column(
         children: [
           Card(
             color: Colors.grey.shade100,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(0),
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
             elevation: 0,
             child: Column(
               children: [
                 SizedBox(height: 20.h),
                 Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 24.sp,
-                    vertical: 10.h,
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 24.sp, vertical: 10.h),
                   child: Row(
                     children: [
                       SizedBox(width: 50.w),
@@ -90,47 +79,28 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                         height: 30.h,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(
-                            color: AppColors.primary,
-                            width: 3.w,
-                          ),
+                          border: Border.all(color: AppColors.primary, width: 3.w),
                         ),
                       ),
                       Expanded(
-                        child: Container(
-                          height: 2.h,
-                          color: Colors.grey.shade400,
-                        ),
+                        child: Container(height: 2.h, color: Colors.grey.shade400),
                       ),
                       Container(
                         width: 30.w,
                         height: 30.h,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.grey.shade400,
-                        ),
+                        decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.grey.shade400),
                       ),
                       SizedBox(width: 50.w),
                     ],
                   ),
                 ),
-
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 24.sp),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: const [
-                      Text(
-                        "Shipping Address",
-                        style: TextStyle(fontWeight: FontWeight.w600),
-                      ),
-                      Text(
-                        "Payment Method",
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      Text("Shipping Address", style: TextStyle(fontWeight: FontWeight.w600)),
+                      Text("Payment Method", style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
                     ],
                   ),
                 ),
@@ -138,9 +108,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
               ],
             ),
           ),
-
           SizedBox(height: 20.h),
-
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -148,39 +116,27 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                 key: _formKey,
                 child: ListView(
                   children: [
-                    const Text(
-                      "Address",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
+                    const Text("Address", style: TextStyle(fontWeight: FontWeight.bold)),
                     SizedBox(height: 6.h),
-
                     AuthTextField(
                       label: "",
                       controller: addressController,
-                      validator: (v) =>
-                          v == null || v.isEmpty ? "Required" : null,
+                      validator: (v) => v == null || v.isEmpty ? "Required" : null,
                     ),
-
                     SizedBox(height: 16.h),
-
                     Row(
                       children: [
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                "Zip Code",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
+                              const Text("Zip Code", style: TextStyle(fontWeight: FontWeight.bold)),
                               SizedBox(height: 6.h),
                               AuthTextField(
                                 label: "",
                                 keyboardType: TextInputType.number,
                                 controller: zipController,
-                                validator: (v) => v == null || v.isEmpty
-                                    ? "Required"
-                                    : null,
+                                validator: (v) => v == null || v.isEmpty ? "Required" : null,
                               ),
                             ],
                           ),
@@ -190,32 +146,21 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                "City",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
+                              const Text("City", style: TextStyle(fontWeight: FontWeight.bold)),
                               SizedBox(height: 6.h),
                               AuthTextField(
                                 label: "",
                                 controller: cityController,
-                                validator: (v) => v == null || v.isEmpty
-                                    ? "Required"
-                                    : null,
+                                validator: (v) => v == null || v.isEmpty ? "Required" : null,
                               ),
                             ],
                           ),
                         ),
                       ],
                     ),
-
                     SizedBox(height: 16.h),
-
-                    const Text(
-                      "Phone",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
+                    const Text("Phone", style: TextStyle(fontWeight: FontWeight.bold)),
                     SizedBox(height: 6.h),
-
                     AuthTextField(
                       label: "",
                       keyboardType: TextInputType.number,
@@ -225,9 +170,9 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                         padding: const EdgeInsets.only(left: 14),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
-                          children:  [
-                            Text("🇵🇰"),
-                            SizedBox(width: 6),
+                          children: [
+                            const Text("🇵🇰"),
+                            const SizedBox(width: 6),
                             Text(
                               "+92",
                               style: TextStyle(
@@ -238,17 +183,11 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                             ),
                           ],
                         ),
+                      ),
                     ),
-                    ),
-
                     SizedBox(height: 16.h),
-
-                    const Text(
-                      "Country",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
+                    const Text("Country", style: TextStyle(fontWeight: FontWeight.bold)),
                     SizedBox(height: 6.h),
-
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 12.sp),
                       decoration: BoxDecoration(
@@ -261,49 +200,27 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                         isExpanded: true,
                         underline: const SizedBox(),
                         items: ["Pakistan", "UAE", "India"]
-                            .map(
-                              (e) =>
-                                  DropdownMenuItem(value: e, child: Text(e)),
-                            )
+                            .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                             .toList(),
                         onChanged: (val) {
                           setState(() => country = val!);
                         },
                       ),
                     ),
-
                     SizedBox(height: 20.h),
-
                     Row(
                       children: [
                         GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              saveAddress = !saveAddress;
-                            });
-                          },
+                          onTap: () => setState(() => saveAddress = !saveAddress),
                           child: Container(
                             width: 24.w,
                             height: 24.h,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(6.r),
-                              border: Border.all(
-                                color: saveAddress
-                                    ? Colors.green
-                                    : Colors.grey,
-                                width: 2.w,
-                              ),
-                              color: saveAddress
-                                  ? Colors.green
-                                  : Colors.transparent,
+                              border: Border.all(color: saveAddress ? Colors.green : Colors.grey, width: 2.w),
+                              color: saveAddress ? Colors.green : Colors.transparent,
                             ),
-                            child: saveAddress
-                                ? const Icon(
-                                    Icons.check,
-                                    size: 16,
-                                    color: Colors.white,
-                                  )
-                                : null,
+                            child: saveAddress ? const Icon(Icons.check, size: 16, color: Colors.white) : null,
                           ),
                         ),
                         SizedBox(width: 10.w),
@@ -315,7 +232,6 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
               ),
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.all(AppSizes.padding),
             child: AuthButton(text: "NEXT", onTap: _submit),
@@ -328,38 +244,32 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
 
   void _submit() {
     if (!_formKey.currentState!.validate()) return;
-
     String phone = phoneController.text.trim();
 
     if (phone.startsWith('0')) {
       phone = phone.substring(1);
     }
-
     final formattedPhone = "+92$phone";
 
     final newAddress = AddressModel(
-      locationname: "New Address",
-      username: "User",
+      id: widget.existingAddress?.id ?? "",
+      locationname: widget.existingAddress?.locationname ?? "Saved Address",
+      username: widget.existingAddress?.username ?? "User",
       phone: formattedPhone,
-      address:
-      "${addressController.text}, ${cityController.text}, $country",
-      zipcode: int.parse(zipController.text),
-      city: cityController.text,
+      address: addressController.text.trim(),
+      zipcode: int.tryParse(zipController.text.trim()) ?? 0,
+      city: cityController.text.trim(),
+      country: country,
       isSave: saveAddress,
     );
 
     final bloc = context.read<AddressBloc>();
 
-    // EDIT MODE
-    if (widget.index != null) {
-      bloc.add(UpdateAddressEvent(widget.index!, newAddress));
-    }
-
-    // ADD MODE
-    else {
+    if (widget.existingAddress != null) {
+      bloc.add(UpdateAddressEvent(newAddress));
+    } else {
       bloc.add(AddAddressEvent(newAddress, saveAddress));
     }
-
     Navigator.pop(context);
   }
 }

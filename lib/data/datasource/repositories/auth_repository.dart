@@ -5,6 +5,7 @@ import 'package:grocery_app/core/enums/otp_purpose.dart';
 import 'package:grocery_app/data/models/user_model.dart';
 import '../../../core/error/error_handler.dart';
 import '../../../core/helper/extension/otp_purpose_extension.dart';
+import '../../../core/helper/utils/phone_formatter.dart';
 import '../../../core/network/api_service.dart';
 import '../../models/google_login_response_model.dart';
 import '../local/auth_local_data_source.dart';
@@ -15,20 +16,17 @@ class AuthRepository {
 
   final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
 
-  AuthRepository(this.apiService, this.localDataSource);
+  AuthRepository(this.apiService,this.localDataSource);
+
+
 
   Future<GoogleLoginResponse> loginWithGoogle() async {
     try {
-      // Initialize Google Sign In
       await _googleSignIn.initialize(
-        serverClientId:
-            "356810750168-mats3inacun39petth3inc4masr1v4p6.apps.googleusercontent.com",
+        serverClientId: "356810750168-mats3inacun39petth3inc4masr1v4p6.apps.googleusercontent.com",
       );
 
-      // Trigger sign in
       final GoogleSignInAccount googleUser = await _googleSignIn.authenticate();
-
-      // Get auth details
       final GoogleSignInAuthentication googleAuth = googleUser.authentication;
 
       final String? idToken = googleAuth.idToken;
@@ -37,8 +35,9 @@ class AuthRepository {
         throw Exception("Could not retrieve Google ID Token");
       }
 
-      // Send to backend
-      final body = {"idToken": idToken};
+      final body = {
+        "idToken": idToken,
+      };
 
       return await apiService.googleLogin(body);
     } on DioException catch (e) {
@@ -48,18 +47,14 @@ class AuthRepository {
     }
   }
 
-  // FACEBOOK LOGIN LOGIC
   Future<UserModel> loginWithFacebook() async {
     try {
-      // 1. Facebook Sign-In flow start karein
       final LoginResult result = await FacebookAuth.instance.login(
         permissions: ['email', 'public_profile'],
       );
 
       if (result.status == LoginStatus.success) {
         final AccessToken accessToken = result.accessToken!;
-
-        // 2. Backend API ko access token bhein
         final body = {"accessToken": accessToken.tokenString};
         return await apiService.facebookLogin(body);
       } else if (result.status == LoginStatus.cancelled) {
@@ -80,7 +75,11 @@ class AuthRepository {
     required String password,
   }) async {
     try {
-      final body = {"name": name, "email": email, "password": password};
+      final body = {
+        "name": name,
+        "email": email,
+        "password": password,
+      };
 
       return await apiService.signup(body);
     } on DioException catch (e) {
@@ -99,6 +98,7 @@ class AuthRepository {
       throw ErrorHandler.handle(e);
     }
   }
+
 
   Future<dynamic> sendOtp({
     required String userId,
@@ -170,13 +170,18 @@ class AuthRepository {
       final data = {"email": email};
 
       return await apiService.forgotPassword(data);
+
     } on DioException catch (e) {
       throw ErrorHandler.handle(e);
     }
   }
 
-  Future<dynamic> resetPassword(String userId, String newPassword) async {
-    final data = {"userId": userId, "newPassword": newPassword};
+
+  Future<dynamic> resetPassword(  String userId, String newPassword) async {
+    final data = {
+      "userId": userId,
+      "newPassword": newPassword
+    };
     return await apiService.resetPassword(data);
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:grocery_app/core/helper/constants/colors_resources.dart';
 
@@ -89,53 +90,32 @@ class CustomButton extends StatelessWidget {
             ],
             Flexible(
               child: Center(
-                child: Column(
+                child: Row(
                   mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    textWidget ??
-                        Text(
-                          text ?? "",
-                          overflow: TextOverflow.ellipsis,
-                          style:
-                              fontStyle ??
-                              TextStyle(
-                                color: textColor ?? AppColors.homeBackground,
-                                fontSize:
-                                    fontSize ??
-                                    DimensionsResources.FONT_SIZE_MEDIUM.r,
-                                fontWeight: fontWeight ?? FontWeight.w600,
-                              ),
-                        ),
-                    if (subText != null)
-                      Text(
-                        subText!,
-                        style: TextStyle(
-                          color: (textColor ?? AppColors.white).withValues(
-                            alpha: 0.7,
+                    Text(
+                      text ?? "",
+                      overflow: TextOverflow.ellipsis,
+                      style: fontStyle ??
+                          TextStyle(
+                            color: textColor ?? AppColors.homeBackground,
+                            fontSize:
+                            fontSize ?? DimensionsResources.FONT_SIZE_MEDIUM.r,
+                            fontWeight: fontWeight ?? FontWeight.w600,
                           ),
-                          fontSize:
-                              DimensionsResources.FONT_SIZE_1X_EXTRA_SMALL.sp,
-                          fontWeight: FontWeight.w400,
-                        ),
+                    ),
+
+                    if (isLoading) ...[
+                      SizedBox(width: 8.w),
+                      SpinKitFadingCircle(
+                        color: AppColors.white,
+                        size: 20.r,
                       ),
+                    ],
                   ],
                 ),
               ),
-            ),
-            if (isLoading) ...[
-              SizedBox(width: DimensionsResources.D_8.w),
-              SizedBox(
-                width: DimensionsResources.D_20.w,
-                height: DimensionsResources.D_20.h,
-                child: CircularProgressIndicator(
-                  strokeWidth: DimensionsResources.D_2,
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    textColor ?? AppColors.white,
-                  ),
-                ),
-              ),
-            ],
+            )
           ],
         ),
       ),

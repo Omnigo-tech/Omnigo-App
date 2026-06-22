@@ -3,6 +3,7 @@ import 'package:grocery_app/core/network/api_service.dart';
 
 import '../../../core/error/error_handler.dart';
 import '../../models/grocery-item.dart';
+import '../../models/remove_favourite_response_model.dart';
 import '../../models/wishlist_toggle_response_model.dart';
 
 class WishlistRepository {
@@ -25,6 +26,16 @@ class WishlistRepository {
   Future<List<GroceryItemModel>> getFavorites() async {
     final response = await _apiService.getFavorites();
     return response.favorites;
+  }
+
+  Future<RemoveFavouriteResponseModel> removeFavorite(
+      String productId,
+      ) async {
+    try {
+      return await _apiService.removeFavorite(productId);
+    } on DioException catch (e) {
+      throw ErrorHandler.handle(e);
+    }
   }
 
 

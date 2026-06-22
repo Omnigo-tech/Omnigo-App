@@ -23,6 +23,8 @@ import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_bloc.d
 import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_event.dart';
 
 import 'core/services/notifications_services.dart';
+import 'data/datasource/repositories/address_repository.dart';
+import 'data/datasource/repositories/address_repository.dart';
 
 final sl = GetIt.instance;
 void main() async {
@@ -42,14 +44,14 @@ void main() async {
   // Screen orientation and basic UI mode
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   await SvgUtils.preCacheSVGs();
-
   runApp(
     MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => sl<GroceryDetailBloc>()..add(LoadItemsEvent()),
+          create: (_) => sl<GroceryDetailBloc>()
+            ..add(LoadItemsEvent()),
         ),
-        BlocProvider(create: (_) => AddressBloc()..add(LoadAddresses())),
+        BlocProvider(create: (_) => AddressBloc(sl<AddressRepository>())..add(LoadAddresses())),
         BlocProvider(create: (context) => CallBloc()),
         BlocProvider(create: (_) => sl<ReviewBloc>()),
         BlocProvider(create: (_) => PaymentBloc()),

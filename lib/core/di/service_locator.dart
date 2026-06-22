@@ -57,7 +57,9 @@ Future<void> setup() async {
   sl.registerFactory<AuthBloc>(() => AuthBloc(sl()));
 
   sl.registerFactory<LocationBloc>(() => LocationBloc(sl()));
-  sl.registerFactory(() => GroceryBloc(sl()));
+  //sl.registerFactory(() => GroceryBloc(sl()));
+  sl.registerLazySingleton<GroceryBloc>(() => GroceryBloc(sl()));
+
   sl.registerFactory<OnboardingBloc>(() => OnboardingBloc(sl()));
 
   sl.registerFactory<GroceryDetailBloc>(

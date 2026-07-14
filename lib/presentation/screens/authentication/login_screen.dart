@@ -50,8 +50,6 @@ class _LoginScreenState extends State<LoginScreen> {
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthSuccess) {
-            CustomSnackBar.show(context, state.message, isError: false);
-
             // 1. Get user data from state
             final user = state.data.user;
 

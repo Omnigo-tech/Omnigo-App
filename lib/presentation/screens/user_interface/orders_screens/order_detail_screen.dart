@@ -6,6 +6,9 @@ import 'package:grocery_app/core/helper/constants/dimensions-resource.dart';
 import 'package:grocery_app/core/helper/constants/strings-resource.dart';
 import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_bloc.dart';
 import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_event.dart';
+import 'package:grocery_app/presentation/bloc/review/review_bloc.dart';
+import 'package:grocery_app/presentation/bloc/review/review_event.dart';
+import 'package:grocery_app/presentation/bloc/review/review_state.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/helper/utils/phone_formatter.dart';
@@ -29,6 +32,7 @@ class OrderDetailScreen extends StatefulWidget {
 }
 
 class _OrderDetailScreenState extends State<OrderDetailScreen> {
+  double? filledStars;
   @override
   void initState() {
     super.initState();
@@ -37,6 +41,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       context.read<GroceryDetailBloc>().add(
         GetOrderDetailsEvent(widget.orderId),
       );
+
+      context.read<ReviewBloc>().add(FetchReviewsEvent());
     });
   }
 
@@ -47,9 +53,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
-        title: Text(
-          "${StringResources.orderDetail}${widget.orderNumber}",
-        ),
+        title: Text("${StringResources.orderDetail}${widget.orderNumber}"),
         elevation: 0,
         backgroundColor: AppColors.white,
         foregroundColor: Colors.black,
@@ -57,27 +61,19 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       body: BlocBuilder<GroceryDetailBloc, GroceryDetailState>(
         builder: (context, state) {
           if (state.isOrderDetailLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           }
 
           final order = state.orderDetail;
 
           if (order == null) {
-            return const Center(
-              child: Text(
-                "Order not found",
-              ),
-            );
+            return const Center(child: Text("Order not found"));
           }
 
           return Scaffold(
             backgroundColor: AppColors.white,
             body: SingleChildScrollView(
-              padding: EdgeInsets.all(
-                DimensionsResources.D_16.w,
-              ),
+              padding: EdgeInsets.all(DimensionsResources.D_16.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -93,9 +89,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         ),
                       ),
                       Text(
-                        DateFormat('h:mm a').format(
-                          order.createdAt!.toLocal(),
-                        ),
+                        DateFormat('h:mm a').format(order.createdAt!.toLocal()),
                         style: textTheme.bodyMedium?.copyWith(
                           color: AppColors.primaryBlue,
                         ),
@@ -103,24 +97,18 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     ],
                   ),
 
-                  SizedBox(
-                    height: DimensionsResources.D_10.h,
-                  ),
+                  SizedBox(height: DimensionsResources.D_10.h),
 
                   Text(
                     order.createdAt != null
-                        ? DateFormat.yMMMMd().format(
-                      order.createdAt!,
-                    )
+                        ? DateFormat.yMMMMd().format(order.createdAt!)
                         : '',
                     style: textTheme.headlineLarge?.copyWith(
                       fontSize: DimensionsResources.FONT_SIZE_EXTRA_LARGE.sp,
                     ),
                   ),
 
-                  SizedBox(
-                    height: DimensionsResources.D_20.h,
-                  ),
+                  SizedBox(height: DimensionsResources.D_20.h),
 
                   Container(
                     decoration: BoxDecoration(
@@ -134,60 +122,42 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         return ListTile(
                           leading: ClipRRect(
                             borderRadius: BorderRadius.circular(8),
-                            child:  Image.network(
+                            child: Image.network(
                               ImageUrl.fixImageUrl(item.image),
                               width: 50.w,
                               height: 50.h,
                               fit: BoxFit.contain,
-                              errorBuilder: (context, error, stackTrace) => const Icon(
-                                Icons.image_not_supported,
-                                color: Colors.grey,
-                                size: 40,
-                              ),
+                              errorBuilder: (context, error, stackTrace) =>
+                                  const Icon(
+                                    Icons.image_not_supported,
+                                    color: Colors.grey,
+                                    size: 40,
+                                  ),
                             ),
                           ),
-                          title: Text(
-                            item.name,
-                          ),
-                          subtitle: Text(
-                            item.weight ?? '',
-                          ),
-                          trailing: Text(
-                            "x${item.quantity}",
-                          ),
+                          title: Text(item.name),
+                          subtitle: Text(item.weight ?? ''),
+                          trailing: Text("x${item.quantity}"),
                         );
                       }).toList(),
                     ),
                   ),
 
-                  SizedBox(
-                    height: DimensionsResources.D_20.h,
-                  ),
+                  SizedBox(height: DimensionsResources.D_20.h),
 
-                  Text(
-                    StringResources.deliveryMan,
-                    style: textTheme.bodyLarge,
-                  ),
+                  Text(StringResources.deliveryMan, style: textTheme.bodyLarge),
 
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: const CircleAvatar(
                       backgroundColor: AppColors.itemBackground,
-                      child: Icon(
-                        Icons.person,
-                      ),
+                      child: Icon(Icons.person),
                     ),
-                    title: Text(
-                      order.rider?.name ?? "Rider not assigned",
-                    ),
-                    subtitle: Text(
-                      order.rider?.phone ?? "N/A",
-                    ),
+                    title: Text(order.rider?.name ?? "Rider not assigned"),
+                    subtitle: Text(order.rider?.phone ?? "N/A"),
                   ),
 
-                  SizedBox(
-                    height: DimensionsResources.D_20.h,
-                  ),
+                  SizedBox(height: DimensionsResources.D_20.h),
 
                   Text(
                     StringResources.deliveryLocation,
@@ -200,9 +170,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                       Icons.location_on,
                       color: AppColors.primary,
                     ),
-                    title: Text(
-                      order.address?.address ?? "",
-                    ),
+                    title: Text(order.address?.address ?? ""),
                     subtitle: Text(
                       "${order.address?.city ?? ''}, ${order.address?.country ?? ''}",
                     ),
@@ -211,11 +179,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   const Divider(),
 
                   /// BILLING
-                  _billRow(
-                    StringResources.subTotal,
-                    order.subtotal,
-                    textTheme,
-                  ),
+                  _billRow(StringResources.subTotal, order.subtotal, textTheme),
 
                   _billRow(
                     StringResources.deliveryFee,
@@ -236,53 +200,94 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     isBold: true,
                   ),
 
-                  SizedBox(
-                    height: DimensionsResources.D_30.h,
-                  ),
+                  SizedBox(height: DimensionsResources.D_30.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(StringResources.ratingReview, style: textTheme.bodyLarge),
-                      InkWell(
-                          onTap: () {
-                            Navigator.pushNamed(context, AppRoutes.review);
-                          },
-                          child: Text(StringResources.viewAll,
-                              style: textTheme.labelLarge?.copyWith(color: AppColors.primary))),
-                    ],
-                  ),
-                  SizedBox(height: DimensionsResources.D_10.h),
-                  Row(
-                    children: [
                       Text(
-                        "4.5",
-                        style: textTheme.displayLarge?.copyWith(fontSize: DimensionsResources.FONT_SIZE_LARGE.sp),
+                        StringResources.ratingReview,
+                        style: textTheme.bodyLarge,
                       ),
-                      SizedBox(width: DimensionsResources.D_10.w),
-                      Row(
-                        children: List.generate(
-                          5,
-                              (index) => Icon(
-                            Icons.star,
-                            color: AppColors.amber,
-                            size: DimensionsResources.D_24.r,
+                      InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(context, AppRoutes.review);
+                        },
+                        child: Text(
+                          StringResources.viewAll,
+                          style: textTheme.labelLarge?.copyWith(
+                            color: AppColors.primary,
                           ),
                         ),
                       ),
                     ],
                   ),
                   SizedBox(height: DimensionsResources.D_10.h),
-                  Text(StringResources.feedbackSubtitle, style: textTheme.bodySmall),
+
+                  BlocBuilder<ReviewBloc, ReviewState>(
+                    builder: (context, state) {
+                      double averageRating = 0.0;
+
+                      if (state is ReviewLoaded) {
+                        averageRating = state.averageRating;
+                      } else if (state is ReviewSubmitting) {
+                        if (state.currentReviews.isNotEmpty) {
+                          final total = state.currentReviews.fold<double>(
+                            0,
+                            (sum, r) => sum + r.rating,
+                          );
+                          averageRating = total / state.currentReviews.length;
+                        }
+                      }
+                      final filledStars = averageRating.round().clamp(0, 5);
+
+                      return Row(
+                        children: [
+                          Text(
+                            averageRating.toStringAsFixed(1),
+                            style: textTheme.displayLarge?.copyWith(
+                              fontSize: DimensionsResources.FONT_SIZE_LARGE.sp,
+                            ),
+                          ),
+                          SizedBox(width: DimensionsResources.D_10.w),
+                          Row(
+                            children: List.generate(
+                              5,
+                              (index) => Icon(
+                                Icons.star,
+                                color: index < filledStars
+                                    ? AppColors.amber
+                                    : Colors.grey.shade300,
+                                size: DimensionsResources.D_24.r,
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+
+                  SizedBox(height: DimensionsResources.D_10.h),
+                  Text(
+                    StringResources.feedbackSubtitle,
+                    style: textTheme.bodySmall,
+                  ),
                   SizedBox(height: DimensionsResources.D_10.h),
                 ],
               ),
             ),
             bottomNavigationBar: Container(
               padding: EdgeInsets.symmetric(
-                  horizontal: DimensionsResources.D_16.w, vertical: DimensionsResources.D_60.w),
+                horizontal: DimensionsResources.D_16.w,
+                vertical: DimensionsResources.D_60.w,
+              ),
               decoration: BoxDecoration(
                 color: AppColors.white,
-                border: Border(top: BorderSide(color: AppColors.border, width: DimensionsResources.D_1)),
+                border: Border(
+                  top: BorderSide(
+                    color: AppColors.border,
+                    width: DimensionsResources.D_1,
+                  ),
+                ),
               ),
               child: BlocConsumer<GroceryDetailBloc, GroceryDetailState>(
                 listener: (context, state) {
@@ -290,13 +295,16 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => CheckoutSummaryScreen(selectedMethod: order.paymentMethod),
+                        builder: (context) => CheckoutSummaryScreen(
+                          selectedMethod: order.paymentMethod,
+                        ),
                       ),
                     );
-                  } else if (state.message.isNotEmpty && state.message != "ReorderSuccess") {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(state.message)),
-                    );
+                  } else if (state.message.isNotEmpty &&
+                      state.message != "ReorderSuccess") {
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text(state.message)));
                   }
                 },
                 builder: (context, state) {
@@ -304,10 +312,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     onClick: state.isOrderLoading
                         ? null
                         : () {
-                      context.read<GroceryDetailBloc>().add(
-                        CallReorderApiEvent(widget.orderId),
-                      );
-                    },
+                            context.read<GroceryDetailBloc>().add(
+                              CallReorderApiEvent(widget.orderId),
+                            );
+                          },
                     text: "Reorder",
                     textColor: AppColors.white,
                     isLoading: state.isOrderLoading,
@@ -322,15 +330,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   }
 
   Widget _billRow(
-      String title,
-      double value,
-      TextTheme textTheme, {
-        bool isBold = false,
-      }) {
+    String title,
+    double value,
+    TextTheme textTheme, {
+    bool isBold = false,
+  }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: 6,
-      ),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

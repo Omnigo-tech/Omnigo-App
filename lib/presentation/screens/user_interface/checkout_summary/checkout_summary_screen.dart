@@ -193,16 +193,18 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                                     Container(
                                       width: 60.w,
                                       height: 60.h,
-                                      child:  Image.network(
+                                      child: Image.network(
                                         ImageUrl.fixImageUrl(item.image),
                                         width: 50.w,
                                         height: 50.h,
                                         fit: BoxFit.contain,
-                                        errorBuilder: (context, error, stackTrace) => const Icon(
-                                          Icons.image_not_supported,
-                                          color: Colors.grey,
-                                          size: 40,
-                                        ),
+                                        errorBuilder:
+                                            (context, error, stackTrace) =>
+                                                const Icon(
+                                                  Icons.image_not_supported,
+                                                  color: Colors.grey,
+                                                  size: 40,
+                                                ),
                                       ),
                                     ),
                                     SizedBox(width: 10.w),

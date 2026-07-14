@@ -9,7 +9,7 @@ class DioClient {
   Dio getDio() {
     final dio = Dio(
       BaseOptions(
-        baseUrl: "http://192.168.100.69:5000/api/",
+        baseUrl: "http://192.168.2.104:5000/api/",
         headers: {"Content-Type": "application/json"},
       ),
     );

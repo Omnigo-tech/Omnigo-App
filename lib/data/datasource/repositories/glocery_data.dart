@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:grocery_app/core/error/error_handler.dart';
-import 'package:grocery_app/core/helper/constants/images-resources.dart';
 import 'package:grocery_app/core/network/api_service.dart';
 import 'package:grocery_app/presentation/grocery/grocery_data/grocery_model.dart';
 
@@ -20,4 +19,3 @@ class GroceryRepository {
     }
   }
 }
-

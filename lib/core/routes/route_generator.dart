@@ -1,6 +1,6 @@
-
-
 import 'package:flutter/material.dart';
+import 'package:grocery_app/widgets/categories_widget.dart'
+    show GroceryHomeArgs;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery_app/core/di/service_locator.dart';
 import 'package:grocery_app/presentation/bloc/address/address_bloc.dart';
@@ -81,50 +81,46 @@ class RouteGenerator {
       case AppRoutes.myCart:
         return MaterialPageRoute(builder: (_) => const MyCartScreen());
 
-      /*case AppRoutes.groceryhome:
-        final category = (settings.arguments is String)
-            ? settings.arguments as String
-            : '';
-        return MaterialPageRoute(
-          builder: (_) => MultiBlocProvider(
-            providers: [
-              BlocProvider(create: (_) => HomeBloc()..add(LoadHomeData())),
-              BlocProvider(
-                create: (_) =>
-                    sl<GroceryBloc>()
-                      ..add(LoadGroceryEvent(initialCategory: category)),
-              ),
-            ],
-            child: AppBottomBar(
-              body: GroceryHomeScreen(nameCategories: category),
-            ),
-          ),
-        );*/
       case AppRoutes.groceryhome:
-        final category = (settings.arguments is String)
-            ? settings.arguments as String
-            : '';
+        String? category;
+        bool showAll = false;
+
+        if (settings.arguments is GroceryHomeArgs) {
+          final args = settings.arguments as GroceryHomeArgs;
+          category = args.category;
+          showAll = args.showAll;
+        } else if (settings.arguments is String) {
+          category = settings.arguments as String;
+        }
+
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
             providers: [
               BlocProvider(create: (_) => HomeBloc()..add(LoadHomeData())),
-              BlocProvider(
-                create: (_) => sl<GroceryBloc>()
-                  ..add(LoadGroceryEvent())
-                  ..add(SelectCategoryEvent(category)),
-              ),
+              BlocProvider.value(value: sl<GroceryBloc>()),
             ],
-            child: AppBottomBar(
-              body: GroceryHomeScreen(nameCategories: category),
+            child: Builder(
+              builder: (context) {
+                context.read<GroceryBloc>().add(
+                  LoadGroceryEvent(initialCategory: category, showAll: showAll),
+                );
+                return AppBottomBar(
+                  body: GroceryHomeScreen(nameCategories: category ?? ''),
+                );
+              },
             ),
           ),
         );
+
       case AppRoutes.addressdetail:
         final method = settings.arguments as String;
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
             providers: [
-              BlocProvider(create: (_) => AddressBloc(sl<AddressRepository>())..add(LoadAddresses())),
+              BlocProvider(
+                create: (_) =>
+                    AddressBloc(sl<AddressRepository>())..add(LoadAddresses()),
+              ),
             ],
             child: CheckoutSummaryScreen(selectedMethod: method),
           ),

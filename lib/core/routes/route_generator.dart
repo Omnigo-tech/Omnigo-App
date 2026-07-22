@@ -17,7 +17,9 @@ import 'package:grocery_app/presentation/screens/user_interface/my_cart/my_cart_
 import 'package:grocery_app/presentation/screens/user_interface/tracking/tracking_order_screen.dart';
 import 'package:grocery_app/widgets/bottom_navigation_bar.dart';
 
+import '../../data/datasource/remote/socket_service.dart';
 import '../../data/datasource/repositories/address_repository.dart';
+import '../../data/datasource/repositories/chat_repository.dart';
 import '../../presentation/bloc/chat/chat_bloc.dart';
 import '../../presentation/bloc/home/home_bloc.dart';
 import '../../presentation/bloc/home/home_event.dart';
@@ -131,25 +133,38 @@ class RouteGenerator {
         );
       case AppRoutes.chat:
         return MaterialPageRoute(
+          settings: settings,
           builder: (_) =>
-              BlocProvider(create: (_) => ChatBloc(), child: ChatScreen()),
+              BlocProvider(create: (_) => ChatBloc(sl<ChatRepository>(), sl<SocketService>()),
+                  child: ChatScreen(),
+              ),
         );
 
       case AppRoutes.call:
-        return MaterialPageRoute(builder: (_) => const CallScreen());
+        return MaterialPageRoute(
+            settings: settings,
+            builder: (_) => const CallScreen());
 
       case AppRoutes.paymentmethodScreen:
         return MaterialPageRoute(builder: (_) => PaymentMethodScreen());
 
       case AppRoutes.trackingOrder:
+        final args = settings.arguments as Map<String, dynamic>;
+        final String orderId = args['orderId']?.toString() ?? '';
+        final String userId = args['userId']?.toString() ?? '';
+
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
             providers: [
               BlocProvider(
-                create: (_) => TrackingBloc()..add(FetchTrackingDetails()),
+                // sl() hamare GetIt service locator se TrackingBloc ke dependencies (repository + socket) auto inject kar dega
+                create: (_) => sl<TrackingBloc>(),
               ),
             ],
-            child: TrackingOrderScreen(),
+            child: TrackingOrderScreen(
+              orderId: orderId,
+              userId: userId,
+            ),
           ),
         );
       case AppRoutes.review:

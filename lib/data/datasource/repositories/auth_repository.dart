@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:grocery_app/core/enums/otp_purpose.dart';
 import 'package:grocery_app/data/models/user_model.dart';
@@ -47,27 +46,27 @@ class AuthRepository {
     }
   }
 
-  Future<UserModel> loginWithFacebook() async {
-    try {
-      final LoginResult result = await FacebookAuth.instance.login(
-        permissions: ['email', 'public_profile'],
-      );
-
-      if (result.status == LoginStatus.success) {
-        final AccessToken accessToken = result.accessToken!;
-        final body = {"accessToken": accessToken.tokenString};
-        return await apiService.facebookLogin(body);
-      } else if (result.status == LoginStatus.cancelled) {
-        throw Exception("Facebook Sign-In cancelled by user");
-      } else {
-        throw Exception(result.message ?? "Facebook Sign-In failed");
-      }
-    } on DioException catch (e) {
-      throw ErrorHandler.handle(e);
-    } catch (e) {
-      throw Exception(e.toString());
-    }
-  }
+  // Future<UserModel> loginWithFacebook() async {
+  //   try {
+  //     final LoginResult result = await FacebookAuth.instance.login(
+  //       permissions: ['email', 'public_profile'],
+  //     );
+  //
+  //     if (result.status == LoginStatus.success) {
+  //       final AccessToken accessToken = result.accessToken!;
+  //       final body = {"accessToken": accessToken.tokenString};
+  //       return await apiService.facebookLogin(body);
+  //     } else if (result.status == LoginStatus.cancelled) {
+  //       throw Exception("Facebook Sign-In cancelled by user");
+  //     } else {
+  //       throw Exception(result.message ?? "Facebook Sign-In failed");
+  //     }
+  //   } on DioException catch (e) {
+  //     throw ErrorHandler.handle(e);
+  //   } catch (e) {
+  //     throw Exception(e.toString());
+  //   }
+  // }
 
   Future<UserModel> signup({
     required String name,

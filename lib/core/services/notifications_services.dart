@@ -92,12 +92,16 @@ class NotificationService {
 
   static Future<String?> getToken() async {
     try {
-      String? token = await FirebaseMessaging.instance.getToken();
-      print("FCM Token: $token");
+      await FirebaseMessaging.instance.requestPermission();
+
+      final token = await FirebaseMessaging.instance.getToken();
+
+      print("FCM Token = $token");
+
       return token;
     } catch (e) {
-      print("FCM Token Error (non-fatal): $e");
-      return null; // App continues normally
+      print("FCM Error = $e");
+      return null;
     }
   }
 

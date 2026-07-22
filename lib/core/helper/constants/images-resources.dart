@@ -64,6 +64,10 @@ class ImageResource {
     BANNER_IMAGE2,
     BANNER_IMAGE3,
   ];
+  static const String HAND_DROP = '${DIR_IMAGE}hand_Icon_img.png';
+  static const String LEAVE_DOOR_DROP = '${DIR_IMAGE}leave_door_img.png';
+  static const String OUTSIDE_DROP = '${DIR_IMAGE}par_outdoor_img.png';
+  static const String MEET_DOOR_DROP = '${DIR_IMAGE}door_img.png';
 
   static const String DIR_ICON = 'assets/icons/';
   static const String ICON_EMAIL = '${DIR_ICON}icon_email.svg';
@@ -84,4 +88,6 @@ class ImageResource {
   static const String STORE_ICON = '${DIR_ICON}store_icon.svg';
   static const String SELECT_STAR_ICON = '${DIR_ICON}select_star_icon.svg';
   static const String UNSELECT_STAR_ICON = '${DIR_ICON}unselect_star_icon.svg';
+
+
 }

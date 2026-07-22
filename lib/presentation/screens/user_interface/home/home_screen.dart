@@ -17,6 +17,8 @@ import '../../../../data/datasource/local/auth_local_data_source.dart';
 import '../../../../widgets/categories_widget.dart';
 import '../../../../widgets/promo_section_widget.dart';
 import '../../../../widgets/vehicle_services_widget.dart';
+import '../../../bloc/grocery_details/item_detail_bloc.dart';
+import '../../../bloc/grocery_details/item_detail_event.dart';
 import '../../../bloc/home/home_bloc.dart';
 import '../../../bloc/home/home_state.dart';
 
@@ -37,6 +39,8 @@ class _HomeScreenState extends State<HomeScreen> {
     // GroceryHomeScreen later — no duplicate network calls if it was
     // already loaded by a prior visit to the grocery tab.
     context.read<GroceryBloc>().add(LoadGroceryEvent());
+    context.read<GroceryDetailBloc>()
+      .add(GetCartItemsEvent());
   }
 
   @override

@@ -163,7 +163,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   SizedBox(
                     height: DimensionsResources.D_20.h,
                   ),
-
                   Text(
                     StringResources.deliveryMan,
                     style: textTheme.bodyLarge,

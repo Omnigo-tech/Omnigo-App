@@ -11,7 +11,12 @@ import 'package:grocery_app/widgets/auth_button.dart';
 import 'cutom_button.dart';
 
 class ConfirmOrder extends StatelessWidget {
-  const ConfirmOrder({super.key});
+  final String orderId;
+  final String userId;
+  const ConfirmOrder({super.key,
+    required this.orderId,
+    required this.userId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +71,17 @@ class ConfirmOrder extends StatelessWidget {
               child: AuthButton(
                 text: StringResources.trackOrder,
                 onTap: () {
-                  Navigator.pushNamed(context, AppRoutes.trackingOrder);
+                  print("order id is this${orderId}");
+                  print("user id is this ${userId}");
+                  Navigator.pushNamed(
+                    context,
+                    AppRoutes.trackingOrder,
+                    arguments: {
+                    'orderId': orderId,
+                    'userId': userId,
+                    },
+
+                  );
                 },
               ),
             ),

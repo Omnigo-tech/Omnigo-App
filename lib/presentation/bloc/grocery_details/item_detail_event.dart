@@ -24,6 +24,12 @@ class AddToCartEvent extends GroceryDetailEvent {
   AddToCartEvent(this.item);
 }
 
+class BulkAddToCartEvent extends GroceryDetailEvent {
+  final List<GroceryItemModel> items;
+
+  BulkAddToCartEvent(this.items);
+}
+
 class IncrementQtyEvent extends GroceryDetailEvent {
   final String id;
   IncrementQtyEvent(this.id);
@@ -40,10 +46,10 @@ class RemoveFromCartEvent extends GroceryDetailEvent {
 }
 
 class PlaceOrderEvent extends GroceryDetailEvent {
-  final AddressModel address;
+  final String id;
   final String paymentMethod;
 
-  PlaceOrderEvent(this.address, this.paymentMethod);
+  PlaceOrderEvent(this.id, this.paymentMethod);
 }
 
 class CancelOrderEvent extends GroceryDetailEvent {

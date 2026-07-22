@@ -1,37 +1,109 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'tracking_model.g.dart';
+
+@JsonSerializable(explicitToJson: true)
 class TrackingModel {
+  @JsonKey(name: 'orderId')
+  final String orderId;
+
+  @JsonKey(name: 'orderNumber')
+  final String orderNumber;
+
   final String status;
+
+  @JsonKey(name: 'location')
+  final String? location;
+
+
+  // Sub-models for nested objects
+  @JsonKey(name: 'rider')
+  final RiderModel? rider;
+
+  @JsonKey(name: 'timeline')
+  final TimelineModel? timeline;
+
+  // Non-backend fields standard default values ke sath
+  @JsonKey(defaultValue: "10-15 Min")
   final String estimatedTime;
-  final String deliveryHeroName;
-  final String deliveryHeroImage;
+
+  @JsonKey(defaultValue: "Grocery Store")
   final String storeName;
-  final String storeAddress;
+
+  @JsonKey(defaultValue: "Your Address")
   final String destinationAddress;
-  final double progress;
-  final String phonenumber;// 0.0 to 1.0
 
   TrackingModel({
+    required this.orderId,
+    required this.orderNumber,
     required this.status,
-    required this.estimatedTime,
-    required this.deliveryHeroName,
-    required this.deliveryHeroImage,
-    required this.storeName,
-    required this.storeAddress,
-    required this.destinationAddress,
-    required this.progress,
-    required this.phonenumber,
+    required this.location,
+    this.rider,
+    this.timeline,
+    this.estimatedTime = "10-15 Min",
+    this.storeName = "Grocery Store",
+    this.destinationAddress = "Your Address",
   });
 
-  factory TrackingModel.mock() {
+  // UI Layers ko break hone se bachane ke liye getters (aapki screen ka code change nahi karna parega)
+  String get deliveryHeroName => rider?.name ?? 'Assigning Rider...';
+  String get phonenumber => rider?.phone ?? '';
+  String get orderPlacedTime => timeline?.orderPlaced ?? '';
+  String get riderAssignedTime => timeline?.riderAssigned ?? '';
+
+  // API wrapper structure handling
+  factory TrackingModel.fromJson(Map<String, dynamic> json) {
+    final Map<String, dynamic> data = json.containsKey('tracking')
+        ? json['tracking'] as Map<String, dynamic>
+        : json;
+    return _$TrackingModelFromJson(data);
+  }
+
+  Map<String, dynamic> toJson() => _$TrackingModelToJson(this);
+
+  // Socket updates ke liye safe copyWith state modifier
+  TrackingModel copyWith({String? newStatus}) {
     return TrackingModel(
-      status: "On the way",
-      estimatedTime: "10 Min",
-      deliveryHeroName: "Abdulmalik Qasim",
-      deliveryHeroImage: "assets/images/delivery_hero.png", // Make sure this exists or use a placeholder
-      storeName: "Grocery Store",
-      storeAddress: "Store Location Details",
-      destinationAddress: "Queen Road Karachi",
-      progress: 0.4,
-      phonenumber: "03125214609"
+      orderId: this.orderId,
+      orderNumber: this.orderNumber,
+      status: newStatus ?? this.status,
+      location: this.location,
+      rider: this.rider,
+      timeline: this.timeline,
+      estimatedTime: this.estimatedTime,
+      storeName: this.storeName,
+      destinationAddress: this.destinationAddress,
     );
   }
+}
+
+// ==========================================
+// RIDER SUB MODEL
+// ==========================================
+@JsonSerializable()
+class RiderModel {
+  @JsonKey(name: '_id')
+  final String? id;
+  final String? name;
+  final String? phone;
+
+  RiderModel({this.id, this.name, this.phone});
+
+  factory RiderModel.fromJson(Map<String, dynamic> json) => _$RiderModelFromJson(json);
+  Map<String, dynamic> toJson() => _$RiderModelToJson(this);
+}
+
+// ==========================================
+// TIMELINE SUB MODEL
+// ==========================================
+@JsonSerializable()
+class TimelineModel {
+  final String? orderPlaced;
+  final String? riderAssigned;
+  final String? updatedAt;
+
+  TimelineModel({this.orderPlaced, this.riderAssigned, this.updatedAt});
+
+  factory TimelineModel.fromJson(Map<String, dynamic> json) => _$TimelineModelFromJson(json);
+  Map<String, dynamic> toJson() => _$TimelineModelToJson(this);
 }

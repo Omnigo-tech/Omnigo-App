@@ -3,6 +3,7 @@ import 'package:grocery_app/data/models/order_detail_response_model.dart';
 import '../../../core/error/error_handler.dart';
 import '../../../core/network/api_service.dart';
 import '../../models/cart_response_model.dart';
+import '../../models/grocery-item.dart';
 import '../../models/my_orders_response_model.dart';
 import '../../models/place_order_response_model.dart'; // Naya import
 
@@ -21,6 +22,27 @@ class CartRepository {
         "quantity": quantity,
       };
       return await _apiService.addToCart(body);
+    } on DioException catch (e) {
+      throw ErrorHandler.handle(e);
+    }
+  }
+
+  Future<CartResponseModel> bulkAddToCart(
+      List<GroceryItemModel> items,
+      ) async {
+    try {
+      final body = {
+        "products": items
+            .map(
+              (e) => {
+            "productId": e.id,
+            "quantity": e.quantity <= 0 ? 1 : e.quantity,
+          },
+        )
+            .toList(),
+      };
+
+      return await _apiService.bulkAddToCart(body);
     } on DioException catch (e) {
       throw ErrorHandler.handle(e);
     }

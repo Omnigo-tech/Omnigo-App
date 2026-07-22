@@ -15,7 +15,15 @@ class CallScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-
+    final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<CallBloc>().add(StartCall(
+        conversationId: args['conversationId'],
+        currentUserId: args['currentUserId'],
+        receiverId: args['receiverId'],
+        receiverName: args['receiverName'] ?? "Rider",
+      ));
+    });
     return BlocListener<CallBloc, CallState>(
       listener: (context, state) {
         if (state.status == CallStatus.ended) {

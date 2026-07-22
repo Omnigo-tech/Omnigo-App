@@ -14,6 +14,7 @@ import 'package:grocery_app/presentation/bloc/location/location_bloc.dart';
 import 'package:grocery_app/presentation/bloc/payment/payment_bloc.dart';
 import 'package:grocery_app/presentation/bloc/review/review_bloc.dart';
 import 'package:grocery_app/presentation/grocery/grocery_bloc/grocery_bloc.dart';
+import 'package:grocery_app/widgets/global_effect_listener.dart';
 import 'core/di/service_locator.dart';
 import 'core/helper/constants/dimensions-resource.dart';
 import 'core/helper/utils/svg-utils.dart';
@@ -23,16 +24,20 @@ import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_bloc.d
 import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_event.dart';
 
 import 'core/services/notifications_services.dart';
+import 'data/datasource/remote/socket_service.dart';
 import 'data/datasource/repositories/address_repository.dart';
 import 'data/datasource/repositories/address_repository.dart';
 
 final sl = GetIt.instance;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   setup();
   await Firebase.initializeApp();
-  //await NotificationService.init();
-  //await NotificationService.getToken();
+  print("Project: ${Firebase.app().options.projectId}");
+  print("AppId: ${Firebase.app().options.appId}");
+  await NotificationService.init();
+  await NotificationService.getToken();
 
   try {
     await NotificationService.init();
@@ -48,11 +53,13 @@ void main() async {
     MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => sl<GroceryDetailBloc>()
-            ..add(LoadItemsEvent()),
+          create: (_) => sl<GroceryDetailBloc>()..add(LoadItemsEvent()),
         ),
-        BlocProvider(create: (_) => AddressBloc(sl<AddressRepository>())..add(LoadAddresses())),
-        BlocProvider(create: (context) => CallBloc()),
+        BlocProvider(
+          create: (_) =>
+              AddressBloc(sl<AddressRepository>())..add(LoadAddresses()),
+        ),
+        BlocProvider(create: (context) => CallBloc(sl<SocketService>())),
         BlocProvider(create: (_) => sl<ReviewBloc>()),
         BlocProvider(create: (_) => PaymentBloc()),
         BlocProvider(create: (_) => GroceryBloc(sl<GroceryRepository>())),
@@ -94,11 +101,14 @@ class MyApp extends StatelessWidget {
             initialRoute: AppRoutes.splash,
             onGenerateRoute: AppRouter.onGenerateRoute,
             builder: (context, widget) {
-              return MediaQuery(
-                data: MediaQuery.of(
-                  context,
-                ).copyWith(textScaler: const TextScaler.linear(1.0)),
-                child: widget!,
+              return GlobalEffectListener(
+                child:
+                MediaQuery(
+                  data: MediaQuery.of(
+                    context,
+                  ).copyWith(textScaler: const TextScaler.linear(1.0)),
+                  child: widget!,
+                ),
               );
             },
           ),

@@ -6,6 +6,7 @@ import '../core/helper/constants/colors_resources.dart';
 import '../core/helper/constants/dimensions-resource.dart';
 import '../core/helper/constants/images-resources.dart';
 import '../core/helper/constants/strings-resource.dart';
+import '../presentation/screens/user_interface/  profile/profile_screen.dart';
 import '../presentation/screens/user_interface/favourite/favourite_screen.dart';
 import '../presentation/screens/user_interface/home/home_screen.dart';
 
@@ -33,7 +34,7 @@ class _AppBottomBarState extends State<AppBottomBar> {
     const HomeScreen(),
     const OrdersScreen(),
     const FavouriteScreen(),
-    const HomeScreen(),
+    const ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {

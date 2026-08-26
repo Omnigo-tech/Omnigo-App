@@ -8,7 +8,6 @@ class AppRoutes {
   static const String home = '/home';
   static const String location = '/location';
   static const String otp = '/otp';
-  static const String phoneInput = '/phone-input';
   static const String groceryDetails = '/grocery-details';
   static const String myCart = '/my_cart';
   static const String groceryhome = '/groceryhome';
@@ -19,6 +18,8 @@ class AppRoutes {
   static const String chat = '/chat';
   static const String call = '/call';
   static const String order = '/order';
+  static const String fastFoodHome = '/fast-food-home';
+  static const String restaurantScreen = '/restaurant-screen';
 
   static Null get addressdetails => null;
 }

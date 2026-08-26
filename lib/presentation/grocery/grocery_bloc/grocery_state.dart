@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:grocery_app/presentation/grocery/grocery_data/grocery_model.dart';
+
+import '../../../data/models/grocery_category_model.dart';
+import '../grocery_data/grocery_model.dart';
 
 class GroceryState extends Equatable {
   final bool isLoading;
@@ -9,15 +11,11 @@ class GroceryState extends Equatable {
   final List<GroceryModel> allItems;
   final List<GroceryModel> filteredItems;
   final List<GroceryModel> searchResults;
+
   final String selectedCategory;
 
-  // Categories extracted from API products (no hardcoding)
-  final List<String> categories;
+  final List<GrocerySubCategoryModel> categories;
 
-  // Random product image per category — used as category circle icon
-  final Map<String, String> categoryImages;
-
-  // Product names extracted from API for suggestions
   final List<String> productSuggestions;
 
   const GroceryState({
@@ -29,7 +27,6 @@ class GroceryState extends Equatable {
     required this.searchResults,
     required this.selectedCategory,
     required this.categories,
-    required this.categoryImages,
     required this.productSuggestions,
   });
 
@@ -43,7 +40,6 @@ class GroceryState extends Equatable {
       searchResults: [],
       selectedCategory: "",
       categories: [],
-      categoryImages: {},
       productSuggestions: [],
     );
   }
@@ -56,8 +52,7 @@ class GroceryState extends Equatable {
     List<GroceryModel>? filteredItems,
     List<GroceryModel>? searchResults,
     String? selectedCategory,
-    List<String>? categories,
-    Map<String, String>? categoryImages,
+    List<GrocerySubCategoryModel>? categories,
     List<String>? productSuggestions,
   }) {
     return GroceryState(
@@ -69,8 +64,8 @@ class GroceryState extends Equatable {
       searchResults: searchResults ?? this.searchResults,
       selectedCategory: selectedCategory ?? this.selectedCategory,
       categories: categories ?? this.categories,
-      categoryImages: categoryImages ?? this.categoryImages,
-      productSuggestions: productSuggestions ?? this.productSuggestions,
+      productSuggestions:
+      productSuggestions ?? this.productSuggestions,
     );
   }
 
@@ -84,7 +79,6 @@ class GroceryState extends Equatable {
     searchResults,
     selectedCategory,
     categories,
-    categoryImages,
     productSuggestions,
   ];
 }

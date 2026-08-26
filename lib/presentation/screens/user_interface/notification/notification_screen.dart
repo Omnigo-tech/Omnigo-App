@@ -6,6 +6,7 @@ import '../../../../core/helper/constants/colors_resources.dart';
 import '../../../../core/helper/constants/dimensions-resource.dart';
 import '../../../../core/helper/constants/images-resources.dart';
 import '../../../../core/helper/constants/strings-resource.dart';
+import '../../../../core/helper/utils/dialogs/show_cart_dialog.dart';
 import '../../../../core/helper/utils/launcher_helper.dart';
 import '../../../../widgets/tracking_info_card.dart';
 
@@ -54,11 +55,14 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 iconColor: AppColors.primary,
 
                 onMessageTap: () {
-                  LauncherHelper.sendSMS(tracking['phonenumber']);
+                  Navigator.pushNamed(context, '/chat');
                 },
 
                 onCallTap: () {
-                  LauncherHelper.makePhoneCall(tracking['phonenumber']);
+                  GlobalDialogs.showCallDriverSheet(
+                    context,
+                    phoneNumber:tracking['phonenumber'],
+                  );
                 },
               ),
             ),

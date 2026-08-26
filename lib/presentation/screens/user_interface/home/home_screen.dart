@@ -124,9 +124,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   );
                                 }
-                                return CategoriesWidget(
+                                return  CategoriesWidget(
                                   categories: groceryState.categories,
-                                  categoryImages: groceryState.categoryImages,
                                 );
                               },
                             ),

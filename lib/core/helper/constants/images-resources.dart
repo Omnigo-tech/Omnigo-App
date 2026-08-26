@@ -64,6 +64,16 @@ class ImageResource {
     BANNER_IMAGE2,
     BANNER_IMAGE3,
   ];
+  static const String PIZA_IMG = '${DIR_IMAGE}piza.png';
+  static const String BURGER_IMG = '${DIR_IMAGE}burger.png';
+  static const String CRISPY_IMG = '${DIR_IMAGE}crispy.png';
+  static const String PASTA_IMG = '${DIR_IMAGE}pasta.png';
+  static const String ROLL_IMG = '${DIR_IMAGE}roll.png';
+  static const String PIZA_GARDEN_LOGO = '${DIR_IMAGE}piza_garden_lago.png';
+  static const String QAISER_LOGO = '${DIR_IMAGE}qaiser_rest_lago.png';
+  static const String MATKO_MATKI = '${DIR_IMAGE}matko_matki_lago.png';
+
+
 
   static const String DIR_ICON = 'assets/icons/';
   static const String ICON_EMAIL = '${DIR_ICON}icon_email.svg';

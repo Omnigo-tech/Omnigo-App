@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:grocery_app/core/helper/constants/colors_resources.dart';
 import 'package:grocery_app/core/helper/constants/dimensions-resource.dart';
 import 'package:grocery_app/core/helper/constants/images-resources.dart';
@@ -13,6 +15,7 @@ import 'package:grocery_app/presentation/screens/user_interface/details/grocery_
 import 'package:grocery_app/presentation/grocery/grocery_home/filter_bottom_sheet.dart';
 import 'package:grocery_app/presentation/grocery/grocery_home/search_screen.dart';
 import 'package:grocery_app/presentation/screens/user_interface/my_cart/my_cart_screen.dart';
+import '../../../core/helper/utils/phone_formatter.dart';
 import '../../bloc/grocery_details/item_detail_event.dart';
 import '../../screens/user_interface/address_list/address_screen.dart';
 import '../grocery_bloc/grocery_bloc.dart';
@@ -40,10 +43,6 @@ class GroceryView extends StatefulWidget {
 class _GroceryViewState extends State<GroceryView> {
   final ScrollController _categoryScrollController = ScrollController();
 
-  // Replace localhost with real IP for physical device testing
-  String fixImageUrl(String url) {
-    return url.replaceAll('localhost', '192.168.2.104');
-  }
 
   @override
   void dispose() {
@@ -143,10 +142,14 @@ class _GroceryViewState extends State<GroceryView> {
                     ),
                   );
                 },
-                icon: Icon(
-                  Icons.shopping_bag_outlined,
-                  size: 24.sp,
-                  color: AppColors.black,
+                icon: SvgPicture.asset(
+                  ImageResource.ICON_ORDER,
+                  width: 24.w,
+                  height: 21.h,
+                  colorFilter: const ColorFilter.mode(
+                    AppColors.black,
+                    BlendMode.srcIn,
+                  ),
                 ),
               ),
             ],
@@ -223,7 +226,7 @@ class _GroceryViewState extends State<GroceryView> {
 
   Widget _buildCategories(BuildContext context) {
     return SizedBox(
-      height: 96.h,
+      height: 100.h,
       child: BlocBuilder<GroceryBloc, GroceryState>(
         builder: (context, state) {
           if (state.categories.isEmpty) {
@@ -231,10 +234,13 @@ class _GroceryViewState extends State<GroceryView> {
           }
 
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            final index = state.categories.indexOf(state.selectedCategory);
-            if (index != -1 && _categoryScrollController.hasClients) {
+            final selectedIndex = state.categories.indexWhere(
+                  (category) => category.name == state.selectedCategory,
+            );
+
+            if (selectedIndex != -1 && _categoryScrollController.hasClients) {
               _categoryScrollController.animateTo(
-                index * 78.0,
+                selectedIndex * 82.0,
                 duration: const Duration(milliseconds: 400),
                 curve: Curves.easeInOut,
               );
@@ -247,9 +253,10 @@ class _GroceryViewState extends State<GroceryView> {
             scrollDirection: Axis.horizontal,
             itemCount: state.categories.length,
             itemBuilder: (_, index) {
-              final categoryName = state.categories[index];
+              final category = state.categories[index];
+              final categoryName = category.name;
+              final imageUrl = category.image;
               final isSelected = state.selectedCategory == categoryName;
-              final imageUrl = state.categoryImages[categoryName] ?? "";
 
               return GestureDetector(
                 onTap: () {
@@ -258,58 +265,90 @@ class _GroceryViewState extends State<GroceryView> {
                   );
                 },
                 child: Container(
-                  width: 70.w,
-                  margin: const EdgeInsets.symmetric(horizontal: 6),
+                  width: 72.w,
+                  margin: const EdgeInsets.symmetric(horizontal: 5),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
+                      // Outer Border Circle Container
                       Container(
-                        width: 70.w,
-                        height: 70.h,
+                        width: 58.w,
+                        height: 58.h,
+                        // Consistent 3px padding so image stays inside circle in both states
+                        padding: const EdgeInsets.all(6),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
+                          color: Colors.transparent,
                           border: Border.all(
                             color: isSelected
-                                ? const Color(0xFF2F6FED)
-                                : const Color.fromARGB(0, 151, 153, 153),
-                            width: 2.w,
+                                ? const Color(0xFF0264D3)
+                                : const Color(0x23323B48), // Grey border for unselected
+                            width: isSelected ? 2.w : 1.w,
                           ),
+                          boxShadow: isSelected
+                              ? [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.15),
+                              blurRadius: 4,
+                              offset: const Offset(0, 4),
+                            )
+                          ]
+                              : [],
                         ),
-                        padding: EdgeInsets.all(isSelected ? 3 : 0),
-                        child: ClipOval(
-                          child: Container(
-                            color: Colors.grey.shade100,
-                            child: imageUrl.isNotEmpty
-                                ? Image.network(
-                                    fixImageUrl(imageUrl),
-                                    fit: BoxFit.fill,
-                                    errorBuilder: (_, __, ___) => Icon(
-                                      Icons.image_not_supported,
-                                      color: Colors.grey.shade400,
-                                    ),
-                                  )
-                                : Icon(
-                                    Icons.image_not_supported,
-                                    color: Colors.grey.shade400,
-                                  ),
+                        // Inner Perfect Circle for Image Background
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            color: Color(0xFFF8F8F8),
+                            shape: BoxShape.circle,
+                          ),
+                          clipBehavior: Clip.antiAlias, // Ensures sharp circle clip
+                          child: imageUrl.isNotEmpty
+                              ? CachedNetworkImage(
+                            imageUrl: ImageUrl.fixImageUrl(imageUrl),
+                            width: double.infinity,
+                            height: double.infinity,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => const Center(
+                              child: SizedBox(
+                                width: 14,
+                                height: 14,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 1.5,
+                                ),
+                              ),
+                            ),
+                            errorWidget: (context, url, error) => Icon(
+                              Icons.image_not_supported,
+                              color: Colors.grey.shade400,
+                              size: 20,
+                            ),
+                          )
+                              : Icon(
+                            Icons.image_not_supported,
+                            color: Colors.grey.shade400,
+                            size: 20,
                           ),
                         ),
                       ),
+
                       SizedBox(height: 6.h),
-                      Text(
-                        categoryName,
-                        textAlign: TextAlign.center,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: isSelected
-                              ? FontWeight.w600
-                              : FontWeight.w400,
-                          color: isSelected
-                              ? const Color(0xFF2F6FED)
-                              : Colors.grey.shade700,
+
+                      Flexible(
+                        child: Text(
+                          categoryName,
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 11.sp,
+                            height: 1.2,
+                            fontWeight: isSelected
+                                ? FontWeight.w600
+                                : FontWeight.w400,
+                            color: isSelected
+                                ? const Color(0xFF0264D3)
+                                : Colors.black,
+                          ),
                         ),
                       ),
                     ],
@@ -483,7 +522,7 @@ class _GroceryViewState extends State<GroceryView> {
                   padding: const EdgeInsets.all(8),
                   child: (item.image != null && item.image.isNotEmpty)
                       ? Image.network(
-                          fixImageUrl(item.image),
+                    ImageUrl.fixImageUrl(item.image),
                           fit: BoxFit.contain,
                           errorBuilder: (_, __, ___) => Icon(
                             Icons.image_not_supported,

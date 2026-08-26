@@ -12,13 +12,11 @@ class LauncherHelper {
     }
   }
 
-  static Future<void> sendSMS(String phoneNumber) async {
-    final Uri url = Uri(scheme: 'sms', path: phoneNumber);
-
+  static Future<void> openWhatsApp(String phoneNumber) async {
+    final String cleanNumber = phoneNumber.replaceAll(RegExp(r'[^\d+]'), '');
+    final Uri url = Uri.parse("https://wa.me/$cleanNumber");
     if (await canLaunchUrl(url)) {
       await launchUrl(url, mode: LaunchMode.externalApplication);
-    } else {
-      throw 'Could not launch $url';
     }
   }
 }

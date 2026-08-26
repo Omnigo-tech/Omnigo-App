@@ -1,3 +1,4 @@
+import 'dart:io'; // <-- Added for HttpOverrides
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -25,13 +26,26 @@ import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_event.
 import 'core/services/notifications_services.dart';
 import 'data/datasource/repositories/address_repository.dart';
 
+// SSL Handshake Error Fix Class
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+  }
+}
+
 final sl = GetIt.instance;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // SSL Handshake Error Fix Applied Here
+  HttpOverrides.global = MyHttpOverrides();
+
   setup();
   await Firebase.initializeApp();
-  //await NotificationService.init();
-  //await NotificationService.getToken();
 
   try {
     await NotificationService.init();
@@ -43,6 +57,7 @@ void main() async {
   // Screen orientation and basic UI mode
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   await SvgUtils.preCacheSVGs();
+
   runApp(
     MultiBlocProvider(
       providers: [
@@ -51,7 +66,7 @@ void main() async {
         ),
         BlocProvider(
           create: (_) =>
-              AddressBloc(sl<AddressRepository>())..add(LoadAddresses()),
+          AddressBloc(sl<AddressRepository>())..add(LoadAddresses()),
         ),
         BlocProvider(create: (context) => CallBloc()),
         BlocProvider(create: (_) => sl<ReviewBloc>()),

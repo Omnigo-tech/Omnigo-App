@@ -9,6 +9,7 @@ import 'package:grocery_app/presentation/screens/authentication/signup_screen.da
 import 'package:grocery_app/widgets/auth_button.dart';
 import 'package:grocery_app/widgets/auth_textfield.dart';
 
+import '../../../core/enums/otp_purpose.dart';
 import '../../../core/helper/constants/colors_resources.dart';
 import '../../../core/helper/constants/images-resources.dart';
 import '../../../core/helper/constants/strings-resource.dart';
@@ -16,9 +17,16 @@ import '../../../core/routes/AppRoutes.dart';
 import '../../../widgets/custom_snackbar.dart';
 import '../../bloc/auth/auth_bloc.dart';
 import '../../bloc/auth/auth_state.dart';
+import 'otp_screen.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  final String? phone;
+  final String? password;
+  const LoginScreen({
+    super.key,
+    this.phone,
+    this.password,
+  });
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -26,19 +34,29 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController emailController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+
+    phoneController.text = widget.phone ?? '';
+    passwordController.text = widget.password ?? '';
+  }
+
   Future<void> loginUser() async {
+
     if (!_formKey.currentState!.validate()) return;
+    final phone = phoneController.text.formatPhone();
     context.read<AuthBloc>().add(
-      LoginEvent(emailController.text.trim(), passwordController.text.trim()),
+      LoginEvent(phone, passwordController.text.trim()),
     );
   }
 
   @override
   void dispose() {
-    emailController.dispose();
+    phoneController.dispose();
     passwordController.dispose();
     super.dispose();
   }
@@ -50,33 +68,52 @@ class _LoginScreenState extends State<LoginScreen> {
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthSuccess) {
-            // 1. Get user data from state
             final user = state.data.user;
 
             if (user.isPhoneVerified == false) {
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                AppRoutes
-                    .phoneInput, // 👈 Apni phone verification screen ka route name check kar lein
-                (route) => false,
-              );
-            } else if (user.hasLocation == false) {
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                AppRoutes.location,
-                (route) => false,
+              context.read<AuthBloc>().add(
+                SendOtpEvent(
+                  userId: user.id,
+                  type: OtpType.phone,
+                  value: phoneController.text.formatPhone(),
+                  purpose: OtpPurpose.phoneVerification,
+                ),
               );
             } else {
               Navigator.pushNamedAndRemoveUntil(
                 context,
                 AppRoutes.home,
-                (route) => false,
+                    (route) => false,
               );
             }
           }
 
+          if (state is OtpSentState) {
+            CustomSnackBar.show(
+              context,
+              state.message,
+              isError: false,
+            );
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => OtpScreen(
+                  value: phoneController.text.formatPhone(),
+                  userId: state.userId!,
+                  purpose: OtpPurpose.phoneVerification,
+                  type: OtpType.phone,
+                ),
+              ),
+            );
+          }
+
           if (state is AuthFailure) {
-            CustomSnackBar.show(context, state.error, isError: true);
+            CustomSnackBar.show(
+              context,
+              state.error,
+              isError: true,
+            );
           }
         },
         builder: (context, state) {
@@ -107,7 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     SizedBox(height: 8.h),
                     Text(
-                      StringResources.enterEmailPassword,
+                      StringResources.enterPhonePassword,
                       style: GoogleFonts.dmSans(
                         color: AppColors.lightText,
                         fontSize: 14.sp,
@@ -116,11 +153,19 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(height: 32.h),
 
                     AuthTextField(
-                      label: StringResources.email,
-                      hint: "example@gmail.com",
-                      controller: emailController,
-                      keyboardType: TextInputType.emailAddress,
-                      validator: (v) => v.validateEmail(),
+                      label: StringResources.mobileNumber,
+                      hint:StringResources.phoneHint,
+                      controller: phoneController,
+                      keyboardType: TextInputType.phone,
+                      prefixText: "+92",
+                      prefixIcon: const Padding(
+                        padding: EdgeInsets.all(12),
+                        child: Text(
+                          "🇵🇰",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ),
+                      validator: (v) => v.validatePhone(),
                     ),
                     SizedBox(height: 20.h),
 

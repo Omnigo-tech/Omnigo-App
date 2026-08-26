@@ -9,13 +9,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/datasource/local/auth_local_data_source.dart';
 import '../../data/datasource/repositories/address_repository.dart';
 import '../../data/datasource/repositories/auth_repository.dart';
+import '../../data/datasource/repositories/fast_food_home_repository.dart';
 import '../../data/datasource/repositories/location_repository.dart';
 import '../../data/datasource/repositories/onboarding_repository.dart';
+import '../../data/datasource/repositories/restaurant_repository.dart';
 import '../../data/datasource/services/location_service.dart';
 import '../../presentation/bloc/auth/auth_bloc.dart';
+import '../../presentation/bloc/fast_foods/fast_food_home_bloc.dart';
 import '../../presentation/bloc/grocery_details/item_detail_bloc.dart';
 import '../../presentation/bloc/location/location_bloc.dart';
 import '../../presentation/bloc/onboarding/onboarding_bloc.dart';
+import '../../presentation/bloc/restaurant/restaurant_bloc.dart';
 import '../../presentation/grocery/grocery_bloc/grocery_bloc.dart';
 import '../network/api_service.dart';
 import '../network/dio_client.dart';
@@ -68,6 +72,16 @@ Future<void> setup() async {
   sl.registerLazySingleton<CartRepository>(() => CartRepository(sl<ApiService>()));
   sl.registerLazySingleton<AddressRepository>(() => AddressRepository(sl<ApiService>()));
   sl.registerLazySingleton(() => ReviewRepository(sl()));
+  sl.registerLazySingleton<FastFoodHomeRepository>(
+        () => FastFoodHomeRepository(
+      sl<ApiService>(),
+    ),
+  );
+  sl.registerLazySingleton<RestaurantRepository>(
+        () => RestaurantRepository(
+      sl<ApiService>(),
+    ),
+  );
 
   // ================= BLOCS =================
   sl.registerFactory<AuthBloc>(
@@ -80,6 +94,11 @@ Future<void> setup() async {
   sl.registerFactory(() => GroceryBloc(sl()));
   sl.registerFactory<OnboardingBloc>(() => OnboardingBloc(sl()));
   sl.registerFactory<ReviewBloc>(() => ReviewBloc(sl()));
+  sl.registerFactory<FastFoodHomeBloc>(
+        () => FastFoodHomeBloc(
+      sl<FastFoodHomeRepository>(),
+    ),
+  );
 
   sl.registerFactory<GroceryDetailBloc>(
         () => GroceryDetailBloc(
@@ -88,6 +107,12 @@ Future<void> setup() async {
           sl<CartRepository>(),
     ),
 
+  );
+
+  sl.registerFactory<RestaurantBloc>(
+        () => RestaurantBloc(
+      sl<RestaurantRepository>(),
+    ),
   );
 
 

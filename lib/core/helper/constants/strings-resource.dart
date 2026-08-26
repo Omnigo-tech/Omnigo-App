@@ -196,7 +196,7 @@ class StringResources {
   static const String minPasswordLength = 'Minimum 6 characters required';
   static const String termsOfService = 'Terms of Service';
   static const String privacyPolicy = 'Privacy Policy';
-  static const String enterEmailPassword = 'Enter your email and password';
+  static const String enterPhonePassword = 'Enter your phone and password';
   static const String forgotPassword = 'Forgot Password?';
   static const String dontHaveAccount = "Don't have an account?";
 

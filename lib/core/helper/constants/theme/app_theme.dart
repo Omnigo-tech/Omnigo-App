@@ -11,51 +11,60 @@ class AppTheme {
       brightness: Brightness.light,
       primaryColor: AppColors.primary,
       scaffoldBackgroundColor: AppColors.white,
-      
-      // Global Poppins font
-      textTheme: GoogleFonts.poppinsTextTheme().copyWith(
-        displayLarge: GoogleFonts.poppins(
+
+      // Global Inter font implementation
+      textTheme: GoogleFonts.interTextTheme().copyWith(
+        displayLarge: GoogleFonts.inter(
           fontSize: DimensionsResources.D_32,
           fontWeight: FontWeight.bold,
           color: AppColors.black,
         ),
-        titleLarge: GoogleFonts.poppins(
+        titleLarge: GoogleFonts.inter(
           fontSize: DimensionsResources.D_20,
           fontWeight: FontWeight.bold,
           color: AppColors.black,
         ),
-        bodyLarge: GoogleFonts.poppins(
+        titleMedium: GoogleFonts.inter(
+          fontSize: DimensionsResources.D_16,
+          fontWeight: FontWeight.bold,
+          color: AppColors.black,
+        ),
+        bodyLarge: GoogleFonts.inter(
           fontSize: DimensionsResources.D_16,
           fontWeight: FontWeight.w500,
           color: AppColors.black,
         ),
-        bodyMedium: GoogleFonts.poppins(
+        bodyMedium: GoogleFonts.inter(
           fontSize: DimensionsResources.D_14,
           color: AppColors.black,
         ),
-        labelLarge: GoogleFonts.poppins(
+        bodySmall: GoogleFonts.inter(
+          fontSize: DimensionsResources.D_12,
+          color: AppColors.grey,
+        ),
+        labelLarge: GoogleFonts.inter(
           fontSize: DimensionsResources.D_14,
           fontWeight: FontWeight.w600,
           color: AppColors.white,
         ),
-        labelSmall: GoogleFonts.poppins(
+        labelSmall: GoogleFonts.inter(
           fontSize: DimensionsResources.D_10,
           fontWeight: FontWeight.w600,
           color: AppColors.black,
         ),
-        headlineLarge: GoogleFonts.poppins(
+        headlineLarge: GoogleFonts.inter(
           fontSize: DimensionsResources.D_32,
           fontWeight: FontWeight.w400,
           color: AppColors.black,
         ),
       ),
 
-      appBarTheme:  AppBarTheme(
+      appBarTheme: AppBarTheme(
         backgroundColor: AppColors.white,
         elevation: DimensionsResources.D_0,
         centerTitle: true,
-        iconTheme: IconThemeData(color: AppColors.black),
-        titleTextStyle: GoogleFonts.poppins(
+        iconTheme: const IconThemeData(color: AppColors.black),
+        titleTextStyle: GoogleFonts.inter(
           color: AppColors.black,
           fontSize: DimensionsResources.D_18.w,
           fontWeight: FontWeight.w600,
@@ -69,7 +78,7 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(DimensionsResources.D_12.r),
           ),
-          textStyle:  TextStyle(
+          textStyle: TextStyle(
             fontSize: DimensionsResources.D_16.w,
             fontWeight: FontWeight.bold,
           ),
@@ -91,8 +100,8 @@ class AppTheme {
           borderRadius: BorderRadius.circular(DimensionsResources.D_12.r),
           borderSide: const BorderSide(color: AppColors.primary),
         ),
-        labelStyle: const TextStyle(color: AppColors.grey),
-        hintStyle: const TextStyle(color: AppColors.grey),
+        labelStyle: GoogleFonts.inter(color: AppColors.grey),
+        hintStyle: GoogleFonts.inter(color: AppColors.grey),
       ),
     );
   }

@@ -12,7 +12,7 @@ GroceryModel _$GroceryModelFromJson(Map<String, dynamic> json) => GroceryModel(
   category: json['category'] as String,
   images:
       (json['images'] as List<dynamic>?)?.map((e) => e as String).toList() ??
-      [],
+      const [],
   price: (json['price'] as num).toDouble(),
   description: json['description'] as String?,
   weight: json['weight'] as String?,

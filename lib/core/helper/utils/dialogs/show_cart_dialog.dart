@@ -266,57 +266,62 @@ class GlobalDialogs {
               ),
             ),
 
-            SizedBox(height: DimensionsResources.D_30.h),
+            SizedBox(height: DimensionsResources.D_24.h),
 
-            // Option 1: Standard Phone Dialer
-            SizedBox(
-              width: double.infinity,
-              height: DimensionsResources.D_56.h,
-              child: CustomButton(
-                onClick: () {
-                  LauncherHelper.makePhoneCall(phoneNumber);
-                  Navigator.pop(context);
-                },
-                text: StringResources.usePhoneDialer,
-                textColor: AppColors.black,
-                color: AppColors.border,
-                borderColor: AppColors.grey,
+            // Option 1: Call via Phone Dialer
+            ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.border,
+                minimumSize: Size(double.infinity, DimensionsResources.D_56.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(DimensionsResources.D_12.r),
+                ),
+                side: const BorderSide(color: AppColors.grey),
               ),
+              icon: const Icon(Icons.phone, color: AppColors.black),
+              label: Text(
+                'Call via Dialer',
+                style: TextStyle(
+                  color: AppColors.black,
+                  fontSize: DimensionsResources.FONT_SIZE_LARGE.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              onPressed: () {
+                LauncherHelper.makePhoneCall(phoneNumber);
+                Navigator.pop(context);
+              },
             ),
 
             SizedBox(height: DimensionsResources.D_12.h),
 
-            // Option 2: Live In-App Internet Call (Socket Integrated)
-            SizedBox(
-              width: double.infinity,
-              height: DimensionsResources.D_56.h,
-              child: CustomButton(
-                onClick: () {
-                  Navigator.pop(context); // Bottom sheet ko pehle close karein
-
-                  // Delayed navigation setup taake UI thread block na ho aur arguments cleanly pass hon
-                  Future.delayed(const Duration(milliseconds: 100), () {
-                    Navigator.pushNamed(
-                      context,
-                      AppRoutes.call,
-                      arguments: {
-                        'conversationId': conversationId,
-                        'receiverId': receiverId,
-                        'currentUserId': currentUserId,
-                        'receiverName': receiverName,
-                      },
-                    );
-                  });
-                },
-                text: StringResources.appCall,
-                textColor: AppColors.white,
-                subText: StringResources.internetConnectionHint,
+            // Option 2: Call via WhatsApp
+            ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF25D366), // WhatsApp Green Color
+                minimumSize: Size(double.infinity, DimensionsResources.D_56.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(DimensionsResources.D_12.r),
+                ),
               ),
+              icon: const Icon(Icons.chat_bubble, color: AppColors.white),
+              label: Text(
+                'Call via WhatsApp',
+                style: TextStyle(
+                  color: AppColors.white,
+                  fontSize: DimensionsResources.FONT_SIZE_LARGE.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              onPressed: () {
+                LauncherHelper.openWhatsApp(phoneNumber);
+                Navigator.pop(context);
+              },
             ),
 
-            SizedBox(height: DimensionsResources.D_50.h),
+            SizedBox(height: DimensionsResources.D_30.h),
           ],
         ),
       ),
     );
-  }}
+    }}

@@ -3,8 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grocery_app/core/helper/constants/colors_resources.dart';
 import 'package:grocery_app/core/helper/constants/strings-resource.dart';
+import 'package:grocery_app/presentation/fastfoodscreens/home/fast_food_home_screen.dart';
 
 import '../core/helper/constants/dimensions-resource.dart';
+import '../core/routes/AppRoutes.dart';
 
 class PromoSection extends StatelessWidget {
   const PromoSection({super.key});
@@ -25,21 +27,26 @@ class PromoSection extends StatelessWidget {
                 Expanded(
                   child: Column(
                     children: [
-                      Container(
-                        height: DimensionsResources.D_120.h,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(
-                            DimensionsResources.D_18.r,
+                      InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(context, AppRoutes.fastFoodHome);
+                        },
+                        child: Container(
+                          height: DimensionsResources.D_120.h,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(
+                              DimensionsResources.D_18.r,
+                            ),
                           ),
-                        ),
-                        child: Center(
-                          child: Text(
-                            StringResources.fastFood,
-                            style: GoogleFonts.lora(
-                              fontSize: DimensionsResources.D_14.sp,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.black,
+                          child: Center(
+                            child: Text(
+                              StringResources.fastFood,
+                              style: GoogleFonts.lora(
+                                fontSize: DimensionsResources.D_14.sp,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.black,
+                              ),
                             ),
                           ),
                         ),

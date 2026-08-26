@@ -4,10 +4,10 @@ abstract class AuthEvent {}
 
 class SignupEvent extends AuthEvent {
   final String name;
-  final String email;
+  final String phone;
   final String password;
 
-  SignupEvent(this.name, this.email, this.password);
+  SignupEvent(this.name, this.phone, this.password);
 }
 
 class GoogleLoginEvent extends AuthEvent {}
@@ -15,10 +15,10 @@ class FacebookLoginEvent extends AuthEvent {}
 
 
 class LoginEvent extends AuthEvent {
-  final String email;
+  final String phone;
   final String password;
 
-  LoginEvent(this.email, this.password);
+  LoginEvent(this.phone, this.password);
 }
 
 class SendOtpEvent extends AuthEvent {

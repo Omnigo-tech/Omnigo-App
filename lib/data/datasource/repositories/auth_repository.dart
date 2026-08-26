@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
+// import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:grocery_app/core/enums/otp_purpose.dart';
 import 'package:grocery_app/data/models/user_model.dart';
 import '../../../core/error/error_handler.dart';
 import '../../../core/helper/extension/otp_purpose_extension.dart';
-import '../../../core/helper/utils/phone_formatter.dart';
 import '../../../core/network/api_service.dart';
 import '../../models/google_login_response_model.dart';
 import '../local/auth_local_data_source.dart';
@@ -70,13 +70,14 @@ class AuthRepository {
 
   Future<UserModel> signup({
     required String name,
-    required String email,
+    required String phone,
     required String password,
   }) async {
     try {
       final body = {
         "name": name,
-        "email": email,
+        "phone": phone,
+        "role":"user",
         "password": password,
       };
 
@@ -87,11 +88,11 @@ class AuthRepository {
   }
 
   Future<UserModel> login({
-    required String email,
+    required String phone,
     required String password,
   }) async {
     try {
-      final data = {"email": email, "password": password};
+      final data = {"phone": phone, "password": password};
       return await apiService.login(data);
     } on DioException catch (e) {
       throw ErrorHandler.handle(e);

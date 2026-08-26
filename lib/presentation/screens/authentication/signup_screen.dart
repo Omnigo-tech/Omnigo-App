@@ -28,16 +28,17 @@ class _SignupScreenState extends State<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
 
   final nameController = TextEditingController();
-  final emailController = TextEditingController();
+  final phoneController = TextEditingController();
   final passwordController = TextEditingController();
 
   void signup() {
     if (!_formKey.currentState!.validate()) return;
 
+    final phone = phoneController.text.formatPhone();
     context.read<AuthBloc>().add(
       SignupEvent(
         nameController.text.trim(),
-        emailController.text.trim(),
+        phone,
         passwordController.text.trim(),
       ),
     );
@@ -46,7 +47,7 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   void dispose() {
     nameController.dispose();
-    emailController.dispose();
+    phoneController.dispose();
     passwordController.dispose();
     super.dispose();
   }
@@ -61,7 +62,12 @@ class _SignupScreenState extends State<SignupScreen> {
           if (state is AuthSuccess) {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (_) => const LoginScreen()),
+              MaterialPageRoute(
+                builder: (_) => LoginScreen(
+                  phone: phoneController.text.trim(),
+                  password: passwordController.text.trim(),
+                ),
+              ),
             );
           }
 
@@ -119,11 +125,16 @@ class _SignupScreenState extends State<SignupScreen> {
                     SizedBox(height: 20.h),
 
                     AuthTextField(
-                      label: StringResources.email,
-                      hint: "example@gmail.com",
-                      controller: emailController,
-                      keyboardType: TextInputType.emailAddress,
-                      validator: (v) => v.validateEmail(),
+                      label: StringResources.mobileNumber,
+                      hint: StringResources.phoneHint,
+                      controller: phoneController,
+                      keyboardType: TextInputType.phone,
+                      prefixText: "+92",
+                      prefixIcon: const Padding(
+                        padding: EdgeInsets.all(12),
+                        child: Text("🇵🇰", style: TextStyle(fontSize: 20)),
+                      ),
+                      validator: (v) => v.validatePhone(),
                     ),
 
                     SizedBox(height: 20.h),

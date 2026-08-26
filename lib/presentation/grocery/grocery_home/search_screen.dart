@@ -13,7 +13,10 @@ import 'package:grocery_app/presentation/bloc/address/address_state.dart';
 import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_bloc.dart';
 import 'package:grocery_app/presentation/grocery/grocery_home/filter_bottom_sheet.dart';
 import 'package:grocery_app/presentation/screens/user_interface/details/grocery_details.dart';
-import 'package:grocery_app/widgets/circle_button_widget.dart';
+import 'package:grocery_app/widgets/circle_button_widget.dart'; // Import AuthLocalDataSource
+import '../../../core/di/service_locator.dart';
+import '../../../core/helper/utils/phone_formatter.dart';
+import '../../../data/datasource/local/auth_local_data_source.dart';
 import '../grocery_bloc/grocery_bloc.dart';
 import '../grocery_bloc/grocery_event.dart';
 import '../grocery_bloc/grocery_state.dart';
@@ -29,11 +32,6 @@ class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController searchController = TextEditingController();
   bool isSearching = false;
 
-  // Fix localhost → real IP for physical device
-  String fixImageUrl(String url) {
-    return url.replaceAll('localhost', '192.168.1.106');
-  }
-
   @override
   void dispose() {
     searchController.dispose();
@@ -47,11 +45,9 @@ class _SearchScreenState extends State<SearchScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            SizedBox(height: DimensionsResources.D_25.h),
+            SizedBox(height: DimensionsResources.D_15.h),
             _buildHeader(context),
             _buildSearchField(context),
-            // Show suggestions from API when not searching,
-            // show results when searching
             Expanded(
               child: isSearching ? _buildResults() : _buildSuggestions(),
             ),
@@ -65,17 +61,31 @@ class _SearchScreenState extends State<SearchScreen> {
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: DimensionsResources.D_10.sp,
-        vertical: DimensionsResources.D_5.h,
       ),
       child: Row(
         children: [
           SizedBox(width: DimensionsResources.D_10.w),
           BlocBuilder<AddressBloc, AddressState>(
             builder: (context, state) {
-              final address = state.selectedAddress;
+              // 1. First priority: Selected address from AddressBloc state
+              String? addressToShow = state.selectedAddress?.address;
+
+              // 2. Fallback: If state address is null or empty, fetch from local storage
+              if (addressToShow == null || addressToShow.trim().isEmpty) {
+                final localData = sl<AuthLocalDataSource>().getUserLocation();
+                addressToShow = localData?['address'];
+              }
+
+              // 3. Final default value if local storage is also empty
+              if (addressToShow == null || addressToShow.trim().isEmpty) {
+                addressToShow = "No Address Selected";
+              }
+
               return Expanded(
                 child: Text(
-                  address?.address ?? "",
+                  addressToShow,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: AppColors.darkGreen,
                     fontSize: DimensionsResources.FONT_SIZE_SMALL,
@@ -108,7 +118,8 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget _buildSearchField(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(DimensionsResources.D_10.h),
+      padding: EdgeInsets.symmetric(horizontal: DimensionsResources.D_18.h,vertical: DimensionsResources.D_10.h ),
+
       child: Row(
         children: [
           Expanded(
@@ -161,7 +172,6 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  // Suggestions from API (product names extracted in bloc)
   Widget _buildSuggestions() {
     return BlocBuilder<GroceryBloc, GroceryState>(
       builder: (context, state) {
@@ -214,19 +224,23 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  // Search results from API
   Widget _buildResults() {
     return BlocBuilder<GroceryBloc, GroceryState>(
       builder: (context, state) {
         if (state.isSearching) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
         }
 
         if (state.searchResults.isEmpty) {
           return const Center(
             child: Text(
               "Oops! No items found...",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           );
         }
@@ -242,16 +256,20 @@ class _SearchScreenState extends State<SearchScreen> {
           itemCount: state.searchResults.length,
           itemBuilder: (_, index) {
             final item = state.searchResults[index];
+            final imageUrl = item.image;
+
             return GestureDetector(
               onTap: () {
                 final detailItem = GroceryItemModel(
                   id: item.id,
                   name: item.name,
-                  image: item.image!,
+                  image: item.image ?? '',
                   price: item.price,
-                  description: item.description ?? "No description available.",
+                  description:
+                  item.description ?? "No description available.",
                   weight: item.weight ?? "N/A",
                 );
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -273,25 +291,28 @@ class _SearchScreenState extends State<SearchScreen> {
                   children: [
                     Expanded(
                       child: Center(
-                        // ✅ Handle empty image URL
-                        child: item.image!.isNotEmpty
+                        child: imageUrl != null && imageUrl.isNotEmpty
                             ? Image.network(
-                                fixImageUrl(item.image!),
-                                fit: BoxFit.contain,
-                                errorBuilder: (_, __, ___) => const Icon(
-                                  Icons.image_not_supported,
-                                  color: Colors.grey,
-                                  size: 40,
-                                ),
-                              )
+                          ImageUrl.fixImageUrl(imageUrl),
+                          fit: BoxFit.contain,
+                          errorBuilder: (_, __, ___) {
+                            return const Icon(
+                              Icons.image_not_supported,
+                              color: Colors.grey,
+                              size: 40,
+                            );
+                          },
+                        )
                             : const Icon(
-                                Icons.image_not_supported,
-                                color: Colors.grey,
-                                size: 40,
-                              ),
+                          Icons.image_not_supported,
+                          color: Colors.grey,
+                          size: 40,
+                        ),
                       ),
                     ),
+
                     const SizedBox(height: 8),
+
                     Text(
                       item.name,
                       style: TextStyle(
@@ -301,6 +322,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -311,6 +333,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             fontWeight: FontWeight.w500,
                           ),
                         ),
+
                         CustomCircleBtn(
                           icon: Icons.add,
                           isAdd: true,
@@ -320,19 +343,22 @@ class _SearchScreenState extends State<SearchScreen> {
                             final detailItem = GroceryItemModel(
                               id: item.id,
                               name: item.name,
-                              image: item.image!,
+                              image: item.image ?? '',
                               price: item.price,
                               description:
-                                  item.description ??
+                              item.description ??
                                   "No description available.",
                               weight: item.weight ?? "N/A",
                             );
+
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (_) => BlocProvider.value(
                                   value: context.read<GroceryDetailBloc>(),
-                                  child: DetailScreen(item: detailItem),
+                                  child: DetailScreen(
+                                    item: detailItem,
+                                  ),
                                 ),
                               ),
                             );

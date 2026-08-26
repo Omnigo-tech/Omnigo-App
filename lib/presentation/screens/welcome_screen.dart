@@ -23,14 +23,7 @@ class WelcomeScreen extends StatelessWidget {
             final userData = state.data;
             final user = userData.user;
 
-
-            if (user.isPhoneVerified == false) {
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                AppRoutes.phoneInput, // 👈 Apni phone verification screen ka route name check kar lein
-                    (route) => false,
-              );
-            } else if (user.hasLocation == false) {
+            if (user.hasLocation == false) {
 
               Navigator.pushNamedAndRemoveUntil(
                 context,
@@ -78,7 +71,7 @@ class WelcomeScreen extends StatelessWidget {
                             icon: Icons.g_mobiledata,
                             check: false,
                             onTap: () {
-                              Navigator.pushNamed(context, AppRoutes.signup);
+                              Navigator.pushNamed(context, AppRoutes.login);
                             },
                           ),
                           const SizedBox(height: 15),

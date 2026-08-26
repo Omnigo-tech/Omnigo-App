@@ -50,13 +50,8 @@ extension ValidationExtension on String? {
     return null;
   }
 
-  String? formatPhone(String phone) {
-    phone = phone.trim();
-
-    if (!phone.startsWith('0')) {
-      return '0$phone';
-    }
-
-    return phone;
+  String formatPhone() {
+    final phone = this?.trim() ?? '';
+    return phone.startsWith('0') ? phone : '0$phone';
   }
 }

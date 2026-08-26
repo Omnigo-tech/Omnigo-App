@@ -64,6 +64,16 @@ class ImageResource {
     BANNER_IMAGE2,
     BANNER_IMAGE3,
   ];
+  static const String PIZA_IMG = '${DIR_IMAGE}piza.png';
+  static const String BURGER_IMG = '${DIR_IMAGE}burger.png';
+  static const String CRISPY_IMG = '${DIR_IMAGE}crispy.png';
+  static const String PASTA_IMG = '${DIR_IMAGE}pasta.png';
+  static const String ROLL_IMG = '${DIR_IMAGE}roll.png';
+  static const String PIZA_GARDEN_LOGO = '${DIR_IMAGE}piza_garden_lago.png';
+  static const String QAISER_LOGO = '${DIR_IMAGE}qaiser_rest_lago.png';
+  static const String MATKO_MATKI = '${DIR_IMAGE}matko_matki_lago.png';
+
+
   static const String HAND_DROP = '${DIR_IMAGE}hand_Icon_img.png';
   static const String LEAVE_DOOR_DROP = '${DIR_IMAGE}leave_door_img.png';
   static const String OUTSIDE_DROP = '${DIR_IMAGE}par_outdoor_img.png';
@@ -88,6 +98,4 @@ class ImageResource {
   static const String STORE_ICON = '${DIR_ICON}store_icon.svg';
   static const String SELECT_STAR_ICON = '${DIR_ICON}select_star_icon.svg';
   static const String UNSELECT_STAR_ICON = '${DIR_ICON}unselect_star_icon.svg';
-
-
 }

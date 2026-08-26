@@ -20,7 +20,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
         final response = await repository.signup(
           name: event.name,
-          email: event.email,
+          phone: event.phone,
           password: event.password,
         );
 
@@ -46,7 +46,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       try {
         final res = await repository.login(
-          email: event.email,
+          phone: event.phone,
           password: event.password,
         );
         await repository.localDataSource.saveToken(
@@ -208,7 +208,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     // on<FacebookLoginEvent>((event, emit) async {
     //   emit(AuthLoading());
     //   try {
-    //     // final res = await repository.loginWithFacebook();
+    //     final res = await repository.loginWithFacebook();
     //     await repository.localDataSource.saveToken(res.token);
     //     await repository.localDataSource.saveUserId(res.user.id);
     //

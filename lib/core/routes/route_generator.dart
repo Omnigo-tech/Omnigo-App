@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:grocery_app/data/datasource/repositories/fast_food_home_repository.dart';
+import 'package:grocery_app/presentation/bloc/fast_foods/fast_food_home_bloc.dart';
+import 'package:grocery_app/presentation/fastfoodscreens/home/restaurant_detail_screen.dart';
 import 'package:grocery_app/widgets/categories_widget.dart'
     show GroceryHomeArgs;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,12 +22,14 @@ import 'package:grocery_app/widgets/bottom_navigation_bar.dart';
 
 import '../../data/datasource/remote/socket_service.dart';
 import '../../data/datasource/repositories/address_repository.dart';
+import '../../data/models/fast_foods_models/restaurant_model.dart';
 import '../../data/datasource/repositories/chat_repository.dart';
 import '../../presentation/bloc/chat/chat_bloc.dart';
 import '../../presentation/bloc/home/home_bloc.dart';
 import '../../presentation/bloc/home/home_event.dart';
 import '../../presentation/bloc/tracking/tracking_bloc.dart';
 import '../../presentation/bloc/tracking/tracking_event.dart';
+import '../../presentation/fastfoodscreens/home/fast_food_home_screen.dart';
 import '../../presentation/screens/authentication/location_screen.dart';
 import '../../presentation/screens/authentication/login_screen.dart';
 import '../../presentation/screens/authentication/otp_screen.dart';
@@ -69,8 +74,6 @@ class RouteGenerator {
         );
       case AppRoutes.location:
         return MaterialPageRoute(builder: (_) => const LocationScreen());
-      case AppRoutes.phoneInput:
-        return MaterialPageRoute(builder: (_) => const PhoneInputScreen());
       case AppRoutes.home:
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
@@ -165,6 +168,20 @@ class RouteGenerator {
         );
       case AppRoutes.review:
         return MaterialPageRoute(builder: (_) => const ReviewScreen());
+
+      case AppRoutes.fastFoodHome:
+        return MaterialPageRoute(
+          builder: (_) =>
+              BlocProvider(create: (_) => FastFoodHomeBloc(sl<FastFoodHomeRepository>()), child: FastFoodHomeScreen()),
+        );
+      case AppRoutes.restaurantScreen:
+        final restaurantId =
+        settings.arguments as String;
+        return MaterialPageRoute(
+          builder: (_) => RestaurantDetailScreen(
+            restaurantId: restaurantId,
+          ),
+        );
 
       default:
         return MaterialPageRoute(

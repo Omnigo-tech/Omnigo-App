@@ -77,10 +77,9 @@ class _AuthTextFieldState extends State<AuthTextField> {
             ),
             prefixIcon: widget.prefixIcon,
             prefixText: widget.prefixText,
-            prefixStyle: const TextStyle(
-              color: Colors.black,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
+            prefixStyle: GoogleFonts.dmSans(
+              color: AppColors.black,
+              fontSize: 14.sp,
             ),
             suffixIcon: widget.obscure
                 ? IconButton(

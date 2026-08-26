@@ -14,11 +14,11 @@ import '../../../../core/helper/utils/phone_formatter.dart';
 import '../../../../widgets/circle_button_widget.dart';
 import '../../../../widgets/custom_snackbar.dart';
 import '../../../../widgets/info_glosery_card_widget.dart';
+import '../../../bloc/grocery_details/grocery_ui_effect.dart';
 import '../../../bloc/grocery_details/item_detail_bloc.dart';
 import '../../../bloc/grocery_details/item_detail_event.dart';
 import '../../../bloc/grocery_details/item_detail_state.dart';
-import '../../../../core/routes/AppRoutes.dart';
-
+import 'dart:async';
 class DetailScreen extends StatefulWidget {
   final GroceryItemModel item;
 
@@ -34,11 +34,16 @@ class _DetailScreenState extends State<DetailScreen> {
   @override
   void initState() {
     super.initState();
+
     final bloc = context.read<GroceryDetailBloc>();
-    final isExistInCart = bloc.state.cart.any((e) => e.id == widget.item.id);
+
+    final isExistInCart =
+    bloc.state.cart.any((e) => e.id == widget.item.id);
 
     if (isExistInCart) {
-      _localQuantity = bloc.state.cart.firstWhere((e) => e.id == widget.item.id).quantity;
+      _localQuantity = bloc.state.cart
+          .firstWhere((e) => e.id == widget.item.id)
+          .quantity;
     } else {
       _localQuantity = 1;
     }
@@ -46,27 +51,7 @@ class _DetailScreenState extends State<DetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<GroceryDetailBloc, GroceryDetailState>(
-      listenWhen: (previous, current) => current.message.isNotEmpty,
-      listener: (context, state) {
-        final msg = state.message.toLowerCase();
-
-        // Agar item already cart mein hai ya error hai to sirf SnackBar dikhao
-        if (msg.contains('already') || msg.contains('favorites') || msg.contains('failed')) {
-          CustomSnackBar.show(
-            context,
-            state.message,
-            isError: msg.contains('failed') || msg.contains('already'),
-          );
-        } else {
-          // Agar successfully add hua hai tabhi sirf Dialog show karo
-          GlobalDialogs.showAddedToCartDialog(
-            context,
-            selectedItems: [widget.item.copyWith(quantity: _localQuantity)],
-          );
-        }
-      },
-      child: BlocBuilder<GroceryDetailBloc, GroceryDetailState>(
+    return BlocBuilder<GroceryDetailBloc, GroceryDetailState>(
         builder: (context, state) {
           final currentItem = state.items.isNotEmpty
               ? state.items.firstWhere(
@@ -300,7 +285,6 @@ class _DetailScreenState extends State<DetailScreen> {
             ),
           );
         },
-      ),
-    );
+      );
   }
 }

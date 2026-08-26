@@ -74,6 +74,10 @@ class ImageResource {
   static const String MATKO_MATKI = '${DIR_IMAGE}matko_matki_lago.png';
 
 
+  static const String HAND_DROP = '${DIR_IMAGE}hand_Icon_img.png';
+  static const String LEAVE_DOOR_DROP = '${DIR_IMAGE}leave_door_img.png';
+  static const String OUTSIDE_DROP = '${DIR_IMAGE}par_outdoor_img.png';
+  static const String MEET_DOOR_DROP = '${DIR_IMAGE}door_img.png';
 
   static const String DIR_ICON = 'assets/icons/';
   static const String ICON_EMAIL = '${DIR_ICON}icon_email.svg';

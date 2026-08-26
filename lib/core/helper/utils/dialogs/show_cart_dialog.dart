@@ -8,6 +8,7 @@ import 'package:grocery_app/core/helper/constants/strings-resource.dart';
 import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_bloc.dart';
 import 'package:grocery_app/presentation/screens/user_interface/my_cart/my_cart_screen.dart';
 
+import '../../../../main.dart';
 import '../../../../presentation/bloc/call/call_bloc.dart';
 import '../../../../presentation/bloc/call/call_event.dart';
 import '../../../../widgets/cutom_button.dart';
@@ -15,8 +16,9 @@ import '../../../routes/AppRoutes.dart';
 import '../launcher_helper.dart';
 
 class GlobalDialogs {
-  static void showAddedToCartDialog(BuildContext context,
+  static void showAddedToCartDialog(
       {List? selectedItems}) {
+    final context = navigatorKey.currentContext!;
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -60,13 +62,14 @@ class GlobalDialogs {
                 SizedBox(height: DimensionsResources.D_24.h),
                 CustomButton(
                   onClick: () {
-                    Navigator.pop(dialogContext);
-                    Navigator.push(
-                      context,
+                    Navigator.of(dialogContext).pop();
+
+                    navigatorKey.currentState!.push(
                       MaterialPageRoute(
                         builder: (_) => BlocProvider.value(
-                          value: context.read<GroceryDetailBloc>(),
-                          child: MyCartScreen(),
+                          value: navigatorKey.currentContext!
+                              .read<GroceryDetailBloc>(),
+                          child: const MyCartScreen(),
                         ),
                       ),
                     );
@@ -78,10 +81,9 @@ class GlobalDialogs {
 
                 TextButton(
                   onPressed: () {
-                    Navigator.pop(dialogContext);
+                    Navigator.of(dialogContext).pop();
 
-                    Navigator.pushNamedAndRemoveUntil(
-                      context,
+                    navigatorKey.currentState!.pushNamedAndRemoveUntil(
                       AppRoutes.groceryhome,
                           (route) => false,
                     );
@@ -207,7 +209,14 @@ class GlobalDialogs {
       },
     );
   }
-  static void showCallDriverSheet(BuildContext context, {required String phoneNumber}) {
+  static void showCallDriverSheet(
+      BuildContext context, {
+        required String phoneNumber,
+        required String conversationId,
+        required String receiverId,
+        required String currentUserId,
+        required String receiverName,
+      }) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,

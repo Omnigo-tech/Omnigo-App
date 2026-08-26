@@ -1,9 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:grocery_app/core/helper/constants/colors_resources.dart';
 import 'package:grocery_app/core/helper/constants/dimensions-resource.dart';
+import 'package:grocery_app/core/helper/constants/images-resources.dart';
 import 'package:grocery_app/core/helper/constants/strings-resource.dart';
 import 'package:grocery_app/presentation/bloc/address/address_bloc.dart';
 import 'package:grocery_app/presentation/bloc/address/address_state.dart';
@@ -14,10 +16,13 @@ import 'package:grocery_app/presentation/screens/user_interface/address_list/add
 import 'package:grocery_app/presentation/screens/user_interface/address_list/address_screen.dart';
 import 'package:grocery_app/widgets/app_bar_widget.dart';
 import 'package:grocery_app/widgets/circle_button_widget.dart';
+import '../../../../core/di/service_locator.dart';
 import '../../../../core/helper/utils/phone_formatter.dart';
 import '../../../../core/routes/AppRoutes.dart';
+import '../../../../data/datasource/local/auth_local_data_source.dart';
 import '../../../../widgets/confirm_order.dart';
 import '../../../../widgets/cutom_button.dart';
+import '../../../bloc/grocery_details/grocery_ui_effect.dart';
 
 class CheckoutSummaryScreen extends StatefulWidget {
   final String? selectedMethod;
@@ -30,24 +35,69 @@ class CheckoutSummaryScreen extends StatefulWidget {
 
 class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
   late String currentMethod;
+  late StreamSubscription subscription;
+
+  // Drop-off Preferences State Variables
+  String selectedDropOff = "Hand it to me";
+  final TextEditingController instructionsController = TextEditingController();
+
+  final List<Map<String, String>> dropOffOptions = [
+    {"title": "Hand it to me", "icon": ImageResource.HAND_DROP},
+    {"title": "Meet at my door", "icon": ImageResource.MEET_DOOR_DROP},
+    {"title": "Meet Outside", "icon": ImageResource.OUTSIDE_DROP},
+    {"title": "Leave at my door", "icon": ImageResource.LEAVE_DOOR_DROP},
+  ];
 
   @override
   void initState() {
     super.initState();
+
     currentMethod =
-        (widget.selectedMethod == null || widget.selectedMethod!.isEmpty)
-        ? "cash_on_delivery"
-        : widget.selectedMethod!;
+    widget.selectedMethod?.isNotEmpty == true
+        ? widget.selectedMethod!
+        : "cash_on_delivery";
+
+    subscription = context
+        .read<GroceryDetailBloc>()
+        .effectStream
+        .listen((effect) {
+
+      if (effect is OrderPlacedEffect) {
+        final userId = sl<AuthLocalDataSource>().getUserId();
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ConfirmOrder(
+              orderId: effect.orderId,
+              userId: userId!,
+            ),
+          ),
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    subscription.cancel();
+    instructionsController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
       backgroundColor: AppColors.lightBackground,
       appBar: const CustomAppBar(title: StringResources.checkoutSummary),
       body: BlocBuilder<GroceryDetailBloc, GroceryDetailState>(
         builder: (context, state) {
           final cartList = state.cart;
+          final localData = sl<AuthLocalDataSource>().getUserLocation();
+          String currentAddress = localData?['address'] ?? '';
+          String id = localData?['id'] ?? '';
 
           double subtotal = 0;
           for (var item in cartList) {
@@ -67,12 +117,10 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // --- DELIVERY ADDRESS SECTION ---
                         Text(
                           "Delivery Address",
-                          style: GoogleFonts.dmSans(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: textTheme.titleMedium,
                         ),
                         SizedBox(height: 10.h),
                         BlocBuilder<AddressBloc, AddressState>(
@@ -107,16 +155,19 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             address?.locationname ??
-                                                "Select Address",
-                                            style: const TextStyle(
+                                                "Saved Address",
+                                            style: textTheme.bodyLarge?.copyWith(
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
-                                          Text(address?.address ?? ""),
+                                          Text(
+                                            address?.address ?? currentAddress,
+                                            style: textTheme.bodyMedium,
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -130,7 +181,7 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                             );
                           },
                         ),
-                        SizedBox(height: 15.h),
+                        SizedBox(height: 10.h),
                         Center(
                           child: GestureDetector(
                             onTap: () {
@@ -155,21 +206,137 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                                   ),
                                 ),
                                 SizedBox(height: 5.h),
-                                const Text(
+                                Text(
                                   "Add new address",
-                                  style: TextStyle(color: Colors.grey),
+                                  style: textTheme.bodySmall,
                                 ),
                               ],
                             ),
                           ),
                         ),
+
+                        SizedBox(height: 20.h),
+
+                        // --- DROP-OFF OPTIONS ---
+                        Theme(
+                          data: Theme.of(context).copyWith(
+                            dividerColor: Colors.transparent,
+                          ),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.white,
+                              borderRadius: BorderRadius.circular(12.r),
+                            ),
+                            child: ExpansionTile(
+                              tilePadding: EdgeInsets.symmetric(
+                                horizontal: 14.w,
+                                vertical: 2.h,
+                              ),
+                              childrenPadding: EdgeInsets.symmetric(
+                                horizontal: 14.w,
+                                vertical: 10.h,
+                              ),
+                              title: Text(
+                                "Drop-off Options: $selectedDropOff",
+                                style: textTheme.bodyLarge?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Divider(color: AppColors.border),
+                                    ...dropOffOptions.map((option) {
+                                      final isSelected =
+                                          selectedDropOff == option["title"];
+                                      return RadioListTile<String>(
+                                        value: option["title"]!,
+                                        groupValue: selectedDropOff,
+                                        contentPadding: EdgeInsets.zero,
+                                        activeColor: AppColors.primary,
+                                        title: Row(
+                                          children: [
+                                            Image.asset(
+                                              option["icon"]!,
+                                              width: 20.w,
+                                              height: 20.h,
+                                              fit: BoxFit.contain,
+                                              errorBuilder: (context, error, stackTrace) =>
+                                              const Icon(
+                                                Icons.image_not_supported,
+                                                size: 20,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                            SizedBox(width: 10.w),
+                                            Text(
+                                              option["title"]!,
+                                              style: textTheme.bodyMedium?.copyWith(
+                                                fontWeight: isSelected
+                                                    ? FontWeight.bold
+                                                    : FontWeight.normal,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        onChanged: (value) {
+                                          if (value != null) {
+                                            setState(() {
+                                              selectedDropOff = value;
+                                            });
+                                          }
+                                        },
+                                      );
+                                    }).toList(),
+                                    SizedBox(height: 10.h),
+                                    Text(
+                                      "Instructions for delivery person",
+                                      style: textTheme.bodyMedium?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    SizedBox(height: 8.h),
+                                    TextField(
+                                      controller: instructionsController,
+                                      style: textTheme.bodyMedium,
+                                      decoration: InputDecoration(
+                                        hintText:
+                                        "Example: Please knock instead of using door bell",
+                                        hintStyle: textTheme.bodySmall,
+                                        contentPadding: EdgeInsets.symmetric(
+                                          horizontal: 12.w,
+                                          vertical: 10.h,
+                                        ),
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                          BorderRadius.circular(8.r),
+                                          borderSide: const BorderSide(
+                                            color: AppColors.border,
+                                          ),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderRadius:
+                                          BorderRadius.circular(8.r),
+                                          borderSide: const BorderSide(
+                                            color: AppColors.primary,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+
                         SizedBox(height: 25.h),
+
+                        // --- PRODUCTS IN CART SECTION ---
                         Text(
                           "Products in Cart",
-                          style: GoogleFonts.dmSans(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: textTheme.titleMedium,
                         ),
                         SizedBox(height: 10.h),
                         Container(
@@ -182,7 +349,7 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                             physics: const NeverScrollableScrollPhysics(),
                             itemCount: cartList.length,
                             separatorBuilder: (_, _) =>
-                                const Divider(color: AppColors.border),
+                            const Divider(color: AppColors.border),
                             itemBuilder: (context, index) {
                               final item = cartList[index];
 
@@ -190,7 +357,7 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                                 padding: EdgeInsets.all(12.w),
                                 child: Row(
                                   children: [
-                                    Container(
+                                    SizedBox(
                                       width: 60.w,
                                       height: 60.h,
                                       child: Image.network(
@@ -200,36 +367,33 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                                         fit: BoxFit.contain,
                                         errorBuilder:
                                             (context, error, stackTrace) =>
-                                                const Icon(
-                                                  Icons.image_not_supported,
-                                                  color: Colors.grey,
-                                                  size: 40,
-                                                ),
+                                        const Icon(
+                                          Icons.image_not_supported,
+                                          color: Colors.grey,
+                                          size: 40,
+                                        ),
                                       ),
                                     ),
                                     SizedBox(width: 10.w),
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             item.name,
-                                            style: GoogleFonts.dmSans(
+                                            style: textTheme.bodyLarge?.copyWith(
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                           Text(
                                             item.weight ?? '',
-                                            style: const TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.grey,
-                                            ),
+                                            style: textTheme.bodySmall,
                                           ),
                                           SizedBox(height: 5.h),
                                           Text(
                                             "\$${item.price}",
-                                            style: GoogleFonts.dmSans(
+                                            style: textTheme.bodyLarge?.copyWith(
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
@@ -247,12 +411,15 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                                             context
                                                 .read<GroceryDetailBloc>()
                                                 .add(
-                                                  DecrementQtyEvent(item.id),
-                                                );
+                                              DecrementQtyEvent(item.id),
+                                            );
                                           },
                                         ),
                                         SizedBox(width: 8.w),
-                                        Text(item.quantity.toString()),
+                                        Text(
+                                          item.quantity.toString(),
+                                          style: textTheme.bodyMedium,
+                                        ),
                                         SizedBox(width: 8.w),
                                         CustomCircleBtn(
                                           icon: Icons.add,
@@ -263,8 +430,8 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                                             context
                                                 .read<GroceryDetailBloc>()
                                                 .add(
-                                                  IncrementQtyEvent(item.id),
-                                                );
+                                              IncrementQtyEvent(item.id),
+                                            );
                                           },
                                         ),
                                       ],
@@ -275,13 +442,13 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                             },
                           ),
                         ),
+
                         SizedBox(height: 15.h),
+
+                        // --- PAYMENT METHOD SECTION ---
                         Text(
                           "Payment Method",
-                          style: GoogleFonts.dmSans(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: textTheme.titleMedium,
                         ),
                         SizedBox(height: 10.h),
                         Container(
@@ -310,16 +477,12 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                                   children: [
                                     Text(
                                       "Pay via",
-                                      style: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 12.sp,
-                                      ),
+                                      style: textTheme.bodySmall,
                                     ),
                                     Text(
                                       currentMethod,
-                                      style: GoogleFonts.dmSans(
+                                      style: textTheme.bodyMedium?.copyWith(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 14.sp,
                                       ),
                                     ),
                                   ],
@@ -327,14 +490,12 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                               ),
                               TextButton(
                                 onPressed: () async {
-                                  // Navigating to payment method screen to change selection
                                   final result = await Navigator.pushNamed(
                                     context,
                                     AppRoutes.paymentmethodScreen,
                                     arguments: {'isChange': true},
                                   );
 
-                                  // Update UI with new selection if returned
                                   if (result != null && result is String) {
                                     setState(() {
                                       currentMethod = result;
@@ -343,22 +504,21 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                                 },
                                 child: Text(
                                   "change",
-                                  style: TextStyle(
+                                  style: textTheme.bodyMedium?.copyWith(
                                     color: AppColors.primary,
-                                    fontSize: 14.sp,
                                   ),
                                 ),
                               ),
                             ],
                           ),
                         ),
+
                         SizedBox(height: 25.h),
+
+                        // --- BILL DETAILS SECTION ---
                         Text(
                           "Bill Details",
-                          style: GoogleFonts.dmSans(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: textTheme.titleMedium,
                         ),
                         SizedBox(height: 10.h),
                         Container(
@@ -369,15 +529,17 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                           ),
                           child: Column(
                             children: [
-                              _billRow("Subtotal", subtotal),
-                              _billRow("Delivery Fee", deliveryFee),
-                              _billRow("Tax & Other Fees", tax),
+                              _billRow(context, "Subtotal", subtotal),
+                              _billRow(context, "Delivery Fee", deliveryFee),
+                              _billRow(context, "Tax & Other Fees", tax),
                               const Divider(),
-                              _billRow("Total", total, isBold: true),
+                              _billRow(context, "Total", total, isBold: true),
                             ],
                           ),
                         ),
                         SizedBox(height: 15.h),
+
+                        // --- PROMO CODE SECTION ---
                         Row(
                           children: [
                             Expanded(
@@ -391,7 +553,10 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 alignment: Alignment.centerLeft,
-                                child: const Text("Add Promo"),
+                                child: Text(
+                                  "Add Promo",
+                                  style: textTheme.bodyMedium,
+                                ),
                               ),
                             ),
                             const SizedBox(width: 10),
@@ -400,7 +565,10 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.homeBackground,
                               ),
-                              child: const Text("Apply"),
+                              child: Text(
+                                "Apply",
+                                style: textTheme.labelLarge,
+                              ),
                             ),
                           ],
                         ),
@@ -409,39 +577,34 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
                     ),
                   ),
                 ),
+
+                // --- CONFIRM ORDER BUTTON ---
                 Container(
                   padding: EdgeInsets.all(DimensionsResources.D_16.w),
                   child: SizedBox(
                     width: double.infinity,
                     height: DimensionsResources.D_50.h,
-                    child: BlocConsumer<GroceryDetailBloc, GroceryDetailState>(
-                      listener: (context, state) {
-                        if (state.message == "Order placed successfully") {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const ConfirmOrder(),
-                            ),
-                          );
-                        }
-                      },
+                    child: BlocBuilder<GroceryDetailBloc, GroceryDetailState>(
                       builder: (context, state) {
-                        final address = context
-                            .read<AddressBloc>()
-                            .state
-                            .selectedAddress;
+                        final address =
+                            context.watch<AddressBloc>().state.selectedAddress;
+
                         return CustomButton(
                           text: "Confirm Your Order",
+                          textColor: AppColors.white,
                           isLoading: state.isOrderLoading,
                           onClick: state.isOrderLoading
                               ? null
                               : () {
-                                  context.read<GroceryDetailBloc>().add(
-                                    PlaceOrderEvent(address!, currentMethod),
-                                  );
-                                },
-                          color: AppColors.homeBackground,
-                          textColor: AppColors.white,
+                            print("*********${selectedDropOff}******");
+                            print("*********${instructionsController.text}******");
+                            context.read<GroceryDetailBloc>().add(
+                              PlaceOrderEvent(
+                                address?.id ?? id,
+                                currentMethod,
+                              ),
+                            );
+                          },
                         );
                       },
                     ),
@@ -455,7 +618,9 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
     );
   }
 
-  Widget _billRow(String title, double value, {bool isBold = false}) {
+  Widget _billRow(BuildContext context, String title, double value, {bool isBold = false}) {
+    final textTheme = Theme.of(context).textTheme;
+
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 4.h),
       child: Row(
@@ -463,15 +628,15 @@ class _CheckoutSummaryScreenState extends State<CheckoutSummaryScreen> {
         children: [
           Text(
             title,
-            style: TextStyle(
-              fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-            ),
+            style: isBold
+                ? textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold)
+                : textTheme.bodyMedium,
           ),
           Text(
             "\$${value.toStringAsFixed(2)}",
-            style: TextStyle(
-              fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-            ),
+            style: isBold
+                ? textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold)
+                : textTheme.bodyMedium,
           ),
         ],
       ),

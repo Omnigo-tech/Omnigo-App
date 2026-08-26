@@ -1,54 +1,94 @@
-import 'package:bloc/bloc.dart';
-import 'package:grocery_app/data/models/message_model.dart';
-
+import 'dart:async';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../data/datasource/remote/socket_service.dart';
+import '../../../data/datasource/repositories/chat_repository.dart';
+import '../../../data/models/message_model.dart';
 import 'chat_event.dart';
-import 'chat_state.dart'; // Define your message model (id, text, isUser)
+import 'chat_state.dart';
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
-  ChatBloc() : super(ChatState.initial()) {
+  final ChatRepository repository;
+  final SocketService socketService;
+  StreamSubscription? _socketSubscription;
+
+  ChatBloc(this.repository, this.socketService) : super(ChatState.initial()) {
     on<FetchMessages>(_onFetchMessages);
     on<SendMessage>(_onSendMessage);
     on<ReceiveMessage>(_onReceiveMessage);
   }
 
-  void _onFetchMessages(FetchMessages event, Emitter<ChatState> emit) {
-    // Implement logic to fetch initial messages from a repository (optional)
+  void _onFetchMessages(FetchMessages event, Emitter<ChatState> emit) async {
+    emit(state.copyWith(status: ChatStatus.loading));
+    try {
+      // 1. Join Socket Identity Rooms
+      socketService.joinUserRoom(event.currentUserId);
+      socketService.joinConversationRoom(event.conversationId);
+
+      // 2. Fetch History over HTTP API
+      final response = await repository.getChatMessages(event.conversationId);
+
+      final mappedMessages = response.messages.map((msg) {
+        return MessageModel(
+          id: msg.id,
+          text: msg.text,
+          isUser: msg.sender.id == event.currentUserId,
+        );
+      }).toList();
+
+      emit(state.copyWith(status: ChatStatus.loaded, messages: mappedMessages));
+
+      // 3. Keep listening to real-time streams
+      await _socketSubscription?.cancel();
+      _socketSubscription = socketService.orderStatusStream.listen((data) {
+        if (data['event'] == 'receiveMessage' && data['conversationId'] == event.conversationId) {
+          add(ReceiveMessage(rawMessage: data, currentUserId: event.currentUserId));
+        }
+      });
+    } catch (e) {
+      emit(state.copyWith(status: ChatStatus.error, errorMessage: e.toString()));
+    }
   }
 
-  // chat_bloc.dart mein
+  void _onSendMessage(SendMessage event, Emitter<ChatState> emit) {
+    // Send live signal across WebSocket line
+    socketService.emitMessage(
+      conversationId: event.conversationId,
+      sender: event.senderId,
+      receiver: event.receiverId,
+      message: event.message,
+    );
 
-  void _onSendMessage(SendMessage event, Emitter<ChatState> emit) async {
-    // 1. User ka message UI par dikhayen
-    final userMsg = MessageModel(
+    // Optimistic UI update immediately
+    final localMsg = MessageModel(
       id: DateTime.now().toString(),
       text: event.message,
       isUser: true,
     );
-
-    final updatedMessages = List<MessageModel>.from(state.messages)..add(userMsg);
-    emit(state.copyWith(messages: updatedMessages));
-
-    // 2. Testing ke liye delay (Backend simulation)
-    await Future.delayed(Duration(seconds: 1));
-
-    // 3. Fake "Bot" reply generate karein
-    final botReply = MessageModel(
-      id: DateTime.now().toString(),
-      text: "Testing: Reply for '${event.message}'",
-      isUser: false,
-    );
-
-    final withBotMessages = List<MessageModel>.from(state.messages)..add(botReply);
-    emit(state.copyWith(messages: withBotMessages));
+    final updated = List<MessageModel>.from(state.messages)..add(localMsg);
+    emit(state.copyWith(messages: updated));
   }
 
   void _onReceiveMessage(ReceiveMessage event, Emitter<ChatState> emit) {
-    final newAIMessage = MessageModel(
-      id: DateTime.now().toString(),
-      text: event.message,
-      isUser: false,
+    final senderId = event.rawMessage['sender'] is Map
+        ? event.rawMessage['sender']['_id']
+        : event.rawMessage['sender'].toString();
+
+    final liveMsg = MessageModel(
+      id: event.rawMessage['_id'] ?? DateTime.now().toString(),
+      text: event.rawMessage['message'] ?? event.rawMessage['content'] ?? '',
+      isUser: senderId == event.currentUserId,
     );
-    final updatedMessages = List<MessageModel>.from(state.messages)..add(newAIMessage);
-    emit(state.copyWith(messages: updatedMessages, status: ChatStatus.loaded));
+
+    // Prevent duplicate injections
+    if (state.messages.any((m) => m.id == liveMsg.id)) return;
+
+    final updated = List<MessageModel>.from(state.messages)..add(liveMsg);
+    emit(state.copyWith(messages: updated));
+  }
+
+  @override
+  Future<void> close() {
+    _socketSubscription?.cancel();
+    return super.close();
   }
 }

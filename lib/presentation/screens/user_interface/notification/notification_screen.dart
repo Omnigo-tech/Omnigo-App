@@ -59,10 +59,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 },
 
                 onCallTap: () {
-                  GlobalDialogs.showCallDriverSheet(
-                    context,
-                    phoneNumber:tracking['phonenumber'],
-                  );
                 },
               ),
             ),

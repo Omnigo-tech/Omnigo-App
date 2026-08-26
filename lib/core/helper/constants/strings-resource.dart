@@ -231,4 +231,8 @@ class StringResources {
       "Location auto-selected successfully!";
   static const String locationRequiredError =
       "Please select both Zone and Area";
+  static const String noHistoryYet = "No history yet";
+  static const String noOngoingOrderYet = "No ongoing orders yet";
+
+
 }

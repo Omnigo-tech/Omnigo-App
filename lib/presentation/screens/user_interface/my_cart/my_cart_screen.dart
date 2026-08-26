@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grocery_app/core/helper/constants/colors_resources.dart';
 import 'package:grocery_app/core/helper/constants/dimensions-resource.dart';
@@ -14,7 +15,6 @@ import 'package:grocery_app/widgets/checkout_bottom_sheet.dart';
 import 'package:grocery_app/widgets/cutom_button.dart';
 import '../../../../core/helper/utils/phone_formatter.dart';
 import '../../../../widgets/circle_button_widget.dart';
-import '../../../../widgets/custom_snackbar.dart';
 
 class MyCartScreen extends StatelessWidget {
   const MyCartScreen({super.key});
@@ -33,7 +33,7 @@ class MyCartScreen extends StatelessWidget {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => CheckoutSummaryScreen(selectedMethod: ""),
+                builder: (context) => const CheckoutSummaryScreen(selectedMethod: ""),
               ),
             );
           },
@@ -46,203 +46,199 @@ class MyCartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      appBar: CustomAppBar(title: StringResources.myCart, showBackButton: true),
-      body: BlocListener<GroceryDetailBloc, GroceryDetailState>(
-        listenWhen: (previous, current) => current.message.isNotEmpty,
-          listener: (context, state) {
-            print("Listener Called");
-            print("Message: ${state.message}");
-
-            CustomSnackBar.show(
-              context,
-              state.message,
-              isError: state.message.toLowerCase().contains('failed'),
+      appBar: const CustomAppBar(title: StringResources.myCart, showBackButton: true),
+      // Removed BlocListener because Snackbars are now handled globally via effectStream in AppBottomBar
+      body: BlocBuilder<GroceryDetailBloc, GroceryDetailState>(
+        builder: (context, state) {
+          if (state.cartLoading) {
+            return const Center(
+              child: SpinKitThreeInOut(
+                color: AppColors.primary,
+                size: DimensionsResources.FONT_SIZE_EXTRA_EXTRA_LARGE,
+              ),
             );
-          },
-        child: BlocBuilder<GroceryDetailBloc, GroceryDetailState>(
-          builder: (context, state) {
-            final cartList = state.cart;
+          }
+          final cartList = state.cart;
 
-            if (cartList.isEmpty) {
-              return Center(
-                child: Text(
-                  StringResources.cartEmpty,
-                  style: GoogleFonts.dmSans(fontSize: 18.sp),
-                ),
-              );
-            }
+          if (cartList.isEmpty) {
+            return Center(
+              child: Text(
+                StringResources.cartEmpty,
+                style: GoogleFonts.dmSans(fontSize: 18.sp),
+              ),
+            );
+          }
 
-            double totalCost = 0;
-            for (var item in cartList) {
-              totalCost += (item.price * item.quantity);
-            }
+          double totalCost = 0;
+          for (var item in cartList) {
+            totalCost += (item.price * item.quantity);
+          }
 
-            return Column(
-              children: [
-                Expanded(
-                  child: ListView.separated(
-                    padding: EdgeInsets.symmetric(vertical: 20.h),
-                    itemCount: cartList.length,
-                    separatorBuilder: (context, index) => Divider(
-                      color: AppColors.border,
-                      thickness: 2,
-                      indent: 16.w,
-                      endIndent: 16.w,
-                    ),
-                    itemBuilder: (context, index) {
-                      final item = cartList[index];
-                      return Dismissible(
-                        key: Key(item.id.toString()),
-                        direction: DismissDirection.endToStart,
-                        confirmDismiss: (direction) async {
-                          context.read<GroceryDetailBloc>().add(
-                            RemoveFromCartEvent(item.id),
-                          );
-                          return false;
-                        },
-                        background: Container(
-                          alignment: Alignment.centerRight,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: DimensionsResources.D_20.w,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.red,
-                            borderRadius: BorderRadius.circular(
-                              DimensionsResources.D_12.r,
-                            ),
-                          ),
-                          child: Icon(
-                            Icons.delete,
-                            color: Colors.white,
-                            size: 28.sp,
+          return Column(
+            children: [
+              Expanded(
+                child: ListView.separated(
+                  padding: EdgeInsets.symmetric(vertical: 20.h),
+                  itemCount: cartList.length,
+                  separatorBuilder: (context, index) => Divider(
+                    color: AppColors.border,
+                    thickness: 2,
+                    indent: 16.w,
+                    endIndent: 16.w,
+                  ),
+                  itemBuilder: (context, index) {
+                    final item = cartList[index];
+                    return Dismissible(
+                      key: Key(item.id.toString()),
+                      direction: DismissDirection.endToStart,
+                      confirmDismiss: (direction) async {
+                        context.read<GroceryDetailBloc>().add(
+                              RemoveFromCartEvent(item.id),
+                            );
+                        return false;
+                      },
+                      background: Container(
+                        alignment: Alignment.centerRight,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: DimensionsResources.D_20.w,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.red,
+                          borderRadius: BorderRadius.circular(
+                            DimensionsResources.D_12.r,
                           ),
                         ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 16.w,
-                            vertical: 10.h,
-                          ),
-                          child: Row(
-                            children: [
-                              Image.network(
-                                ImageUrl.fixImageUrl(item.image),
-                                width: 70.w,
-                                height: 70.h,
-                                fit: BoxFit.contain,
-                                errorBuilder: (context, error, stackTrace) => const Icon(
-                                  Icons.image_not_supported,
-                                  color: Colors.grey,
-                                  size: 40,
-                                ),
+                        child:  Icon(
+                          Icons.delete,
+                          color: Colors.white,
+                          size: 28.sp,
+                        ),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 10.h,
+                        ),
+                        child: Row(
+                          children: [
+                            Image.network(
+                              ImageUrl.fixImageUrl(item.image),
+                              width: 70.w,
+                              height: 70.h,
+                              fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) => const Icon(
+                                Icons.image_not_supported,
+                                color: Colors.grey,
+                                size: 40,
                               ),
-                              SizedBox(width: 15.w),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      item.name,
-                                      style: GoogleFonts.dmSans(
-                                        fontSize: 16.sp,
-                                        fontWeight: FontWeight.bold,
-                                        color: AppColors.black,
-                                      ),
+                            ),
+                            SizedBox(width: 15.w),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    item.name,
+                                    style: GoogleFonts.dmSans(
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.black,
                                     ),
-                                    Text(
-                                      "${item.weight ?? ''}, Price",
-                                      style: GoogleFonts.dmSans(
-                                        fontSize: 14.sp,
-                                        color: AppColors.lightText,
-                                      ),
+                                  ),
+                                  Text(
+                                    "${item.weight ?? ''}, Price",
+                                    style: GoogleFonts.dmSans(
+                                      fontSize: 14.sp,
+                                      color: AppColors.lightText,
                                     ),
-                                    SizedBox(height: 12.h),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            CustomCircleBtn(
-                                              icon: Icons.remove,
-                                              isAdd: false,
-                                              size: 40,
-                                              borderRadius: 14,
-                                              onTap: () {
-                                                context.read<GroceryDetailBloc>().add(
-                                                  DecrementQtyEvent(item.id),
-                                                );
-                                              },
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(horizontal: 15.w),
-                                              child: Text(
-                                                item.quantity.toString(),
-                                                style: GoogleFonts.dmSans(
-                                                  fontSize: 16.sp,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
+                                  ),
+                                  SizedBox(height: 12.h),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          CustomCircleBtn(
+                                            icon: Icons.remove,
+                                            isAdd: false,
+                                            size: 40,
+                                            borderRadius: 14,
+                                            onTap: () {
+                                              context.read<GroceryDetailBloc>().add(
+                                                    DecrementQtyEvent(item.id),
+                                                  );
+                                            },
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.symmetric(horizontal: 15.w),
+                                            child: Text(
+                                              item.quantity.toString(),
+                                              style: GoogleFonts.dmSans(
+                                                fontSize: 16.sp,
+                                                fontWeight: FontWeight.bold,
                                               ),
                                             ),
-                                            CustomCircleBtn(
-                                              icon: Icons.add,
-                                              isAdd: true,
-                                              size: 40,
-                                              borderRadius: 14,
-                                              onTap: () {
-                                                context.read<GroceryDetailBloc>().add(
-                                                  IncrementQtyEvent(item.id),
-                                                );
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                        Text(
-                                          "\$${(item.price * item.quantity).toStringAsFixed(2)}",
-                                          style: GoogleFonts.dmSans(
-                                            fontSize: 18.sp,
-                                            fontWeight: FontWeight.bold,
-                                            color: AppColors.black,
                                           ),
+                                          CustomCircleBtn(
+                                            icon: Icons.add,
+                                            isAdd: true,
+                                            size: 40,
+                                            borderRadius: 14,
+                                            onTap: () {
+                                              context.read<GroceryDetailBloc>().add(
+                                                    IncrementQtyEvent(item.id),
+                                                  );
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                      Text(
+                                        "\$${(item.price * item.quantity).toStringAsFixed(2)}",
+                                        style: GoogleFonts.dmSans(
+                                          fontSize: 18.sp,
+                                          fontWeight: FontWeight.bold,
+                                          color: AppColors.black,
                                         ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      );
-                    },
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.all(24.w),
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        blurRadius: 10,
-                        offset: const Offset(0, -5),
                       ),
-                    ],
-                  ),
-                  child: SafeArea(
-                    top: false,
-                    child: CustomButton(
-                      onClick: () {
-                        _showCheckoutBottomSheet(context, totalCost);
-                      },
-                      text: StringResources.checkout,
-                      textColor: AppColors.white,
-                      borderRadius: DimensionsResources.D_50.r,
+                    );
+                  },
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.all(24.w),
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      blurRadius: 10,
+                      offset: const Offset(0, -5),
                     ),
+                  ],
+                ),
+                child: SafeArea(
+                  top: false,
+                  child: CustomButton(
+                    onClick: () {
+                      _showCheckoutBottomSheet(context, totalCost);
+                    },
+                    text: StringResources.checkout,
+                    textColor: AppColors.white,
+                    borderRadius: DimensionsResources.D_50.r,
                   ),
                 ),
-              ],
-            );
-          },
-        ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

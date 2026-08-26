@@ -51,6 +51,7 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
           "city": event.address.city ?? '',
           "zipCode": event.address.zipcode.toString(),
           "country": event.address.country,
+
         };
 
         final response = await addressRepository.addAddress(body);

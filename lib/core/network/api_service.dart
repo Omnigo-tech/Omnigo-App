@@ -18,6 +18,8 @@ import '../../data/models/fast_foods_models/product_by_category_response_model.d
 import '../../data/models/fast_foods_models/promotion_deal_model.dart';
 import '../../data/models/fast_foods_models/restaurant_response_models.dart';
 import '../../data/models/fast_foods_models/sub_category_response_model.dart';
+import '../../data/models/chat_messages_response_model.dart';
+import '../../data/models/conversation_response_model.dart';
 import '../../data/models/favourite_response_model.dart';
 import '../../data/models/google_login_response_model.dart';
 import '../../data/models/grocery_category_model.dart';
@@ -29,6 +31,7 @@ import '../../data/models/place_order_response_model.dart';
 import '../../data/models/products_response_model.dart';
 import '../../data/models/remove_favourite_response_model.dart';
 import '../../data/models/review_model.dart';
+import '../../data/models/tracking_model.dart';
 
 
 part 'api_service.g.dart';
@@ -115,6 +118,11 @@ abstract class ApiService {
       @Body() Map<String, dynamic> body,
       );
 
+  @POST("cart/bulk-add")
+  Future<CartResponseModel> bulkAddToCart(
+      @Body() Map<String, dynamic> body,
+      );
+
   @DELETE("cart/remove/{productId}")
   Future<CartResponseModel> removeToCart(
       @Path("productId") String productId,
@@ -167,11 +175,9 @@ abstract class ApiService {
       @Path("id") String orderId,
       );
 
-        // GET all feedbacks
   @GET("feedback")
   Future<FeedbackResponse> getFeedbacks();
 
-  // POST submit feedback (token auto-attached by DioClient interceptor)
   @POST("feedback")
   Future<SubmitFeedbackResponse> submitFeedback(
     @Body() Map<String, dynamic> body,
@@ -267,5 +273,18 @@ abstract class ApiService {
       );
 
 
+  @GET("orders/track/{id}")
+  Future<TrackingModel> getTracking(
+      @Path("id") String orderId,
+      );
 
+  @POST("chat/create-conversation")
+  Future<ConversationResponseModel> createConversation(
+      @Body() Map<String, dynamic> body,
+      );
+
+  @GET("chat/messages/{conversationId}")
+  Future<ChatMessagesResponseModel> getChatMessages(
+      @Path("conversationId") String conversationId,
+      );
 }

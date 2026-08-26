@@ -8,7 +8,9 @@ class GroceryDetailState {
   final List<GroceryItemModel> cart;
   final List<GroceryItemModel> favorites;
   final List<OrderModel> orders;
+  final String orderId;
   final String message;
+  final bool cartLoading;
   final bool isFavoritesLoading;
   final bool isOrderLoading;
   final bool isOrderDetailLoading;
@@ -19,7 +21,9 @@ class GroceryDetailState {
     required this.cart,
     this.favorites = const [],
     this.orders = const [],
+    this.orderId = '',
     this.message = '',
+    this.cartLoading=false,
     this.isFavoritesLoading = true,
     this.isOrderLoading=false,
     this.isOrderDetailLoading=false,
@@ -31,7 +35,9 @@ class GroceryDetailState {
     List<GroceryItemModel>? cart,
     List<GroceryItemModel>? favorites,
     List<OrderModel>? orders,
+    String? orderId ,
     String? message,
+    bool? cartLoading,
     bool? isFavoritesLoading,
     bool? isOrderLoading,
     OrderDetailModel? orderDetail,
@@ -42,7 +48,9 @@ class GroceryDetailState {
       cart: cart ?? this.cart,
       favorites: favorites ?? this.favorites,
       orders: orders ?? this.orders,
+      orderId: orderId ?? this.orderId,
       message: message ?? this.message,
+      cartLoading: cartLoading ?? this.cartLoading,
       isFavoritesLoading: isFavoritesLoading ?? this.isFavoritesLoading,
       isOrderLoading: isOrderLoading ?? this.isOrderLoading,
       orderDetail: orderDetail ?? this.orderDetail,

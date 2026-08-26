@@ -7,19 +7,25 @@ import 'package:grocery_app/presentation/bloc/review/review_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/datasource/local/auth_local_data_source.dart';
+import '../../data/datasource/remote/socket_service.dart';
 import '../../data/datasource/repositories/address_repository.dart';
 import '../../data/datasource/repositories/auth_repository.dart';
 import '../../data/datasource/repositories/fast_food_home_repository.dart';
+import '../../data/datasource/repositories/chat_repository.dart';
 import '../../data/datasource/repositories/location_repository.dart';
 import '../../data/datasource/repositories/onboarding_repository.dart';
 import '../../data/datasource/repositories/restaurant_repository.dart';
+import '../../data/datasource/repositories/tracking_repository.dart';
 import '../../data/datasource/services/location_service.dart';
 import '../../presentation/bloc/auth/auth_bloc.dart';
 import '../../presentation/bloc/fast_foods/fast_food_home_bloc.dart';
+import '../../presentation/bloc/call/call_bloc.dart';
+import '../../presentation/bloc/chat/chat_bloc.dart';
 import '../../presentation/bloc/grocery_details/item_detail_bloc.dart';
 import '../../presentation/bloc/location/location_bloc.dart';
 import '../../presentation/bloc/onboarding/onboarding_bloc.dart';
 import '../../presentation/bloc/restaurant/restaurant_bloc.dart';
+import '../../presentation/bloc/tracking/tracking_bloc.dart';
 import '../../presentation/grocery/grocery_bloc/grocery_bloc.dart';
 import '../network/api_service.dart';
 import '../network/dio_client.dart';
@@ -82,6 +88,14 @@ Future<void> setup() async {
       sl<ApiService>(),
     ),
   );
+  sl.registerLazySingleton<ChatRepository>(() => ChatRepository(sl<ApiService>()));
+
+  sl.registerLazySingleton<TrackingRepository>(() => TrackingRepository(sl<ApiService>()));
+  sl.registerLazySingleton<SocketService>(() {
+    final service = SocketService();
+    service.initSocket(); // Runs app setup instances immediately
+    return service;
+  });
 
   // ================= BLOCS =================
   sl.registerFactory<AuthBloc>(
@@ -100,6 +114,10 @@ Future<void> setup() async {
     ),
   );
 
+  sl.registerFactory(
+        () => TrackingBloc(sl<TrackingRepository>(), sl<SocketService>()),
+  );
+
   sl.registerFactory<GroceryDetailBloc>(
         () => GroceryDetailBloc(
           sl<WishlistRepository>(),
@@ -107,6 +125,14 @@ Future<void> setup() async {
           sl<CartRepository>(),
     ),
 
+  );
+
+  sl.registerFactory<ChatBloc>(
+        () => ChatBloc(sl<ChatRepository>(), sl<SocketService>()),
+  );
+
+  sl.registerFactory<CallBloc>(
+        () => CallBloc(sl<SocketService>()),
   );
 
   sl.registerFactory<RestaurantBloc>(

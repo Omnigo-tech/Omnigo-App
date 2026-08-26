@@ -57,14 +57,15 @@ class User {
 
 @JsonSerializable()
 class UserLocation {
+  final String? id;
   final String? type;
   final Coordinates? coordinates;
-  final String? zone;    // ✨ Isko nullable (?) kiya kyunki naye user ki location empty ho sakti hai
-  final String? area;    // ✨ Isko nullable (?) kiya
-  final String? address; // ✨ Isko nullable (?) kiya
-  final bool? isEnabled; // ✨ Isko bhi nullable (?) kar dein safe side ke liye
-
+  final String? zone;
+  final String? area;
+  final String? address;
+  final bool? isEnabled;
   UserLocation({
+    this.id,
     this.type,
     this.coordinates,
     this.zone,    // ✨ required hata diya

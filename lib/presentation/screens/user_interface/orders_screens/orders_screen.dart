@@ -10,6 +10,7 @@ import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_event.
 import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_bloc.dart';
 import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_state.dart';
 import 'package:intl/intl.dart';
+import '../../../../widgets/empty_state_widget.dart';
 import 'order_detail_screen.dart';
 
 class OrdersScreen extends StatefulWidget {
@@ -77,7 +78,7 @@ class _OrdersScreenState extends State<OrdersScreen>
               .toList();
 
           final history = state.orders
-              .where((o) => o.status?.toLowerCase() == "pending" || o.status?.toLowerCase() == "confirmed" ||  o.status?.toLowerCase() == "delivered" || o.status?.toLowerCase() == "cancelled")
+              .where((o) => o.status?.toLowerCase() == "pending" || o.status?.toLowerCase() == "confirmed" ||o.status?.toLowerCase() == "preparing" ||  o.status?.toLowerCase() == "delivered" || o.status?.toLowerCase() == "cancelled")
               .toList();
           return TabBarView(
             controller: _tabController,
@@ -90,7 +91,11 @@ class _OrdersScreenState extends State<OrdersScreen>
 
   Widget _buildHistoryList(List orders) {
     if (orders.isEmpty) {
-      return const Center(child: Text(StringResources.noOrders));
+      return const EmptyStateWidget(
+        icon: Icons.receipt_long_outlined,
+        title:
+        StringResources.noHistoryYet,
+      );
     }
 
     return ListView.separated(
@@ -145,8 +150,9 @@ class _OrdersScreenState extends State<OrdersScreen>
 
   Widget _buildOngoingList(List orders) {
     if (orders.isEmpty) {
-      return const Center(
-        child: Text(StringResources.noOngoingOrders),
+      return const EmptyStateWidget(
+        icon: Icons.shopping_cart_outlined,
+        title:StringResources.noOngoingOrderYet,
       );
     }
 
@@ -358,6 +364,10 @@ class _OrdersScreenState extends State<OrdersScreen>
                             Navigator.pushNamed(
                               context,
                               AppRoutes.trackingOrder,
+                              arguments: {
+                              'orderId': order.id,
+                              'userId': order.userId,
+                            },
                             );
                           },
                           icon: const Icon(

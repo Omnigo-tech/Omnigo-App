@@ -33,11 +33,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // Load grocery categories/products once when Home screen opens.
-    // Uses the shared GroceryBloc instance (sl<GroceryBloc>()) so the
-    // same data/selection state is reused when navigating to
-    // GroceryHomeScreen later — no duplicate network calls if it was
-    // already loaded by a prior visit to the grocery tab.
     context.read<GroceryBloc>().add(LoadGroceryEvent());
     context.read<GroceryDetailBloc>()
       .add(GetCartItemsEvent());

@@ -1,11 +1,10 @@
 abstract class GroceryEvent {}
 
 // Load all products from API
-//class LoadGroceryEvent extends GroceryEvent {}
-
 class LoadGroceryEvent extends GroceryEvent {
   final String? initialCategory;
-  LoadGroceryEvent({this.initialCategory});
+  final bool showAll;
+  LoadGroceryEvent({this.initialCategory, this.showAll = false});
 }
 
 // Select a category tab

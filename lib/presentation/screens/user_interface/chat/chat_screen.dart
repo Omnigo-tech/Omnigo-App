@@ -16,11 +16,40 @@ import '../../../bloc/chat/chat_bloc.dart';
 import '../../../bloc/chat/chat_event.dart';
 import '../../../bloc/chat/chat_state.dart';
 
-class ChatScreen extends StatelessWidget {
+class ChatScreen extends StatefulWidget {
+  const ChatScreen({super.key});
+
+  @override
+  State<ChatScreen> createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+  bool _isInit = true;
 
-  ChatScreen({super.key}); // Added Key and fixed constructor
+  late String conversationId;
+  late String receiverId;
+  late String receiverName;
+  late String currentUserId;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_isInit) {
+      final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      conversationId = args['conversationId'];
+      receiverId = args['receiverId'];
+      receiverName = args['receiverName'];
+      currentUserId = args['currentUserId'];
+
+      // Start fetching history over repository architecture
+      context.read<ChatBloc>().add(
+        FetchMessages(conversationId: conversationId, currentUserId: currentUserId),
+      );
+      _isInit = false;
+    }
+  }
 
   void _scrollToBottom() {
     if (_scrollController.hasClients) {
@@ -34,7 +63,6 @@ class ChatScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Accessing the theme for consistent text styling
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
@@ -43,84 +71,65 @@ class ChatScreen extends StatelessWidget {
         child: Column(
           children: [
             CustomAppBar(
-              title: StringResources.chatUserDefault,
+              title: receiverName,
               showBackButton: true,
               centerTitle: false,
               actions: [
                 IconButton(
                   onPressed: () {
-                    context.read<CallBloc>().add(StartCall(StringResources.chatUserDefault));
-                    Navigator.pushNamed(context, AppRoutes.call);
+                    // Trigger active RTC signaling across stream channels
+                    Navigator.pushNamed(
+                      context,
+                      '/call',
+                      arguments: {
+                        'conversationId': conversationId,
+                        'receiverId': receiverId,
+                        'currentUserId': currentUserId,
+                        'receiverName': receiverName,
+                      },
+                    );
                   },
                   icon: SvgPicture.asset(
                     ImageResource.CALL_ICON,
                     width: DimensionsResources.D_20.w,
-                    colorFilter: const ColorFilter.mode(
-                        AppColors.primary,
-                        BlendMode.srcIn
-                    ),
+                    colorFilter: const ColorFilter.mode(AppColors.primary, BlendMode.srcIn),
                   ),
                 ),
               ],
             ),
-
             Expanded(
               child: BlocConsumer<ChatBloc, ChatState>(
                 listener: (context, state) {
-                  // Scroll to bottom whenever a new message is added
                   WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
                 },
                 builder: (context, state) {
-                  if (state.status == ChatStatus.error && state.messages.isEmpty) {
-                    return Center(
-                      child: Text(
-                        'Error: ${state.errorMessage}',
-                        style: textTheme.bodyMedium?.copyWith(color: AppColors.red),
-                      ),
-                    );
+                  if (state.status == ChatStatus.loading) {
+                    return const Center(child: CircularProgressIndicator());
                   }
-                  return Column(
-                    children: [
-                      Expanded(
-                        child: ListView.builder(
-                          controller: _scrollController,
-                          padding: EdgeInsets.symmetric(vertical: DimensionsResources.D_10.h),
-                          itemCount: state.messages.length,
-                          itemBuilder: (context, index) {
-                            return MessageWidget(message: state.messages[index]);
-                          },
-                        ),
-                      ),
-
-                      // Typing Indicator
-                      if (state.status == ChatStatus.loading)
-                        Padding(
-                          padding: const EdgeInsets.all(DimensionsResources.D_8),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              StringResources.typing,
-                              style: textTheme.labelSmall?.copyWith(
-                                color: AppColors.grey,
-                                fontStyle: FontStyle.italic,
-                              ),
-                            ),
-                          ),
-                        ),
-                    ],
+                  return ListView.builder(
+                    controller: _scrollController,
+                    padding: EdgeInsets.symmetric(vertical: DimensionsResources.D_10.h),
+                    itemCount: state.messages.length,
+                    itemBuilder: (context, index) {
+                      return MessageWidget(message: state.messages[index]);
+                    },
                   );
                 },
               ),
             ),
-
             ChatInputWidget(
-                controller: _messageController,
-                onSendMessage: (message) {
-                  if (message.trim().isNotEmpty) {
-                    context.read<ChatBloc>().add(SendMessage(message));
-                    _messageController.clear();
-                  }
+              controller: _messageController,
+              onSendMessage: (message) {
+                if (message.trim().isNotEmpty) {
+                  context.read<ChatBloc>().add(SendMessage(
+                    conversationId: conversationId,
+                    senderId: currentUserId,
+                    receiverId: receiverId,
+                    message: message,
+                  ));
+                  _messageController.clear();
                 }
+              },
             ),
           ],
         ),

@@ -13,6 +13,8 @@ import 'package:grocery_app/presentation/screens/user_interface/details/grocery_
 import 'package:grocery_app/presentation/grocery/grocery_home/filter_bottom_sheet.dart';
 import 'package:grocery_app/presentation/grocery/grocery_home/search_screen.dart';
 import 'package:grocery_app/presentation/screens/user_interface/my_cart/my_cart_screen.dart';
+import '../../../core/di/service_locator.dart';
+import '../../../data/datasource/local/auth_local_data_source.dart';
 import '../../bloc/grocery_details/item_detail_event.dart';
 import '../../screens/user_interface/address_list/address_screen.dart';
 import '../grocery_bloc/grocery_bloc.dart';
@@ -42,8 +44,9 @@ class _GroceryViewState extends State<GroceryView> {
 
   // Replace localhost with real IP for physical device testing
   String fixImageUrl(String url) {
-    return url.replaceAll('localhost', '192.168.2.104');
+    return url.replaceAll('localhost', '192.168.100.69');
   }
+
 
   @override
   void dispose() {
@@ -53,12 +56,15 @@ class _GroceryViewState extends State<GroceryView> {
 
   @override
   Widget build(BuildContext context) {
+    final localData = sl<AuthLocalDataSource>().getUserLocation();
+    String currentAddress = localData?['address'];
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
-            _buildHeader(context),
+            _buildHeader(context,currentAddress),
             SizedBox(height: 10.h),
             _buildSearchBar(context),
             SizedBox(height: 12.h),
@@ -72,7 +78,7 @@ class _GroceryViewState extends State<GroceryView> {
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildHeader(BuildContext context , String currentAddress) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
       child: BlocBuilder<AddressBloc, AddressState>(
@@ -118,7 +124,7 @@ class _GroceryViewState extends State<GroceryView> {
                       ),
                       SizedBox(height: 2.h),
                       Text(
-                        address?.address ?? "Select your address",
+                        address?.address ?? currentAddress,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -135,8 +141,8 @@ class _GroceryViewState extends State<GroceryView> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => BlocProvider.value(
-                        value: context.read<GroceryDetailBloc>()
+                      builder: (_) =>  BlocProvider.value(
+                        value:context.read<GroceryDetailBloc>()
                           ..add(GetCartItemsEvent()),
                         child: MyCartScreen(),
                       ),
@@ -455,7 +461,7 @@ class _GroceryViewState extends State<GroceryView> {
             final detailItem = GroceryItemModel(
               id: item.id,
               name: item.name,
-              image: item.image,
+              image: item.image ?? '',
               price: item.price,
               description: item.description ?? "No description available.",
               weight: item.weight ?? "N/A",
@@ -525,3 +531,5 @@ class _GroceryViewState extends State<GroceryView> {
     );
   }
 }
+
+

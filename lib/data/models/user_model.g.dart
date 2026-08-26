@@ -49,6 +49,7 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
 };
 
 UserLocation _$UserLocationFromJson(Map<String, dynamic> json) => UserLocation(
+  id: json['id'] as String?,
   type: json['type'] as String?,
   coordinates: json['coordinates'] == null
       ? null
@@ -61,6 +62,7 @@ UserLocation _$UserLocationFromJson(Map<String, dynamic> json) => UserLocation(
 
 Map<String, dynamic> _$UserLocationToJson(UserLocation instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'type': instance.type,
       'coordinates': instance.coordinates,
       'zone': instance.zone,

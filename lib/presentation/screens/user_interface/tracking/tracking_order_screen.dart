@@ -3,20 +3,48 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:grocery_app/core/helper/constants/colors_resources.dart';
 import 'package:grocery_app/core/helper/constants/dimensions-resource.dart';
 import 'package:grocery_app/core/helper/constants/images-resources.dart';
 import 'package:grocery_app/core/helper/constants/strings-resource.dart';
 import 'package:grocery_app/presentation/bloc/tracking/tracking_bloc.dart';
+import 'package:grocery_app/presentation/bloc/tracking/tracking_event.dart';
 import 'package:grocery_app/presentation/bloc/tracking/tracking_state.dart';
 import 'package:grocery_app/widgets/tracking_info_card.dart';
 
+import '../../../../core/di/service_locator.dart';
 import '../../../../core/helper/utils/dialogs/show_cart_dialog.dart';
-import '../../../../core/helper/utils/launcher_helper.dart';
+import '../../../../core/routes/AppRoutes.dart';
+import '../../../../data/datasource/remote/socket_service.dart';
+import '../../../../data/datasource/repositories/chat_repository.dart';
 
-class TrackingOrderScreen extends StatelessWidget {
-  const TrackingOrderScreen({super.key});
+class TrackingOrderScreen extends StatefulWidget {
+  final String orderId;
+  final String userId;
+
+  const TrackingOrderScreen({
+    super.key,
+    required this.orderId,
+    required this.userId,
+  });
+
+  @override
+  State<TrackingOrderScreen> createState() => _TrackingOrderScreenState();
+}
+
+class _TrackingOrderScreenState extends State<TrackingOrderScreen> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<TrackingBloc>().add(
+      FetchTrackingDetails(orderId: widget.orderId, userId: widget.userId),
+    );
+  }
+  @override
+  void dispose() {
+    sl<SocketService>().leaveOrderTrackingRoom(widget.orderId);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +62,12 @@ class TrackingOrderScreen extends StatelessWidget {
           }
 
           if (state is TrackingError) {
-            return Center(child: Text(state.message));
+            return Center(
+              child: Padding(
+                padding: EdgeInsets.all(DimensionsResources.D_20.w),
+                child: Text(state.message, textAlign: TextAlign.center),
+              ),
+            );
           }
 
           if (state is TrackingLoaded) {
@@ -66,7 +99,7 @@ class TrackingOrderScreen extends StatelessWidget {
                         ImageResource.BACK_ICON,
                         width: DimensionsResources.D_30.w,
                         height: DimensionsResources.D_30.h,
-                        colorFilter: ColorFilter.mode(
+                        colorFilter: const ColorFilter.mode(
                           AppColors.darkSecondary,
                           BlendMode.srcIn,
                         ),
@@ -112,10 +145,12 @@ class TrackingOrderScreen extends StatelessWidget {
                             ),
                           ),
                           SizedBox(height: DimensionsResources.D_20.h),
+
+                          // Dynamic Tracking Card with dynamic socket mapping
                           TrackingInfoCard(
                             status: tracking.status,
                             estimatedTime: tracking.estimatedTime,
-                            riderName: tracking.deliveryHeroName,
+                            riderName: tracking.deliveryHeroName ?? "Assigning Rider...",
                             riderTitle: StringResources.deliveryhero,
                             riderImage: ImageResource.RIDER_IMG,
 
@@ -130,15 +165,74 @@ class TrackingOrderScreen extends StatelessWidget {
                             iconBgColor: AppColors.fieldBg,
                             iconColor: AppColors.primary,
 
-                            onMessageTap: () {
-                              Navigator.pushNamed(context, '/chat');
+                            onMessageTap: () async {
+                              // Show standard loading indicator
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (context) => const Center(child: CircularProgressIndicator()),
+                              );
+
+                              try {
+                                final chatRepo = sl<ChatRepository>();
+                                final response = await chatRepo.createConversation(widget.orderId);
+
+                                Navigator.pop(context); // Close loading dialog
+
+                                if (response.success && response.conversation != null) {
+                                  Navigator.pushNamed(
+                                    context,
+                                    AppRoutes.chat,
+                                    arguments: {
+                                      'conversationId': response.conversation!.id,
+                                      'receiverId': response.conversation!.riderId,
+                                      'receiverName': tracking.deliveryHeroName ?? "Rider",
+                                      'currentUserId': widget.userId,
+                                    },
+                                  );
+                                }
+                              } catch (e) {
+                                Navigator.pop(context);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text("Failed to init conversation: $e")),
+                                );
+                              }
                             },
 
-                            onCallTap: () {
-                              GlobalDialogs.showCallDriverSheet(
-                                context,
-                                phoneNumber: tracking.phonenumber,
+                            onCallTap: () async {
+                              if (tracking.phonenumber == null || tracking.phonenumber!.isEmpty) return;
+
+                              // 1. Screen par loading blocker show karein
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (context) => const Center(child: CircularProgressIndicator()),
                               );
+
+                              try {
+                                // 2. ChatRepository se conversationId generate ya fetch karein
+                                final chatRepo = sl<ChatRepository>();
+                                final response = await chatRepo.createConversation(widget.orderId);
+
+                                Navigator.pop(context); // Loading dialog ko band karein
+
+                                if (response.success && response.conversation != null) {
+                                  // 3. Dynamic payload pass kar ke updated sheet open karein
+                                  GlobalDialogs.showCallDriverSheet(
+                                    context,
+                                    phoneNumber: tracking.phonenumber!,
+                                    conversationId: response.conversation!.id,
+                                    receiverId: response.conversation!.riderId,
+                                    currentUserId: widget.userId,
+                                    receiverName: tracking.deliveryHeroName ?? "Rider",
+                                  );
+                                }
+                              } catch (e) {
+                                Navigator.pop(context); // Error aane par bhi loading band karein
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text("Failed to initialize call session: $e")),
+                                );
+                              }
                             },
                           ),
 
@@ -154,10 +248,9 @@ class TrackingOrderScreen extends StatelessWidget {
 
                           _buildTimelineItem(
                             context: context,
-
                             iconImage: ImageResource.LOCATION_ICON,
                             label: StringResources.yourplace,
-                            value: tracking.destinationAddress,
+                            value: tracking.location!,
                             isLast: true,
                           ),
                         ],
@@ -214,15 +307,11 @@ class TrackingOrderScreen extends StatelessWidget {
               children: [
                 Text(
                   label,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.labelSmall?.copyWith(color: AppColors.grey),
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(color: AppColors.grey),
                 ),
                 Text(
                   value,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.labelLarge?.copyWith(color: AppColors.black),
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.black),
                 ),
               ],
             ),

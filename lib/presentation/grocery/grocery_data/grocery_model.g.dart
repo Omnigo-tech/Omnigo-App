@@ -7,22 +7,32 @@ part of 'grocery_model.dart';
 // **************************************************************************
 
 GroceryModel _$GroceryModelFromJson(Map<String, dynamic> json) => GroceryModel(
-  id: json['id'] as String,
+  id: json['_id'] as String,
   name: json['name'] as String,
   category: json['category'] as String,
-  image: json['image'] as String?,
+  images:
+      (json['images'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+      const [],
   price: (json['price'] as num).toDouble(),
   description: json['description'] as String?,
   weight: json['weight'] as String?,
+  subcategory: json['subcategory'] as String?,
+  discountPrice: (json['discountPrice'] as num?)?.toDouble(),
+  isAvailable: json['isAvailable'] as bool? ?? true,
+  isFavourite: json['isFavourite'] as bool? ?? false,
 );
 
 Map<String, dynamic> _$GroceryModelToJson(GroceryModel instance) =>
     <String, dynamic>{
-      'id': instance.id,
+      '_id': instance.id,
       'name': instance.name,
       'category': instance.category,
-      'image': instance.image,
+      'images': instance.images,
       'price': instance.price,
       'description': instance.description,
       'weight': instance.weight,
+      'subcategory': instance.subcategory,
+      'discountPrice': instance.discountPrice,
+      'isAvailable': instance.isAvailable,
+      'isFavourite': instance.isFavourite,
     };

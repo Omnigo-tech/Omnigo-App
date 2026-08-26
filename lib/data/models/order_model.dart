@@ -4,6 +4,7 @@ import 'package:grocery_app/data/models/grocery-item.dart';
 class OrderModel {
   final String? id;
   final String? orderNumber;
+  final String? userId;
   final String? riderId;
   final bool? isAssigned;
   final DateTime? acceptedAt;
@@ -24,6 +25,7 @@ class OrderModel {
      this.id,
     this.orderNumber,
     this.riderId,
+    this.userId,
     this.isAssigned,
     this.acceptedAt,
      this.items,
@@ -44,6 +46,7 @@ class OrderModel {
     return OrderModel(
       id: json['_id'] ?? '',
       orderNumber: json['orderNumber'] ?? '',
+      userId: json['userId'] ?? '',
       riderId: json['riderId'] ?? '',
       isAssigned: json['isAssigned'] ?? false,
       acceptedAt: json['acceptedAt'] != null

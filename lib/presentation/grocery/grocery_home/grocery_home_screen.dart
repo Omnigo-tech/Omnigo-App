@@ -461,7 +461,7 @@ class _GroceryViewState extends State<GroceryView> {
             final detailItem = GroceryItemModel(
               id: item.id,
               name: item.name,
-              image: item.image,
+              image: item.image ?? '',
               price: item.price,
               description: item.description ?? "No description available.",
               weight: item.weight ?? "N/A",

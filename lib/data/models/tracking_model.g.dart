@@ -11,7 +11,7 @@ TrackingModel _$TrackingModelFromJson(Map<String, dynamic> json) =>
       orderId: json['orderId'] as String,
       orderNumber: json['orderNumber'] as String,
       status: json['status'] as String,
-      location: json['location'] as String,
+      location: json['location'] as String?,
       rider: json['rider'] == null
           ? null
           : RiderModel.fromJson(json['rider'] as Map<String, dynamic>),

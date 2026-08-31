@@ -20,6 +20,7 @@ class AppRoutes {
   static const String order = '/order';
   static const String fastFoodHome = '/fast-food-home';
   static const String restaurantScreen = '/restaurant-screen';
+  static const String profile = '/profile';
 
   static Null get addressdetails => null;
 }

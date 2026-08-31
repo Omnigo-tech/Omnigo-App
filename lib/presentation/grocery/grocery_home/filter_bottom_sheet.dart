@@ -131,7 +131,6 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
         if (state.isLoading) {
           return const Center(child: CircularProgressIndicator());
         }
-
         if (state.allItems.isEmpty) {
           return const Center(child: Text("No products available"));
         }
@@ -230,34 +229,41 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
   Widget _buildApplyButton(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 12),
+      padding: EdgeInsets.only(top: 12.h),
       child: SizedBox(
         width: double.infinity,
         child: ElevatedButton(
           onPressed: () {
             context.read<GroceryBloc>().add(
-              ApplyFilterEvent(category: selectedCategory, item: selectedItem),
+              ApplyFilterEvent(
+                category: selectedCategory,
+                item: selectedItem,
+              ),
             );
+
+            Navigator.pop(context);
+
             if (widget.flag == 2) {
-              Navigator.pop(context);
-              Navigator.pop(context);
-            } else {
               Navigator.pop(context);
             }
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.homeBackground,
-            padding: const EdgeInsets.symmetric(vertical: 14),
+            padding: const EdgeInsets.symmetric(
+              vertical: 14,
+            ),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12.r),
             ),
           ),
           child: const Text(
             "Apply Filters",
-            style: TextStyle(color: Colors.white, fontSize: 16),
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+            ),
           ),
         ),
       ),
     );
-  }
-}
+  }}

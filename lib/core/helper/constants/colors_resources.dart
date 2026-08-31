@@ -47,4 +47,5 @@ class AppColors {
   static const pending = Colors.orange;
   static const delivered = Colors.green;
   static const lightBlueOpacity = Color(0x33007AFF); // Blue with 0.2 opacity
+
 }

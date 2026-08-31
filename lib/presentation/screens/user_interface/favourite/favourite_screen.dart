@@ -291,9 +291,9 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
 
                 return;
               }
-
-                bloc.add(BulkAddToCartEvent(itemsToAdd));
-
+              bloc.add(
+                AddToCartEvent.multiple(itemsToAdd),
+              );
               setState(() {
                 selectedItems.clear();
               });

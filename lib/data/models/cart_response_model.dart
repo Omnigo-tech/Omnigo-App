@@ -24,6 +24,7 @@ class CartResponseModel {
         quantity: i['quantity'] ?? 1,
         weight: i['weight'] ?? '',
         description: i['description'] ?? '',
+        belongsTo: i['belongsTo'] ?? '',
       );
     }).toList();
 

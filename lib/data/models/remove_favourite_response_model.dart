@@ -1,7 +1,9 @@
+import 'grocery-item.dart';
+
 class RemoveFavouriteResponseModel {
   final bool success;
   final String message;
-  final List<String> favorites;
+  final List<GroceryItemModel> favorites;
 
   RemoveFavouriteResponseModel({
     required this.success,
@@ -10,13 +12,15 @@ class RemoveFavouriteResponseModel {
   });
 
   factory RemoveFavouriteResponseModel.fromJson(
-      Map<String, dynamic> json) {
+      Map<String, dynamic> json,
+      ) {
     return RemoveFavouriteResponseModel(
-      success: json['success'] ?? false,
-      message: json['message'] ?? '',
-      favorites: List<String>.from(
-        json['favorites'] ?? [],
-      ),
+      success: json['success'] == true,
+      message: json['message']?.toString() ?? '',
+      favorites: (json['favorites'] as List? ?? [])
+          .whereType<Map<String, dynamic>>()
+          .map(GroceryItemModel.fromJson)
+          .toList(),
     );
   }
 }

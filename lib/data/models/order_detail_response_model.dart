@@ -74,6 +74,7 @@ class OrderDetailModel {
         price: (item['price'] as num?)?.toDouble() ?? 0.0,
         quantity: item['quantity'] ?? 1,
         weight: item['weight'] ?? '',
+        belongsTo: item['belongsTo'] ?? '',
         description: '',
       ))
           .toList() ?? [],

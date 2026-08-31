@@ -234,5 +234,24 @@ class StringResources {
   static const String noHistoryYet = "No history yet";
   static const String noOngoingOrderYet = "No ongoing orders yet";
 
+  static const String profile = 'Profile';
+  static const String personalInformation = 'Personal Information';
+  static const String myAddresses = 'My Addresses';
+  static const String myOrders = 'My Orders';
+  static const String wishlist = 'Wishlist';
+  static const String notifications = 'Notifications';
+  static const String paymentMethods = 'Payment Methods';
+  static const String changePassword = 'Change Password';
+  static const String helpCenter = 'Help Center';
+  static const String aboutApp = 'About App';
+  static const String logout = 'Logout';
+
+  static const String logoutConfirmation =
+      'Are you sure you want to logout?';
+  static const String orders = "Orders";
+  static const String inProgress = "In Progress";
+  static const String saved = "Saved";
+  static const String cart = "Cart";
+
 
 }

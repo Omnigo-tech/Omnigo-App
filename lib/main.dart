@@ -13,6 +13,7 @@ import 'package:grocery_app/presentation/bloc/auth/auth_bloc.dart';
 import 'package:grocery_app/presentation/bloc/call/call_bloc.dart';
 import 'package:grocery_app/presentation/bloc/location/location_bloc.dart';
 import 'package:grocery_app/presentation/bloc/payment/payment_bloc.dart';
+import 'package:grocery_app/presentation/bloc/profile/profile_bloc.dart';
 import 'package:grocery_app/presentation/bloc/review/review_bloc.dart';
 import 'package:grocery_app/presentation/grocery/grocery_bloc/grocery_bloc.dart';
 import 'package:grocery_app/widgets/global_effect_listener.dart';
@@ -26,7 +27,6 @@ import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_event.
 
 import 'core/services/notifications_services.dart';
 import 'data/datasource/remote/socket_service.dart';
-import 'data/datasource/repositories/address_repository.dart';
 import 'data/datasource/repositories/address_repository.dart';
 
 // SSL Handshake Error Fix Class
@@ -81,6 +81,7 @@ void main() async {
         BlocProvider(create: (_) => GroceryBloc(sl<GroceryRepository>())),
         BlocProvider<AuthBloc>(create: (_) => sl<AuthBloc>()),
         BlocProvider<LocationBloc>(create: (_) => sl<LocationBloc>()),
+        BlocProvider(create: (_) => sl<ProfileBloc>()),
       ],
       child: const MyApp(),
     ),

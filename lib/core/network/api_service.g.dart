@@ -321,7 +321,7 @@ class _ApiService implements ApiService {
     final _data = <String, dynamic>{};
     _data.addAll(body);
     final _options = _setStreamType<WishlistToggleResponseModel>(
-      Options(method: 'POST', headers: _headers, extra: _extra)
+      Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
             'wishlist/toggle',
@@ -491,34 +491,6 @@ class _ApiService implements ApiService {
           .compose(
             _dio.options,
             'cart/add',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late CartResponseModel _value;
-    try {
-      _value = CartResponseModel.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, response: _result);
-      rethrow;
-    }
-    return _value;
-  }
-
-  @override
-  Future<CartResponseModel> bulkAddToCart(Map<String, dynamic> body) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(body);
-    final _options = _setStreamType<CartResponseModel>(
-      Options(method: 'POST', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            'cart/bulk-add',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -1361,6 +1333,64 @@ class _ApiService implements ApiService {
     late ChatMessagesResponseModel _value;
     try {
       _value = ChatMessagesResponseModel.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options, response: _result);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<ProfileResponseModel> getMyProfile(String userId) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<ProfileResponseModel>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            'auth/my-profile/${userId}',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ProfileResponseModel _value;
+    try {
+      _value = ProfileResponseModel.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options, response: _result);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<UpdateProfilePictureResponseModel> updateProfilePicture(
+    String userId,
+    Map<String, dynamic> body,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(body);
+    final _options = _setStreamType<UpdateProfilePictureResponseModel>(
+      Options(method: 'PUT', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            'auth/my-profile/update/${userId}',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late UpdateProfilePictureResponseModel _value;
+    try {
+      _value = UpdateProfilePictureResponseModel.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;

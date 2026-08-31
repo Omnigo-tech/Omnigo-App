@@ -3,11 +3,12 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:grocery_app/core/helper/constants/colors_resources.dart';
 import 'package:grocery_app/core/helper/constants/dimensions-resource.dart';
 import 'package:grocery_app/core/helper/constants/images-resources.dart';
-import 'package:grocery_app/data/models/grocery-item.dart';
+
 import 'package:grocery_app/presentation/bloc/address/address_bloc.dart';
 import 'package:grocery_app/presentation/bloc/address/address_state.dart';
 import 'package:grocery_app/presentation/bloc/grocery_details/item_detail_bloc.dart';
@@ -18,6 +19,7 @@ import 'package:grocery_app/presentation/screens/user_interface/my_cart/my_cart_
 import '../../../core/helper/utils/phone_formatter.dart';
 import '../../../core/di/service_locator.dart';
 import '../../../data/datasource/local/auth_local_data_source.dart';
+import '../../../data/models/grocery-item.dart';
 import '../../bloc/grocery_details/item_detail_event.dart';
 import '../../screens/user_interface/address_list/address_screen.dart';
 import '../grocery_bloc/grocery_bloc.dart';
@@ -414,7 +416,12 @@ class _GroceryViewState extends State<GroceryView> {
     return BlocBuilder<GroceryBloc, GroceryState>(
       builder: (context, state) {
         if (state.isLoading) {
-          return const Center(child: CircularProgressIndicator());
+          return  const Center(
+            child: SpinKitThreeInOut(
+              color: AppColors.primary,
+              size: DimensionsResources.FONT_SIZE_EXTRA_EXTRA_LARGE,
+            ),
+          );
         }
 
         if (state.error != null && state.error!.isNotEmpty) {
@@ -501,13 +508,15 @@ class _GroceryViewState extends State<GroceryView> {
         final item = items[index];
         return GestureDetector(
           onTap: () {
-            final detailItem = GroceryItemModel(
+            final detailItem =  GroceryItemModel(
               id: item.id,
               name: item.name,
               image: item.image ?? '',
               price: item.price,
               description: item.description ?? "No description available.",
               weight: item.weight ?? "N/A",
+              belongsTo: item.belongsTo,
+              isFavorite: item.isFavourite,
             );
             Navigator.push(
               context,

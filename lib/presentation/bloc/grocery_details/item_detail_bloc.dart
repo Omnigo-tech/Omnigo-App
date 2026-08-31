@@ -34,6 +34,7 @@ class GroceryDetailBloc extends Bloc<GroceryDetailEvent, GroceryDetailState> {
             price: product.price.toDouble(),
             description: product.description ?? "",
             weight: product.weight ?? "",
+            belongsTo: product.belongsTo
           );
         }).toList();
 
@@ -49,7 +50,8 @@ class GroceryDetailBloc extends Bloc<GroceryDetailEvent, GroceryDetailState> {
 
     on<ToggleFavoriteEvent>((event, emit) async {
       try {
-        final response = await wishlistRepository.toggleWishlist(event.id);
+        final response =
+        await wishlistRepository.toggleWishlist(event.id);
 
         final updated = state.items.map((item) {
           if (item.id == event.id) {
@@ -57,6 +59,7 @@ class GroceryDetailBloc extends Bloc<GroceryDetailEvent, GroceryDetailState> {
               isFavorite: response.isFavorite,
             );
           }
+
           return item;
         }).toList();
 
@@ -65,6 +68,15 @@ class GroceryDetailBloc extends Bloc<GroceryDetailEvent, GroceryDetailState> {
             items: updated,
           ),
         );
+
+        // Notify Home/Grocery state that favorite changed.
+        _effectController.add(
+          FavoriteUpdatedEffect(
+            productId: event.id,
+            isFavourite: response.isFavorite,
+          ),
+        );
+
         _showSnackbar(response.message);
       } catch (e) {
         _showSnackbar("Something went wrong");
@@ -150,7 +162,13 @@ class GroceryDetailBloc extends Bloc<GroceryDetailEvent, GroceryDetailState> {
 
 
     on<RemoveFavoriteEvent>((event, emit) async {
-      final originalFavorites = List<GroceryItemModel>.from(state.favorites);
+      final originalFavorites =
+      List<GroceryItemModel>.from(state.favorites);
+
+      final originalItems =
+      List<GroceryItemModel>.from(state.items);
+
+      // Optimistic UI update
       final updatedFavorites = state.favorites
           .where((item) => item.id != event.productId)
           .toList();
@@ -170,30 +188,42 @@ class GroceryDetailBloc extends Bloc<GroceryDetailEvent, GroceryDetailState> {
       );
 
       try {
-        final response = await wishlistRepository.removeFavorite(event.productId);
+        final response =
+        await wishlistRepository.removeFavorite(event.productId);
+
         if (response.success) {
+          // Backend se updated favorites list
           emit(
             state.copyWith(
-              favorites: updatedFavorites,
+              favorites: response.favorites,
             ),
           );
 
           _showSnackbar(response.message);
         } else {
+          // Rollback
           emit(
             state.copyWith(
               favorites: originalFavorites,
+              items: originalItems,
             ),
           );
 
-          _showSnackbar("Failed to remove item");
+          _showSnackbar(
+            response.message.isNotEmpty
+                ? response.message
+                : "Failed to remove favorite",
+          );
         }
-      }catch (e) {
+      } catch (e) {
+        // Error par complete rollback
         emit(
           state.copyWith(
             favorites: originalFavorites,
+            items: originalItems,
           ),
         );
+
         _showSnackbar(e.toString());
       }
     });
@@ -259,16 +289,22 @@ class GroceryDetailBloc extends Bloc<GroceryDetailEvent, GroceryDetailState> {
 
     on<AddToCartEvent>((event, emit) async {
       try {
-        final isAlreadyInCart = state.cart.any((cartItem) => cartItem.id == event.item.id);
+        // Sirf woh items nikalo jo already cart mein nahi hain
+        final itemsToAdd = event.items.where((item) {
+          return !state.cart.any(
+                (cartItem) => cartItem.id == item.id,
+          );
+        }).toList();
 
-        if (isAlreadyInCart) {
+        // Agar saare items already cart mein hain
+        if (itemsToAdd.isEmpty) {
           _showSnackbar("This item is already in your cart!");
           return;
         }
 
+        // Single + multiple dono ke liye same API call
         final response = await cartRepository.addToCart(
-          event.item.id,
-          event.item.quantity,
+          itemsToAdd,
         );
 
         if (response.success) {
@@ -277,52 +313,53 @@ class GroceryDetailBloc extends Bloc<GroceryDetailEvent, GroceryDetailState> {
               cart: response.cartItems,
             ),
           );
+
           _effectController.add(
             ShowAddedToCartDialogEffect(
-              items:[event.item],
+              items: itemsToAdd,
             ),
           );
         } else {
           _showSnackbar("Failed to add item");
-        } }
-      catch (e) {
-        _showSnackbar(e.toString());
-      }
-    });
-
-    on<BulkAddToCartEvent>((event, emit) async {
-      try {
-
-        final response = await cartRepository.bulkAddToCart(
-          event.items,
-        );
-
-        if (response.success) {
-
-          emit(
-            state.copyWith(
-              cart: response.cartItems,
-            ),
-          );
-
-          _effectController.add(
-            ShowAddedToCartDialogEffect(
-              items: event.items,
-            ),
-          );
-
-        } else {
-
-          _showSnackbar(response.message);
-
         }
-
       } catch (e) {
-
         _showSnackbar(e.toString());
-
       }
     });
+
+    // on<BulkAddToCartEvent>((event, emit) async {
+    //   try {
+    //
+    //     final response = await cartRepository.bulkAddToCart(
+    //       event.items,
+    //     );
+    //
+    //     if (response.success) {
+    //
+    //       emit(
+    //         state.copyWith(
+    //           cart: response.cartItems,
+    //         ),
+    //       );
+    //
+    //       _effectController.add(
+    //         ShowAddedToCartDialogEffect(
+    //           items: event.items,
+    //         ),
+    //       );
+    //
+    //     } else {
+    //
+    //       _showSnackbar(response.message);
+    //
+    //     }
+    //
+    //   } catch (e) {
+    //
+    //     _showSnackbar(e.toString());
+    //
+    //   }
+    // });
 
 
     on<PlaceOrderEvent>((event, emit) async {

@@ -4,22 +4,24 @@ abstract class GroceryEvent {}
 class LoadGroceryEvent extends GroceryEvent {
   final String? initialCategory;
   final bool showAll;
-  LoadGroceryEvent({this.initialCategory, this.showAll = false});
+  final bool forceRefresh; // true = hamesha dobara fetch karo (jaise pull-to-refresh)
+  LoadGroceryEvent({
+    this.initialCategory,
+    this.showAll = false,
+    this.forceRefresh = false,
+  });
 }
 
-// Select a category tab
 class SelectCategoryEvent extends GroceryEvent {
   final String category;
   SelectCategoryEvent(this.category);
 }
 
-// Search products via API
 class SearchGroceryEvent extends GroceryEvent {
   final String query;
   SearchGroceryEvent(this.query);
 }
 
-// Apply filter from bottom sheet
 class ApplyFilterEvent extends GroceryEvent {
   final String? category;
   final String? item;
@@ -29,4 +31,14 @@ class ApplyFilterEvent extends GroceryEvent {
 class ApplyItemFilterEvent extends GroceryEvent {
   final String selectedItem;
   ApplyItemFilterEvent(this.selectedItem);
+}
+
+class UpdateFavoriteStatusEvent extends GroceryEvent {
+  final String productId;
+  final bool isFavourite;
+
+  UpdateFavoriteStatusEvent({
+    required this.productId,
+    required this.isFavourite,
+  });
 }

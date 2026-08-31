@@ -18,6 +18,7 @@ GroceryModel _$GroceryModelFromJson(Map<String, dynamic> json) => GroceryModel(
   weight: json['weight'] as String?,
   subcategory: json['subcategory'] as String?,
   discountPrice: (json['discountPrice'] as num?)?.toDouble(),
+  belongsTo: json['belongsTo'] as String? ?? 'grocery',
   isAvailable: json['isAvailable'] as bool? ?? true,
   isFavourite: json['isFavourite'] as bool? ?? false,
 );
@@ -33,6 +34,7 @@ Map<String, dynamic> _$GroceryModelToJson(GroceryModel instance) =>
       'weight': instance.weight,
       'subcategory': instance.subcategory,
       'discountPrice': instance.discountPrice,
+      'belongsTo': instance.belongsTo,
       'isAvailable': instance.isAvailable,
       'isFavourite': instance.isFavourite,
     };

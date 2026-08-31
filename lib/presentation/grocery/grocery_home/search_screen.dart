@@ -268,6 +268,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   description:
                   item.description ?? "No description available.",
                   weight: item.weight ?? "N/A",
+                  belongsTo: item.belongsTo
                 );
 
                 Navigator.push(
@@ -349,6 +350,8 @@ class _SearchScreenState extends State<SearchScreen> {
                               item.description ??
                                   "No description available.",
                               weight: item.weight ?? "N/A",
+                                belongsTo: item.belongsTo
+
                             );
 
                             Navigator.push(

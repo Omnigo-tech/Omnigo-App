@@ -15,38 +15,52 @@ class CartRepository {
     return await _apiService.getCartItem();
   }
 
-  Future<CartResponseModel> addToCart(String productId, int quantity) async {
-    try {
-      final body = {
-        "productId": productId,
-        "quantity": quantity,
-      };
-      return await _apiService.addToCart(body);
-    } on DioException catch (e) {
-      throw ErrorHandler.handle(e);
-    }
-  }
-
-  Future<CartResponseModel> bulkAddToCart(
+  Future<CartResponseModel> addToCart(
       List<GroceryItemModel> items,
       ) async {
     try {
       final body = {
-        "products": items
-            .map(
-              (e) => {
-            "productId": e.id,
-            "quantity": e.quantity <= 0 ? 1 : e.quantity,
-          },
-        )
-            .toList(),
+        "items": items.map((item) {
+          return {
+            "productId": item.id,
+            "name": item.name,
+            "quantity": item.quantity > 0 ? item.quantity : 1,
+            "orderFrom": item.belongsTo,
+          };
+        }).toList(),
       };
 
-      return await _apiService.bulkAddToCart(body);
+      print("========== ADD CART BODY ==========");
+      print(body);
+      print("===================================");
+
+      return await _apiService.addToCart(body);
     } on DioException catch (e) {
+      print("ADD CART ERROR: ${e.response?.data}");
       throw ErrorHandler.handle(e);
     }
   }
+
+  // Future<CartResponseModel> bulkAddToCart(
+  //     List<GroceryItemModel> items,
+  //     ) async {
+  //   try {
+  //     final body = {
+  //       "products": items
+  //           .map(
+  //             (e) => {
+  //           "productId": e.id,
+  //           "quantity": e.quantity <= 0 ? 1 : e.quantity,
+  //         },
+  //       )
+  //           .toList(),
+  //     };
+  //
+  //     return await _apiService.bulkAddToCart(body);
+  //   } on DioException catch (e) {
+  //     throw ErrorHandler.handle(e);
+  //   }
+  // }
 
   Future<CartResponseModel> removeToCart(
       String productId,

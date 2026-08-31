@@ -20,15 +20,21 @@ class RemoveFavoriteEvent  extends GroceryDetailEvent {
 }
 
 class AddToCartEvent extends GroceryDetailEvent {
-  final GroceryItemModel item;
-  AddToCartEvent(this.item);
-}
-
-class BulkAddToCartEvent extends GroceryDetailEvent {
   final List<GroceryItemModel> items;
 
-  BulkAddToCartEvent(this.items);
+  // Single item
+  AddToCartEvent(GroceryItemModel item) : items = [item];
+
+  // Multiple items
+  AddToCartEvent.multiple(List<GroceryItemModel> items)
+      : items = items;
 }
+
+// class BulkAddToCartEvent extends GroceryDetailEvent {
+//   final List<GroceryItemModel> items;
+//
+//   BulkAddToCartEvent(this.items);
+// }
 
 class IncrementQtyEvent extends GroceryDetailEvent {
   final String id;

@@ -27,6 +27,7 @@ import '../../data/datasource/repositories/chat_repository.dart';
 import '../../presentation/bloc/chat/chat_bloc.dart';
 import '../../presentation/bloc/home/home_bloc.dart';
 import '../../presentation/bloc/home/home_event.dart';
+import '../../presentation/bloc/profile/profile_bloc.dart';
 import '../../presentation/bloc/tracking/tracking_bloc.dart';
 import '../../presentation/bloc/tracking/tracking_event.dart';
 import '../../presentation/fastfoodscreens/home/fast_food_home_screen.dart';
@@ -36,6 +37,7 @@ import '../../presentation/screens/authentication/otp_screen.dart';
 import '../../presentation/screens/authentication/phone_input_screen.dart';
 import '../../presentation/screens/authentication/signup_screen.dart';
 import '../../presentation/screens/splash_screen.dart';
+import '../../presentation/screens/user_interface/  profile/profile_screen.dart';
 import '../../presentation/screens/user_interface/payment/payment_method_screen.dart';
 import '../../presentation/screens/user_interface/review/review_screen.dart';
 import '../../presentation/screens/welcome_screen.dart';
@@ -133,16 +135,17 @@ class RouteGenerator {
       case AppRoutes.chat:
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) =>
-              BlocProvider(create: (_) => ChatBloc(sl<ChatRepository>(), sl<SocketService>()),
-                  child: ChatScreen(),
-              ),
+          builder: (_) => BlocProvider(
+            create: (_) => ChatBloc(sl<ChatRepository>(), sl<SocketService>()),
+            child: ChatScreen(),
+          ),
         );
 
       case AppRoutes.call:
         return MaterialPageRoute(
-            settings: settings,
-            builder: (_) => const CallScreen());
+          settings: settings,
+          builder: (_) => const CallScreen(),
+        );
 
       case AppRoutes.paymentmethodScreen:
         return MaterialPageRoute(builder: (_) => PaymentMethodScreen());
@@ -160,10 +163,7 @@ class RouteGenerator {
                 create: (_) => sl<TrackingBloc>(),
               ),
             ],
-            child: TrackingOrderScreen(
-              orderId: orderId,
-              userId: userId,
-            ),
+            child: TrackingOrderScreen(orderId: orderId, userId: userId),
           ),
         );
       case AppRoutes.review:
@@ -171,15 +171,21 @@ class RouteGenerator {
 
       case AppRoutes.fastFoodHome:
         return MaterialPageRoute(
-          builder: (_) =>
-              BlocProvider(create: (_) => FastFoodHomeBloc(sl<FastFoodHomeRepository>()), child: FastFoodHomeScreen()),
+          builder: (_) => BlocProvider(
+            create: (_) => FastFoodHomeBloc(sl<FastFoodHomeRepository>()),
+            child: FastFoodHomeScreen(),
+          ),
         );
       case AppRoutes.restaurantScreen:
-        final restaurantId =
-        settings.arguments as String;
+        final restaurantId = settings.arguments as String;
         return MaterialPageRoute(
-          builder: (_) => RestaurantDetailScreen(
-            restaurantId: restaurantId,
+          builder: (_) => RestaurantDetailScreen(restaurantId: restaurantId),
+        );
+      case AppRoutes.profile:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => sl<ProfileBloc>(),
+            child: const ProfileScreen(),
           ),
         );
 

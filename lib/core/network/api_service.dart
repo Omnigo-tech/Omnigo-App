@@ -29,9 +29,11 @@ import '../../data/models/onboarding_response_model.dart';
 import '../../data/models/order_detail_response_model.dart';
 import '../../data/models/place_order_response_model.dart';
 import '../../data/models/products_response_model.dart';
+import '../../data/models/profile_response_model.dart';
 import '../../data/models/remove_favourite_response_model.dart';
 import '../../data/models/review_model.dart';
 import '../../data/models/tracking_model.dart';
+import '../../data/models/update_profile_picture_response_model.dart';
 
 
 part 'api_service.g.dart';
@@ -85,7 +87,7 @@ abstract class ApiService {
   @GET("onboarding")
   Future<OnboardingResponseModel> getOnboardingData();
 
-  @POST("wishlist/toggle")
+  @PATCH("wishlist/toggle")
   Future<WishlistToggleResponseModel> toggleWishlist(
       @Body() Map<String, dynamic> body,
       );
@@ -118,10 +120,10 @@ abstract class ApiService {
       @Body() Map<String, dynamic> body,
       );
 
-  @POST("cart/bulk-add")
-  Future<CartResponseModel> bulkAddToCart(
-      @Body() Map<String, dynamic> body,
-      );
+  // @POST("cart/bulk-add")
+  // Future<CartResponseModel> bulkAddToCart(
+  //     @Body() Map<String, dynamic> body,
+  //     );
 
   @DELETE("cart/remove/{productId}")
   Future<CartResponseModel> removeToCart(
@@ -287,4 +289,16 @@ abstract class ApiService {
   Future<ChatMessagesResponseModel> getChatMessages(
       @Path("conversationId") String conversationId,
       );
+  
+  @GET("auth/my-profile/{id}")
+  Future<ProfileResponseModel>
+  getMyProfile(
+      @Path("id") String userId,
+      );
+
+  @PUT("auth/my-profile/update/{id}")
+  Future<UpdateProfilePictureResponseModel>
+  updateProfilePicture(
+      @Path("id") String userId,
+      @Body() Map<String, dynamic> body, );
 }

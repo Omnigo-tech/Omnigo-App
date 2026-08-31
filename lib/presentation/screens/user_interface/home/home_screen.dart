@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grocery_app/core/helper/constants/colors_resources.dart';
 import 'package:grocery_app/presentation/grocery/grocery_bloc/grocery_bloc.dart';
@@ -48,7 +49,12 @@ class _HomeScreenState extends State<HomeScreen> {
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
           if (state is HomeLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+              child: SpinKitThreeInOut(
+                color: AppColors.primary,
+                size: DimensionsResources.FONT_SIZE_EXTRA_EXTRA_LARGE,
+              ),
+            );
           }
 
           if (state is HomeLoaded) {
@@ -121,10 +127,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             BlocBuilder<GroceryBloc, GroceryState>(
                               builder: (context, groceryState) {
                                 if (groceryState.isLoading) {
-                                  return const Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 20),
-                                    child: Center(
-                                      child: CircularProgressIndicator(),
+                                  return   const Center(
+                                    child: SpinKitThreeInOut(
+                                      color: AppColors.primary,
+                                      size: DimensionsResources.FONT_SIZE_EXTRA_EXTRA_LARGE,
                                     ),
                                   );
                                 }

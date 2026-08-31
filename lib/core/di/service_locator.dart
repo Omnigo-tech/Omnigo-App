@@ -14,6 +14,7 @@ import '../../data/datasource/repositories/fast_food_home_repository.dart';
 import '../../data/datasource/repositories/chat_repository.dart';
 import '../../data/datasource/repositories/location_repository.dart';
 import '../../data/datasource/repositories/onboarding_repository.dart';
+import '../../data/datasource/repositories/profile_repository.dart';
 import '../../data/datasource/repositories/restaurant_repository.dart';
 import '../../data/datasource/repositories/tracking_repository.dart';
 import '../../data/datasource/services/location_service.dart';
@@ -24,6 +25,7 @@ import '../../presentation/bloc/chat/chat_bloc.dart';
 import '../../presentation/bloc/grocery_details/item_detail_bloc.dart';
 import '../../presentation/bloc/location/location_bloc.dart';
 import '../../presentation/bloc/onboarding/onboarding_bloc.dart';
+import '../../presentation/bloc/profile/profile_bloc.dart';
 import '../../presentation/bloc/restaurant/restaurant_bloc.dart';
 import '../../presentation/bloc/tracking/tracking_bloc.dart';
 import '../../presentation/grocery/grocery_bloc/grocery_bloc.dart';
@@ -78,6 +80,9 @@ Future<void> setup() async {
   sl.registerLazySingleton<CartRepository>(() => CartRepository(sl<ApiService>()));
   sl.registerLazySingleton<AddressRepository>(() => AddressRepository(sl<ApiService>()));
   sl.registerLazySingleton(() => ReviewRepository(sl()));
+  sl.registerLazySingleton<ProfileRepository>(
+        () => ProfileRepository(sl<ApiService>()),
+  );
   sl.registerLazySingleton<FastFoodHomeRepository>(
         () => FastFoodHomeRepository(
       sl<ApiService>(),
@@ -139,6 +144,9 @@ Future<void> setup() async {
         () => RestaurantBloc(
       sl<RestaurantRepository>(),
     ),
+  );
+  sl.registerFactory<ProfileBloc>(
+        () => ProfileBloc(sl<ProfileRepository>()),
   );
 
 

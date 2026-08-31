@@ -8,17 +8,16 @@ class GroceryModel {
   final String id;
 
   final String name;
-
   final String category;
-
   final List<String> images;
-
   final double price;
 
   final String? description;
   final String? weight;
   final String? subcategory;
   final double? discountPrice;
+
+  final String belongsTo;
 
   @JsonKey(defaultValue: true)
   final bool isAvailable;
@@ -36,6 +35,7 @@ class GroceryModel {
     this.weight,
     this.subcategory,
     this.discountPrice,
+    this.belongsTo = 'grocery',
     this.isAvailable = true,
     this.isFavourite = false,
   });
@@ -50,34 +50,61 @@ class GroceryModel {
       id: json['_id']?.toString() ?? '',
       name: json['name']?.toString() ?? '',
       category: json['category']?.toString() ?? '',
-
-      // null / invalid images ko empty list bana do
       images: json['images'] is List
           ? (json['images'] as List)
           .where((e) => e != null)
           .map((e) => e.toString())
           .toList()
           : [],
-
       price: json['price'] is num
           ? (json['price'] as num).toDouble()
-          : double.tryParse(json['price']?.toString() ?? '') ?? 0.0,
-
+          : double.tryParse(
+        json['price']?.toString() ?? '',
+      ) ??
+          0.0,
       description: json['description']?.toString(),
       weight: json['weight']?.toString(),
       subcategory: json['subcategory']?.toString(),
-
       discountPrice: json['discountPrice'] is num
           ? (json['discountPrice'] as num).toDouble()
           : null,
-
+      belongsTo: json['belongsTo']?.toString() ?? 'grocery',
       isAvailable: json['isAvailable'] is bool
           ? json['isAvailable'] as bool
           : true,
-
       isFavourite: json['isFavourite'] is bool
           ? json['isFavourite'] as bool
           : false,
+    );
+  }
+
+  GroceryModel copyWith({
+    String? id,
+    String? name,
+    String? category,
+    List<String>? images,
+    double? price,
+    String? description,
+    String? weight,
+    String? subcategory,
+    double? discountPrice,
+    String? belongsTo,
+    bool? isAvailable,
+    bool? isFavourite,
+  }) {
+    return GroceryModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      category: category ?? this.category,
+      images: images ?? this.images,
+      price: price ?? this.price,
+      description: description ?? this.description,
+      weight: weight ?? this.weight,
+      subcategory: subcategory ?? this.subcategory,
+      discountPrice: discountPrice ?? this.discountPrice,
+      belongsTo: belongsTo ?? this.belongsTo,
+      isAvailable: isAvailable ?? this.isAvailable,
+      isFavourite: isFavourite ?? this.isFavourite,
     );
   }
 

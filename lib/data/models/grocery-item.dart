@@ -9,6 +9,7 @@ class GroceryItemModel extends Equatable {
   final double price;
   final bool isFavorite;
   final int quantity;
+  final String belongsTo;
 
   const GroceryItemModel({
     required this.id,
@@ -19,20 +20,29 @@ class GroceryItemModel extends Equatable {
     required this.description,
     this.isFavorite = false,
     this.quantity = 1,
+    required this.belongsTo,
   });
 
   factory GroceryItemModel.fromJson(Map<String, dynamic> json) {
     return GroceryItemModel(
-      id: json['_id'] ?? '',
-      name: json['name'] ?? '',
-      image: json['image'] ?? '',
-      description: json['description'] ?? '',
-      weight: json['weight'],
-      price: (json['price'] ?? 0).toDouble(),
-      quantity: json['quantity'] ?? 1,
+      id: json['_id']?.toString() ?? '',
+      name: json['name']?.toString() ?? '',
+      image: json['image']?.toString() ?? '',
+      description: json['description']?.toString() ?? '',
+      weight: json['weight']?.toString(),
 
-      // Wishlist API se aane wale items already favorite hain
-      isFavorite: true,
+      price: json['price'] is num
+          ? (json['price'] as num).toDouble()
+          : double.tryParse(json['price']?.toString() ?? '') ?? 0.0,
+
+      quantity: json['quantity'] is num
+          ? (json['quantity'] as num).toInt()
+          : 1,
+
+      belongsTo: json['belongsTo']?.toString() ?? 'grocery',
+
+      isFavorite: json['isFavourite'] == true ||
+          json['isFavorite'] == true,
     );
   }
 
@@ -40,6 +50,7 @@ class GroceryItemModel extends Equatable {
     bool? isFavorite,
     int? quantity,
     double? price,
+    String? belongsTo,
   }) {
     return GroceryItemModel(
       id: id,
@@ -50,6 +61,7 @@ class GroceryItemModel extends Equatable {
       price: price ?? this.price,
       isFavorite: isFavorite ?? this.isFavorite,
       quantity: quantity ?? this.quantity,
+      belongsTo: belongsTo ?? this.belongsTo,
     );
   }
 
@@ -63,5 +75,6 @@ class GroceryItemModel extends Equatable {
     price,
     isFavorite,
     quantity,
+    belongsTo,
   ];
 }
